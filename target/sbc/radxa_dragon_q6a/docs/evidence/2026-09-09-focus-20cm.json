@@ -1,0 +1,47 @@
+{
+  "roi": [
+    0.02,
+    0.1,
+    0.46,
+    0.8
+  ],
+  "results": [
+    {
+      "file": "artifacts/focus-20260908T230816Z.wfp98H/focus-2368.ppm",
+      "mean_green": 166.970797418313,
+      "gradient_energy": 56.54215427205234,
+      "normalized_energy": 0.0020281090764640354
+    },
+    {
+      "file": "artifacts/focus-20260908T230816Z.wfp98H/focus-2432.ppm",
+      "mean_green": 166.471271916027,
+      "gradient_energy": 59.33581461557821,
+      "normalized_energy": 0.002141106715474324
+    },
+    {
+      "file": "artifacts/focus-20260908T230816Z.wfp98H/focus-2496.ppm",
+      "mean_green": 166.225374617256,
+      "gradient_energy": 59.28965857136865,
+      "normalized_energy": 0.002145775630115998
+    },
+    {
+      "file": "artifacts/focus-20260908T230816Z.wfp98H/focus-2560.ppm",
+      "mean_green": 166.04457263747327,
+      "gradient_energy": 56.95974109726941,
+      "normalized_energy": 0.002065944437078249
+    },
+    {
+      "file": "artifacts/focus-20260908T230816Z.wfp98H/focus-2624.ppm",
+      "mean_green": 166.0762119353215,
+      "gradient_energy": 53.11343510129608,
+      "normalized_energy": 0.0019257039866424441
+    },
+    {
+      "file": "artifacts/focus-20260908T230816Z.wfp98H/focus-2688.ppm",
+      "mean_green": 166.14383048110398,
+      "gradient_energy": 48.22912603288453,
+      "normalized_energy": 0.0017471932937966775
+    }
+  ],
+  "best": "artifacts/focus-20260908T230816Z.wfp98H/focus-2496.ppm"
+}

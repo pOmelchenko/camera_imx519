@@ -1,0 +1,16 @@
+build/
+capture/
+artifacts/
+vendor/
+runtime/
+__pycache__/
+driver/*.o
+driver/*.ko
+driver/*.ko.*
+driver/*.mod
+driver/*.mod.c
+driver/.*.cmd
+driver/Module.symvers
+driver/modules.order
+.DS_Store
+._*

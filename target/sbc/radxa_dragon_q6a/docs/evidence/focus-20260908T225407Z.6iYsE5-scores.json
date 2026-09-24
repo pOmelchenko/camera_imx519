@@ -1,0 +1,59 @@
+{
+  "roi": [
+    0.02,
+    0.1,
+    0.46,
+    0.8
+  ],
+  "results": [
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2432.ppm",
+      "mean_green": 197.47245762711864,
+      "gradient_energy": 127.5421345338983,
+      "normalized_energy": 0.0032706993050252513
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2496.ppm",
+      "mean_green": 196.94247881355932,
+      "gradient_energy": 130.31363877118645,
+      "normalized_energy": 0.003359781791771218
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2560.ppm",
+      "mean_green": 196.8136122881356,
+      "gradient_energy": 128.10124470338982,
+      "normalized_energy": 0.0033070676942494256
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2624.ppm",
+      "mean_green": 196.9639565677966,
+      "gradient_energy": 122.28088806497175,
+      "normalized_energy": 0.003151991696723553
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2688.ppm",
+      "mean_green": 197.91821151129943,
+      "gradient_energy": 113.18234463276836,
+      "normalized_energy": 0.0028893966886638593
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2752.ppm",
+      "mean_green": 192.0647334039548,
+      "gradient_energy": 111.12526483050847,
+      "normalized_energy": 0.0030124340886466114
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2816.ppm",
+      "mean_green": 192.9667461158192,
+      "gradient_energy": 102.16694915254237,
+      "normalized_energy": 0.002743755938890544
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2880.ppm",
+      "mean_green": 193.29060734463278,
+      "gradient_energy": 94.55200388418079,
+      "normalized_energy": 0.0025307499452438906
+    }
+  ],
+  "best": "camera-imx519/build/focus-20260908T225407Z.6iYsE5/focus-2496.ppm"
+}

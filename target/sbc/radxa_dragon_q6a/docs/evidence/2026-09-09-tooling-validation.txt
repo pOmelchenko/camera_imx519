@@ -1,0 +1,25 @@
+Tooling validation, 2026-09-09 Europe/Moscow.
+
+Passed locally:
+- bash -n for build.sh, install.sh, check.sh, capture.sh,
+  collect-diagnostics.sh and sync-to-radxa.sh.
+- shasum -a 256 -c SOURCES.sha256: both driver sources OK.
+- --help for the three new scripts.
+- Initial sync-to-radxa.sh transfer succeeded.
+
+Hardware wrapper checks were attempted with:
+cd /home/radxa/camera-imx519 && bash capture.sh raw 3 && bash capture.sh rgb 3 && bash collect-diagnostics.sh && bash build.sh
+
+Both connection attempts ended before the remote command ran:
+ssh: connect to host [redacted] port 22: Operation timed out
+Host address redacted from the saved diagnostic excerpt.
+
+Thus these new wrappers have not yet passed a hardware smoke test.
+Prior successful direct camera captures are documented separately.
+
+After SSH returns:
+1. On workstation: bash camera-imx519/sync-to-radxa.sh
+2. On Radxa: bash ~/camera-imx519/capture.sh raw
+3. On Radxa: bash ~/camera-imx519/capture.sh rgb
+4. On Radxa: bash ~/camera-imx519/collect-diagnostics.sh
+5. Update this record and WORKLOG with artifact paths and exit status.

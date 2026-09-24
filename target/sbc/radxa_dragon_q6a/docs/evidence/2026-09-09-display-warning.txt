@@ -1,0 +1,30 @@
+Selected lines from the kernel log supplied by the user in the conversation.
+Date: 2026-09-09 Europe/Moscow. This is an excerpt, not the complete dmesg.
+
+[    4.133096] ------------[ cut here ]------------
+[    4.133101] disp_cc_mdss_dp_pixel_clk_src: rcg didn't update its configuration.
+[    4.133114] WARNING: drivers/clk/qcom/clk-rcg2.c:156 at update_config+0x110/0x150, CPU#5: modprobe/435
+[    4.133216] Tainted: [O]=OOT_MODULE
+[    4.133247] Call trace:
+[    4.133248]  update_config+0x110/0x150 (P)
+[    4.133252]  clk_rcg2_configure+0xc0/0xd0
+[    4.133254]  clk_rcg2_dp_set_rate+0x124/0x168
+[    4.133257]  clk_change_rate+0xe4/0x738
+[    4.133261]  clk_change_rate+0x140/0x738
+[    4.133264]  clk_core_set_rate_nolock+0x218/0x2b8
+[    4.133267]  clk_set_rate+0x40/0x140
+[    4.133270]  qmp_v3_configure_dp_clocks+0x90/0xf0
+[    4.133273]  qmp_v456_configure_dp_phy+0x98/0x310
+[    4.133275]  qmp_v4_configure_dp_phy+0x2c/0x268
+[    4.133277]  qmp_combo_dp_power_on+0x1f0/0x470
+[    4.133279]  phy_power_on+0x80/0x138
+[    4.133281]  msm_dp_ctrl_enable_mainlink_clocks+0x80/0x288 [msm 66e94c64ffad0a891666b51877bedaf2570fc485]
+[    4.133354]  msm_dp_ctrl_on_link+0xb8/0x438 [msm 66e94c64ffad0a891666b51877bedaf2570fc485]
+[    4.133404]  msm_dp_bridge_atomic_enable+0xf0/0x358 [msm 66e94c64ffad0a891666b51877bedaf2570fc485]
+[    4.133448]  drm_atomic_bridge_chain_enable+0x44/0xa8
+[    4.133519]  fbcon_init+0x440/0x470
+
+Interpretation: warning in display-clock/DisplayPort/DRM initialization.
+IMX519 and AK7375 appeared in the full list of loaded modules; they do not
+appear as the failing functions in this trace. Camera capture was separately
+verified. The display warning's root cause and impact were not investigated.

@@ -1,0 +1,15 @@
+Source: user-created full journal, 2026-09-08 22:40:00..22:48:00 UTC.
+Selected lines only; unfiltered source is retained on the Radxa in artifacts/network-drop-20260908.log.
+
+Sep 08 22:42:41 radxa-dragon-q6a systemd-logind[524]: The system will suspend now!
+Sep 08 22:42:41 radxa-dragon-q6a NetworkManager[560]: <info>  [1788907361.4638] manager: NetworkManager state is now ASLEEP
+Sep 08 22:42:41 radxa-dragon-q6a NetworkManager[560]: <info>  [1788907361.4643] device (wlan0): state change: activated -> deactivating (reason 'sleeping', sys-iface-state: 'managed')
+Sep 08 22:42:41 radxa-dragon-q6a kernel: PM: suspend entry (s2idle)
+Sep 08 22:47:10 radxa-dragon-q6a kernel: PM: suspend exit
+Sep 08 22:47:10 radxa-dragon-q6a systemd-sleep[4250]: System returned from sleep operation 'suspend'.
+Sep 08 22:47:13 radxa-dragon-q6a NetworkManager[560]: <info>  [1788907633.0937] device (wlan0): Activation: successful, device activated.
+
+User executed disable-autosuspend.sh:
+gdm: suspend -> nothing
+radxa: suspend -> nothing
+Rollback: /var/backups/imx519-autosuspend.9uYvqG2y/restore.sh

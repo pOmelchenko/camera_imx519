@@ -1,0 +1,89 @@
+{
+  "date_moscow": "2026-09-09",
+  "boot_id": "4e6a4229-7617-465e-9420-f6ca3a7b3a18",
+  "previous_boot_id": "4a9890ef-fbb1-4542-bacc-fb7bdb095964",
+  "kernel": "7.0.11-6-qcom",
+  "runtime": "0.7.1+radxa.de1e9bc0.imx519.1",
+  "profile": "/home/radxa/camera-imx519/libcamera/tuning/simple/imx519.yaml",
+  "focus": 2496,
+  "radxa_ac_autosuspend": "nothing",
+  "rgb_frames": 90,
+  "rgb_size": [
+    1920,
+    1080
+  ],
+  "rgb_seconds": 2.9556260000000023,
+  "rgb_mean_fps": 30.11206424628824,
+  "sequence_gaps": 0,
+  "ppm_pixel_bytes": 6220800,
+  "raw_files": [
+    {
+      "name": "frame-cam0-stream0-000000.bin",
+      "bytes": 2592000
+    },
+    {
+      "name": "frame-cam0-stream0-000001.bin",
+      "bytes": 2592000
+    },
+    {
+      "name": "frame-cam0-stream0-000002.bin",
+      "bytes": 2592000
+    }
+  ],
+  "snapshot_path": "/home/radxa/camera-imx519/artifacts/snapshot-20260908T231902Z.oLUC9n",
+  "raw_path": "/home/radxa/camera-imx519/artifacts/capture-raw-20260908T231906Z.aSH0ps",
+  "diagnostics_path": "/home/radxa/camera-imx519/artifacts/diagnostics-20260908T231906Z.nDUPtU",
+  "diagnostics_status": [
+    "0\tutc.txt",
+    "0\tuname.txt",
+    "0\tos-release.txt",
+    "0\tidentity.txt",
+    "0\tversions.txt",
+    "0\tdkms.txt",
+    "0\timx519-module.txt",
+    "0\tak7375-module.txt",
+    "0\tcameras.txt",
+    "0\tcameras-system.txt",
+    "0\truntime-version.txt",
+    "0\tvideo-devices.txt",
+    "0\tsource-hashes.txt",
+    "0\tconfig.txt",
+    "0\tmedia0-topology.txt",
+    "0\tv4l-subdev27-controls.txt",
+    "0\tv4l-subdev28-controls.txt",
+    "0\tpermissions.txt",
+    "1\tkernel-full.txt",
+    "0\tcheck.txt"
+  ],
+  "snapshot_log": [
+    "Lens /dev/v4l-subdev28: focus 0 -> 2496; FD held open",
+    "[0:00:43.348975114] [2106]  INFO Camera camera_manager.cpp:340 libcamera v0.7.1+radxa.de1e9bc0.imx519.1",
+    "[0:00:43.395547209] [2111]  INFO IPAProxy ipa_proxy.cpp:184 Using tuning file /home/radxa/camera-imx519/libcamera/tuning/simple/imx519.yaml",
+    "[0:00:43.396149539] [2111]  INFO Camera camera_manager.cpp:223 Adding camera '/base/soc@0/cci@ac4b000/i2c-bus@1/camera@1a' for pipeline handler simple",
+    "Using camera /base/soc@0/cci@ac4b000/i2c-bus@1/camera@1a as cam0",
+    "[0:00:43.397613760] [2106]  INFO Camera camera.cpp:1216 configuring streams: (0) 1920x1080-XRGB8888/sRGB",
+    "[0:00:43.397871509] [2111]  INFO IPASoft soft_simple.cpp:258 IPASoft: Exposure 20-2152, gain 1-16 (0.15)",
+    "[0:00:43.397922571] [2111]  INFO SoftwareIsp software_isp.cpp:278 Input 2328x1748-RGGB-10-CSI2P stride 2912",
+    "[0:00:43.856659504] [2114]  INFO eGL egl.cpp:288 EGL: EGL_VERSION: 1.5",
+    "[0:00:43.856707225] [2114]  INFO eGL egl.cpp:289 EGL: EGL_VENDOR: Mesa Project",
+    "[0:00:43.856713398] [2114]  INFO eGL egl.cpp:290 EGL: EGL_CLIENT_APIS: OpenGL OpenGL_ES ",
+    "[0:00:43.856716925] [2114]  INFO eGL egl.cpp:291 EGL: EGL_EXTENSIONS: EGL_ANDROID_blob_cache EGL_ANDROID_native_fence_sync EGL_EXT_config_select_group EGL_EXT_create_context_robustness EGL_EXT_image_dma_buf_import EGL_EXT_image_dma_buf_import_modifiers EGL_EXT_query_reset_notification_strategy EGL_EXT_surface_compression EGL_IMG_context_priority EGL_KHR_cl_event2 EGL_KHR_config_attribs EGL_KHR_context_flush_control EGL_KHR_create_context EGL_KHR_create_context_no_error EGL_KHR_fence_sync EGL_KHR_get_all_proc_addresses EGL_KHR_gl_colorspace EGL_KHR_gl_renderbuffer_image EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_3D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_image_base EGL_KHR_no_config_context EGL_KHR_reusable_sync EGL_KHR_surfaceless_context EGL_EXT_pixel_format_float EGL_KHR_wait_sync EGL_MESA_configless_context EGL_MESA_gl_interop EGL_MESA_image_dma_buf_export EGL_MESA_query_driver EGL_MESA_x11_native_visual_id ",
+    "[0:00:43.864467717] [2114]  INFO eGL egl.cpp:332 EGL: GL_VERSION: OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+    "cam0: Capture 90 frames",
+    "43.930845 (0.00 fps) cam0-stream0 seq: 000000 bytesused: 8294400",
+    "\tSensorBlackLevels = [ 4096, 4096, 4096, 4096 ]",
+    "\tGamma = 2.200000",
+    "\tSensorTimestamp = 46853112000",
+    "46.886471 (29.98 fps) cam0-stream0 seq: 000089 bytesused: 8294400",
+    "\tSensorBlackLevels = [ 4096, 4096, 4096, 4096 ]",
+    "\tColourGains = [ 1.333790, 2.308438 ]",
+    "\tExposureTime = 63803",
+    "\tContrast = 1.000000",
+    "\tSaturation = 1.000000",
+    "\tAnalogueGain = 3.390728",
+    "\tGamma = 2.200000",
+    "\tSensorTimestamp = 46886471000",
+    "Lens control restored to 0; closing FD"
+  ],
+  "passed": true
+}

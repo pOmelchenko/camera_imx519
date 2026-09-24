@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: CC0-1.0
+frames:
+  - 0:
+      AfMode: 1
+      AfTrigger: 0
+  - 240:
+      AfTrigger: 0

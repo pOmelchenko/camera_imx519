@@ -1,0 +1,65 @@
+{
+  "roi": [
+    0.02,
+    0.1,
+    0.46,
+    0.8
+  ],
+  "results": [
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-0.ppm",
+      "mean_green": 185.7145038841808,
+      "gradient_energy": 42.713974223163845,
+      "normalized_energy": 0.0012384495972959286
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-1024.ppm",
+      "mean_green": 185.6895568502825,
+      "gradient_energy": 42.80431673728813,
+      "normalized_energy": 0.0012414024823318517
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-1536.ppm",
+      "mean_green": 183.55511122881356,
+      "gradient_energy": 46.48239759887006,
+      "normalized_energy": 0.0013796075318312996
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-2048.ppm",
+      "mean_green": 178.08958333333334,
+      "gradient_energy": 67.43912429378531,
+      "normalized_energy": 0.002126350661625271
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-2560.ppm",
+      "mean_green": 175.26758474576272,
+      "gradient_energy": 132.7787429378531,
+      "normalized_energy": 0.004322403924001703
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-3072.ppm",
+      "mean_green": 172.35094456214688,
+      "gradient_energy": 83.7953125,
+      "normalized_energy": 0.0028209305175365905
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-3584.ppm",
+      "mean_green": 175.9409163135593,
+      "gradient_energy": 41.21720515536723,
+      "normalized_energy": 0.0013315112524558222
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-4095.ppm",
+      "mean_green": 179.4612641242938,
+      "gradient_energy": 31.872245762711863,
+      "normalized_energy": 0.0009896262815589046
+    },
+    {
+      "file": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-512.ppm",
+      "mean_green": 185.65688559322035,
+      "gradient_energy": 42.73421610169491,
+      "normalized_energy": 0.0012398056755910725
+    }
+  ],
+  "best": "camera-imx519/build/focus-20260908T224859Z.XPCH1O/focus-2560.ppm"
+}

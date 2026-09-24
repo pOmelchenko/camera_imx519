@@ -1,0 +1,120 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// Based on Radxa's CAM3 IMX219 overlay (radxa-overlays 0.2.30).
+// Copyright (c) 2025 Radxa Computer (Shenzhen) Co., Ltd.
+// Sensor and lens bindings follow raspberrypi/linux imx519.dtsi.
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+    metadata {
+        title = "Enable Arducam IMX519 on CAM3 (experimental)";
+        compatible = "radxa,dragon-q6a";
+        category = "camera";
+        exclusive = "cci1_i2c1", "gpio78";
+        description = "Arducam IMX519 with AK7375 lens on CAM3; requires external drivers.";
+    };
+};
+
+&{/} {
+    imx519_cam3_clk: imx519-cam3-clock {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <24000000>;
+    };
+
+    // Arducam supplies its own oscillator and internal voltage regulators.
+    // GPIO78 is the CAM3 module enable, as in Radxa's CAM3 overlay.
+    imx519_cam3_enable: imx519-cam3-enable {
+        compatible = "regulator-fixed";
+        regulator-name = "imx519-cam3-enable";
+        regulator-always-on;
+        enable-active-high;
+        gpio = <&tlmm 78 GPIO_ACTIVE_HIGH>;
+        startup-delay-us = <10000>;
+        pinctrl-names = "default";
+        pinctrl-0 = <&imx519_cam3_enable_pins>;
+    };
+};
+
+&{/reserved-memory} {
+    linux,cma {
+        compatible = "shared-dma-pool";
+        size = <0x0 0x10000000>;
+        reusable;
+        linux,cma-default;
+    };
+};
+
+&camss {
+    vdda-phy-supply = <&vreg_l10c_0p88>;
+    vdda-pll-supply = <&vreg_l6b_1p2>;
+    status = "okay";
+
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        port@3 {
+            reg = <3>;
+            imx519_csiphy3_ep: endpoint {
+                clock-lanes = <7>;
+                data-lanes = <0 1>;
+                clock-noncontinuous;
+                remote-endpoint = <&imx519_cam3_ep>;
+            };
+        };
+    };
+};
+
+&cci1 {
+    status = "okay";
+};
+
+&cci1_i2c1 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    clock-frequency = <100000>;
+    status = "okay";
+
+    camera@1a {
+        compatible = "sony,imx519";
+        reg = <0x1a>;
+        clocks = <&imx519_cam3_clk>;
+        clock-names = "xclk";
+        VANA-supply = <&imx519_cam3_enable>;
+        VDIG-supply = <&imx519_cam3_enable>;
+        VDDL-supply = <&imx519_cam3_enable>;
+        lens-focus = <&imx519_cam3_lens>;
+        rotation = <0>;
+        orientation = <2>;
+        status = "okay";
+
+        port {
+            imx519_cam3_ep: endpoint {
+                clock-lanes = <0>;
+                data-lanes = <1 2>;
+                clock-noncontinuous;
+                link-frequencies = /bits/ 64 <408000000>;
+                remote-endpoint = <&imx519_csiphy3_ep>;
+            };
+        };
+    };
+
+    imx519_cam3_lens: lens@c {
+        compatible = "asahi-kasei,ak7375";
+        reg = <0x0c>;
+        vdd-supply = <&imx519_cam3_enable>;
+        vio-supply = <&imx519_cam3_enable>;
+        status = "okay";
+    };
+};
+
+&tlmm {
+    imx519_cam3_enable_pins: imx519-cam3-enable-state {
+        pins = "gpio78";
+        function = "gpio";
+        drive-strength = <2>;
+        bias-pull-up;
+    };
+};

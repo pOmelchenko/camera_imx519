@@ -1,0 +1,149 @@
+Log of Meson test suite run on 2026-09-08T22:40:11.266991
+
+Inherited environment: HOSTNAME=463a797ae155 PWD=/tmp/imx519-libcamera.hhQvBJls HOME=/root SHLVL=1 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin DEBIAN_FRONTEND=noninteractive OLDPWD=/ _=/usr/bin/meson LC_CTYPE=C.UTF-8 
+
+==================================== 1/8 =====================================
+test:         libcamera:ipa / imx519-helper
+start time:   22:40:11
+duration:     0.01s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera MALLOC_PERTURB_=198 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/libipa/imx519-helper
+==============================================================================
+
+==================================== 2/8 =====================================
+test:         libcamera:ipa / fixedpoint
+start time:   22:40:11
+duration:     0.01s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera MALLOC_PERTURB_=142 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/libipa/fixedpoint
+----------------------------------- stdout -----------------------------------
+
+Q1.7(-1 .. 0.992188)  Min: [0x80:-1] -- Max: [0x7f:0.992188] Step:0.0078125
+  Checking -2 == [0x80:-1]
+  Checking -1 == [0x80:-1]
+  Checking -0.992 == [0x81:-0.992188]
+  Checking -0.006 == [0xff:-0.0078125]
+  Checking 0 == [0x00:0]
+  Checking 0.008 == [0x01:0.0078125]
+  Checking 0.992 == [0x7f:0.992188]
+  Checking 2 == [0x7f:0.992188]
+
+UQ1.7(0 .. 1.99219)  Min: [0x00:0] -- Max: [0xff:1.99219] Step:0.0078125
+  Checking -1 == [0x00:0]
+  Checking 0 == [0x00:0]
+  Checking 1 == [0x80:1]
+  Checking 1.992 == [0xff:1.99219]
+  Checking 2 == [0xff:1.99219]
+
+Q4.7(-8 .. 7.99219)  Min: [0x0400:-8] -- Max: [0x03ff:7.99219] Step:0.0078125
+  Checking -8 == [0x0400:-8]
+  Checking -0.008 == [0x07ff:-0.0078125]
+  Checking 0 == [0x0000:0]
+  Checking 0.008 == [0x0001:0.0078125]
+  Checking 7.992 == [0x03ff:7.99219]
+  Checking 0.2 == [0x001a:0.203125]
+  Checking -0.2 == [0x07e6:-0.203125]
+  Checking -0.8 == [0x079a:-0.796875]
+  Checking -0.4 == [0x07cd:-0.398438]
+  Checking -1.4 == [0x074d:-1.39844]
+
+UQ4.8(0 .. 15.9961)  Min: [0x0000:0] -- Max: [0x0fff:15.9961] Step:0.00390625
+  Checking 0 == [0x0000:0]
+  Checking 16 == [0x0fff:15.9961]
+
+Q5.4(-16 .. 15.9375)  Min: [0x0100:-16] -- Max: [0x00ff:15.9375] Step:0.0625
+  Checking -16 == [0x0100:-16]
+  Checking 15.94 == [0x00ff:15.9375]
+
+UQ5.8(0 .. 31.9961)  Min: [0x0000:0] -- Max: [0x1fff:31.9961] Step:0.00390625
+  Checking 0 == [0x0000:0]
+  Checking 32 == [0x1fff:31.9961]
+
+Q12.4(-2048 .. 2047.94)  Min: [0x8000:-2048] -- Max: [0x7fff:2047.94] Step:0.0625
+  Checking 0 == [0x0000:0]
+  Checking 7.5 == [0x0078:7.5]
+
+UQ12.4(0 .. 4095.94)  Min: [0x0000:0] -- Max: [0xffff:4095.94] Step:0.0625
+  Checking 0 == [0x0000:0]
+  Checking 7.5 == [0x0078:7.5]
+
+Q4.20(-8 .. 8)  Min: [0x00800000:-8] -- Max: [0x007fffff:8] Step:9.53674e-07
+  Checking -9 == [0x00800000:-8]
+  Checking -8 == [0x00800000:-8]
+  Checking 8 == [0x007fffff:8]
+  Checking 9 == [0x007fffff:8]
+
+UQ4.20(0 .. 16)  Min: [0x00000000:0] -- Max: [0x00ffffff:16] Step:9.53674e-07
+  Checking -1 == [0x00000000:0]
+  Checking 0 == [0x00000000:0]
+  Checking 16 == [0x00ffffff:16]
+  Checking 20 == [0x00ffffff:16]
+
+Testing sign extension of quantized values when cast to larger registers
+  Checking [0x20:-2] == 0x20
+  Checking [0x80:-8] == 0x80
+  Checking [0x80:-8] == 0x0080
+  Checking [0x8000:-128] == 0x8000
+  Checking [0x8000:-128] == 0x00008000
+
+==============================================================================
+
+==================================== 3/8 =====================================
+test:         libcamera:ipa / histogram
+start time:   22:40:11
+duration:     0.01s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera MALLOC_PERTURB_=99 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/libipa/histogram
+==============================================================================
+
+==================================== 4/8 =====================================
+test:         libcamera:ipa / interpolator
+start time:   22:40:11
+duration:     0.01s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=79 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/libipa/interpolator
+==============================================================================
+
+==================================== 5/8 =====================================
+test:         libcamera:ipa / pwl
+start time:   22:40:11
+duration:     0.01s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera MALLOC_PERTURB_=212 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/libipa/pwl
+==============================================================================
+
+==================================== 6/8 =====================================
+test:         libcamera:ipa / quantized
+start time:   22:40:11
+duration:     0.00s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=180 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/libipa/quantized
+==============================================================================
+
+==================================== 7/8 =====================================
+test:         libcamera:ipa / ipa_module_test
+start time:   22:40:11
+duration:     0.00s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera MALLOC_PERTURB_=212 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/ipa_module_test
+==============================================================================
+
+==================================== 8/8 =====================================
+test:         libcamera:ipa / ipa_interface_test
+start time:   22:40:11
+duration:     0.01s
+result:       exit status 0
+command:      UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera/base:/tmp/imx519-libcamera.hhQvBJls/out/src/libcamera MALLOC_PERTURB_=235 ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /tmp/imx519-libcamera.hhQvBJls/out/test/ipa/ipa_interface_test
+----------------------------------- stderr -----------------------------------
+[0:13:17.410106196] [1712]  INFO IPAManager ipa_manager.cpp:148 libcamera is not installed. Adding '/tmp/imx519-libcamera.hhQvBJls/out/src/ipa' to the IPA search path
+[0:13:17.410477112] [1712]  INFO IPAProxy ipa_proxy.cpp:73 libcamera is not installed. Loading IPA configuration from '/tmp/imx519-libcamera.hhQvBJls/src/ipa/vimc/data'
+[0:13:17.410486946] [1712]  INFO IPAProxy ipa_proxy.cpp:184 Using tuning file /tmp/imx519-libcamera.hhQvBJls/src/ipa/vimc/data/vimc.conf
+==============================================================================
+
+
+Ok:                 8   
+Expected Fail:      0   
+Fail:               0   
+Unexpected Pass:    0   
+Skipped:            0   
+Timeout:            0   

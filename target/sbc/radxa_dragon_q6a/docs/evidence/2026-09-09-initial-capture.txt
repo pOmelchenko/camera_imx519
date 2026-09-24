@@ -1,0 +1,40 @@
+Evidence excerpts from SSH tool output, 2026-09-09 Europe/Moscow.
+These are selected lines, not complete original logs.
+
+RAW command (inside timeout 20s):
+cam -c 1 --stream role=raw,width=1920,height=1080 --capture=3 --file=capture/probe-#.bin --metadata
+
+configuring streams: (0) 1920x1080-SRGGB10_CSI2P/RAW
+cam0: Capture 3 frames
+102.217391 (0.00 fps) cam0-stream0 seq: 000000 bytesused: 2592000
+102.233377 (62.55 fps) cam0-stream0 seq: 000001 bytesused: 2592000
+102.250045 (60.00 fps) cam0-stream0 seq: 000002 bytesused: 2592000
+Command exit code: 0
+
+RGB command (inside timeout 20s):
+cam -c 1 --stream role=viewfinder,width=1920,height=1080,pixelformat=RGB888 --capture=3 --file=capture/preview-#.ppm --metadata
+
+Camera configuration adjusted
+configuring streams: (0) 1920x1080-XRGB8888/sRGB
+IPASoft: Exposure 20-2152, gain 0-960 (1)
+Input 2328x1748-RGGB-10-CSI2P stride 2912
+cam0: Capture 3 frames
+124.084627 (0.00 fps) cam0-stream0 seq: 000000 bytesused: 8294400
+124.117981 (29.98 fps) cam0-stream0 seq: 000001 bytesused: 8294400
+124.151311 (30.00 fps) cam0-stream0 seq: 000002 bytesused: 8294400
+Command exit code: 0
+
+Warnings in both runs:
+Configuration file 'imx519.yaml' not found for IPA module 'simple', falling back to '/usr/share/libcamera/ipa/simple/uncalibrated.yaml'
+IPASoft: Failed to create camera sensor helper for imx519
+
+Original files on Radxa:
+/home/radxa/camera-imx519/capture/probe-cam0-stream0-000000.bin
+/home/radxa/camera-imx519/capture/probe-cam0-stream0-000001.bin
+/home/radxa/camera-imx519/capture/probe-cam0-stream0-000002.bin
+/home/radxa/camera-imx519/capture/preview-cam0-stream0-000000.ppm
+/home/radxa/camera-imx519/capture/preview-cam0-stream0-000001.ppm
+/home/radxa/camera-imx519/capture/preview-cam0-stream0-000002.ppm
+
+The last PPM was copied to the workstation and decoded to PNG for inspection:
+an image is present, but dark. No claim of calibrated colour or autofocus.
