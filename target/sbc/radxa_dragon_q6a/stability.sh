@@ -16,6 +16,9 @@ case "$mode" in
 esac
 mkdir -p "$task_dir/artifacts"
 run_dir="$(mktemp -d "$task_dir/artifacts/stability-$mode-$(date -u +%Y%m%dT%H%M%SZ).XXXXXX")"
+if [[ -n "${IMX519_RESULT_DIR_FILE:-}" ]]; then
+    printf '%s\n' "$run_dir" > "$IMX519_RESULT_DIR_FILE"
+fi
 command_args=(timeout --signal=INT --kill-after=3s "${capture_timeout}s"
     bash "$task_dir/cam.sh" -c /base/soc@0/cci@ac4b000/i2c-bus@1/camera@1a
     --stream "$stream" "--capture=$count")
