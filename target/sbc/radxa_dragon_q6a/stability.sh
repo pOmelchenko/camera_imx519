@@ -4,12 +4,13 @@
 set -euo pipefail
 task_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 mode="${1:-rgb}"; count="${2:-9000}"; capture_timeout="${IMX519_TIMEOUT:-420}"
+width="${IMX519_WIDTH:-1920}"; height="${IMX519_HEIGHT:-1080}"
 (( $# <= 2 )) || { echo 'Usage: stability.sh [rgb|raw] [count]' >&2; exit 2; }
-for number in "$count" "$capture_timeout"; do
+for number in "$count" "$capture_timeout" "$width" "$height"; do
     [[ "$number" =~ ^[1-9][0-9]*$ ]] || { echo 'Count and timeout must be positive integers.' >&2; exit 2; }
 done
 case "$mode" in
-    rgb) stream='role=viewfinder,width=1920,height=1080,pixelformat=XRGB8888' ;;
+    rgb) stream="role=viewfinder,width=$width,height=$height,pixelformat=XRGB8888" ;;
     raw) stream='role=raw,width=1920,height=1080' ;;
     *) echo 'Mode must be rgb or raw.' >&2; exit 2 ;;
 esac
@@ -40,8 +41,12 @@ frames = [(float(t), int(s), int(b)) for t, s, b in re.findall(
 gaps = sum(b[1] != a[1] + 1 for a, b in zip(frames, frames[1:]))
 errors = [line for line in log.splitlines() if re.search(r'\bERROR\b|cancelled|timeout', line, re.I)]
 elapsed = frames[-1][0] - frames[0][0] if len(frames) > 1 else 0
+input_match = re.search(r'Input (\d+x\d+)-[^\n]* stride (\d+)', log)
+output_match = re.search(r'configuring streams: \(0\) (\d+x\d+)-XRGB8888', log)
 result = dict(frames=len(frames), expected=expected, seconds_between_first_last=elapsed,
               mean_fps=(len(frames)-1)/elapsed if elapsed else None,
+              sensor_input=input_match.group(1) if input_match else None,
+              output=output_match.group(1) if output_match else None,
               sequence_gaps=gaps, empty_frames=sum(b == 0 for _, _, b in frames), errors=errors)
 ok = len(frames) == expected and gaps == 0 and not result['empty_frames'] and not errors
 result['passed'] = ok

@@ -31,13 +31,16 @@ explicitly supplies `LensPosition`.
 ## Phase-data blocker
 
 Phase detection autofocus (PDAF) is **not implemented or validated** on Q6A.
-`media-ctl -d /dev/media0 -p` on this board shows IMX519 pad 1 as
+The original `media-ctl -d /dev/media0 -p` topology on this board shows IMX519 pad 1 as
 `unknown/17460x1` with **no outgoing link**, while pad 0 is linked to
 `msm_csiphy3`. There is no userspace metadata capture node for this sensor.
 The full read-only [media graph](../docs/evidence/2026-09-25-media-topology.txt)
 is retained with the working kit.
 Consequently libcamera cannot receive or pair per-frame phase samples. Merely
 porting Arducam's Raspberry Pi AF algorithm would not supply missing samples.
+An [experimental CAMSS patch](pdaf-bringup.md) now exposes a `MET8` node in
+memory, but no metadata buffer has been captured: the first capture attempt
+hung in `vb2_fop_release`. The camera still uses CDAF.
 
 The installed `linux-image-7.0.11-6-qcom` package reports version `7.0.11-6`.
 The matching [Radxa linux-qcom tag 7.0.11-6](https://github.com/radxa-pkg/linux-qcom/tree/7.0.11-6)
@@ -66,8 +69,9 @@ measured.
 The current CSID format propagation copies its sink image format to the source;
 VFE line formatting clamps height to at least four, while IMX519 advertises
 one embedded line. A functional metadata path must address those format and
-buffer contracts and then provide a paired buffer to libcamera. No such
-kernel changes were deployed to the working camera.
+buffer contracts and then provide a paired buffer to libcamera. The
+experimental module addresses the format setup but has not passed the buffer
+capture gate; it has not replaced the packaged module on disk.
 
 To complete PDAF, patch this pinned kernel and confirm the sensor actually
 emits phase-bearing CSI
