@@ -28,20 +28,26 @@ measured distance yet. Existing `focus.py` raw-code workflows remain available:
 in Manual mode the new runtime does not send lens commands until the client
 explicitly supplies `LensPosition`.
 
-## Phase-data blocker
+## Phase-data status
 
-Phase detection autofocus (PDAF) is **not implemented or validated** on Q6A.
-The original `media-ctl -d /dev/media0 -p` topology on this board shows IMX519 pad 1 as
-`unknown/17460x1` with **no outgoing link**, while pad 0 is linked to
-`msm_csiphy3`. There is no userspace metadata capture node for this sensor.
+Phase detection autofocus (PDAF) is **not yet integrated into libcamera** on
+Q6A. The original `media-ctl -d /dev/media0 -p` topology showed IMX519 pad 1
+as `unknown/17460x1` with no outgoing link, while pad 0 was linked to
+`msm_csiphy3`. The stock CAMSS exposed no metadata capture node.
 The full read-only [media graph](../docs/evidence/2026-09-25-media-topology.txt)
-is retained with the working kit.
-Consequently libcamera cannot receive or pair per-frame phase samples. Merely
-porting Arducam's Raspberry Pi AF algorithm would not supply missing samples.
+is retained with the working kit. The experimental CAMSS module now exposes
+metadata nodes, but libcamera still cannot receive or pair their frames.
 An [experimental CAMSS patch](pdaf-bringup.md) now exposes a `MET8` node in
-memory. A buffer-queue fault from the first attempt was fixed and
-`REQBUFS`/`QUERYBUF` now pass, but no metadata frame has yet been delivered.
-The camera still uses CDAF.
+memory. A buffer-queue fault and an RDI1/write-master mapping error were
+fixed. MET8 now delivers frames at 9 fps in the full-resolution mode and
+60 fps at 1920×1080. The first two embedded-data rows are VC0/DT `0x12`.
+A separate VC0/DT `0x36` packet contains the PDAF row. Sixteen consecutive
+phase buffers were parsed as a 12×16 grid; moving the AK7375 from code 2047
+to 2496 shifted median phase from about −17 to +44 on the same scene.
+An independent RDI2 now captures phase concurrently with RDI1 embedded data
+in all five native modes. Two short RAW+phase runs also completed after the
+VFE stop fix. The camera still uses CDAF while image/phase pairing,
+calibration and phase-driven lens control are developed.
 
 The installed `linux-image-7.0.11-6-qcom` package reports version `7.0.11-6`.
 The matching [Radxa linux-qcom tag 7.0.11-6](https://github.com/radxa-pkg/linux-qcom/tree/7.0.11-6)
@@ -65,24 +71,22 @@ SHA-256 `e41bb25cd436d0b997bab141e20d8b979343ee85f98038dd3e8951f78744a928`)
 uses the RDI index as the CSI virtual channel and programs one data type from
 the selected image format. If IMX519 phase data shares the image virtual
 channel, capturing its additional embedded data type needs routing changes,
-not just an IMX519 tuning file. The transmitted VC and payload remain to be
-measured.
-The current CSID format propagation copies its sink image format to the source;
-VFE line formatting clamps height to at least four, while IMX519 advertises
-one embedded line. A functional metadata path must address those format and
-buffer contracts and then provide a paired buffer to libcamera. The
-experimental module addresses the format setup but has not passed the buffer
-capture gate; it has not replaced the packaged module on disk.
+not just an IMX519 tuning file. The observed packets are VC0/DT `0x12` for
+two embedded rows and VC0/DT `0x36` for the PDAF row.
+The original CSID/VFE format propagation copied the image format and clamped
+metadata height. The experimental module now exposes the two actual embedded
+rows and separate phase row with buffer lengths derived from the selected
+RAW10 width. Short simultaneous embedded/phase captures passed in five modes;
+full image-to-phase pairing and libcamera delivery remain. The experimental
+module has not replaced the packaged module on disk.
 
-To complete PDAF, patch this pinned kernel and confirm the sensor actually
-emits phase-bearing CSI
-embedded data in each active mode, expose that stream through IMX519 and
-QCOM CAMSS CSID/VFE as a metadata video node, preserve sequence/timestamp
+To complete PDAF, expose the phase stream through independent QCOM CAMSS
+CSID/VFE metadata routing in each active mode, preserve sequence/timestamp
 pairing with image frames, then parse and calibrate the phase grid in the IPA.
 The [IMX519 PDAF parser proposal](https://lists.libcamera.org/pipermail/libcamera-devel/2023-June/038275.html)
-describes a Raspberry Pi format; it cannot be assumed correct on Q6A without
-captured bytes. Test near/far phase sign and confidence on the physical module
-before enabling phase-based lens moves.
+matches the captured row header and yields a lens-dependent signal. Test
+near/far phase sign and confidence on the physical module before enabling
+phase-based lens moves.
 
 ## Build and hardware evidence
 

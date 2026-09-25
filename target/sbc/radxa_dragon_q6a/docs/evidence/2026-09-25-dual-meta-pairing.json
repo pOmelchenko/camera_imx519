@@ -1,0 +1,18 @@
+{
+  "embedded_directory": "embedded",
+  "phase_directory": "phase",
+  "embedded_frames": 24,
+  "phase_frames": 24,
+  "embedded_sequences_contiguous": true,
+  "phase_sequences_contiguous": true,
+  "paired_sequences": 24,
+  "first_paired_sequence": 0,
+  "last_paired_sequence": 23,
+  "phase_minus_embedded_timestamp_us": {
+    "min": 34,
+    "median": 48.0,
+    "max": 62,
+    "max_absolute": 62
+  },
+  "embedded_fps": 9.002
+}

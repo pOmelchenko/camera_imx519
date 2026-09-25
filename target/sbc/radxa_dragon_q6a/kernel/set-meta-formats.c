@@ -65,21 +65,37 @@ int main(int argc, char **argv)
 {
 	struct v4l2_mbus_framefmt image;
 	struct v4l2_mbus_framefmt metadata = {
-		.width = 17460,
+		.height = 1,
+		.code = MEDIA_BUS_FMT_SENSOR_DATA,
+		.field = V4L2_FIELD_NONE,
+	};
+	struct v4l2_mbus_framefmt phase = {
 		.height = 1,
 		.code = MEDIA_BUS_FMT_SENSOR_DATA,
 		.field = V4L2_FIELD_NONE,
 	};
 
-	if (argc != 5) {
-		fprintf(stderr, "Usage: %s SENSOR_SUBDEV CSIPHY_SUBDEV CSID_SUBDEV VFE_RDI1_SUBDEV\n", argv[0]);
+	if (argc != 5 && argc != 6) {
+		fprintf(stderr, "Usage: %s SENSOR_SUBDEV CSIPHY_SUBDEV CSID_SUBDEV VFE_RDI1_SUBDEV [VFE_RDI2_SUBDEV]\n", argv[0]);
 		return 2;
 	}
-	if (get_format(argv[1], 0, &image) ||
-	    set_format(argv[2], 0, &image) ||
+	if (get_format(argv[1], 0, &image))
+		return 1;
+	if (image.code != MEDIA_BUS_FMT_SRGGB10_1X10 || image.width % 4) {
+		fprintf(stderr, "Expected IMX519 packed RAW10 width, got code 0x%x width %u\n",
+			image.code, image.width);
+		return 1;
+	}
+	/* Two DT 0x12 rows and one separate DT 0x36 row, each width * 10 / 8. */
+	phase.width = image.width * 5 / 4;
+	metadata.width = 2 * phase.width;
+	if (set_format(argv[2], 0, &image) ||
 	    set_format(argv[3], 0, &image) ||
 	    set_format(argv[3], 2, &metadata) ||
 	    set_format(argv[4], 0, &metadata))
+		return 1;
+	if (argc == 6 && (set_format(argv[3], 3, &phase) ||
+			  set_format(argv[5], 0, &phase)))
 		return 1;
 	return 0;
 }

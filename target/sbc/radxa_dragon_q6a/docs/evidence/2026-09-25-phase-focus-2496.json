@@ -1,0 +1,74 @@
+{
+  "source_directory": "focus-2496",
+  "layout": {
+    "rows": 12,
+    "columns": 16,
+    "entry_bytes": 5
+  },
+  "frames": [
+    {
+      "frame": "frame-0000.bin",
+      "header": "0015",
+      "qualified_regions": 64,
+      "median_confidence": 281.0,
+      "median_phase": 43.0,
+      "weighted_mean_phase": 42.26
+    },
+    {
+      "frame": "frame-0001.bin",
+      "header": "0015",
+      "qualified_regions": 64,
+      "median_confidence": 245.0,
+      "median_phase": 44.0,
+      "weighted_mean_phase": 42.09
+    },
+    {
+      "frame": "frame-0002.bin",
+      "header": "0015",
+      "qualified_regions": 64,
+      "median_confidence": 284.5,
+      "median_phase": 44.5,
+      "weighted_mean_phase": 43.41
+    },
+    {
+      "frame": "frame-0003.bin",
+      "header": "0015",
+      "qualified_regions": 63,
+      "median_confidence": 296,
+      "median_phase": 44,
+      "weighted_mean_phase": 42.85
+    },
+    {
+      "frame": "frame-0004.bin",
+      "header": "0015",
+      "qualified_regions": 64,
+      "median_confidence": 251.5,
+      "median_phase": 44.0,
+      "weighted_mean_phase": 41.88
+    },
+    {
+      "frame": "frame-0005.bin",
+      "header": "0015",
+      "qualified_regions": 62,
+      "median_confidence": 312.0,
+      "median_phase": 44.5,
+      "weighted_mean_phase": 42.99
+    },
+    {
+      "frame": "frame-0006.bin",
+      "header": "0015",
+      "qualified_regions": 63,
+      "median_confidence": 265,
+      "median_phase": 44,
+      "weighted_mean_phase": 41.89
+    },
+    {
+      "frame": "frame-0007.bin",
+      "header": "0015",
+      "qualified_regions": 60,
+      "median_confidence": 282.5,
+      "median_phase": 43.0,
+      "weighted_mean_phase": 41.12
+    }
+  ]
+}

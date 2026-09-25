@@ -1,8 +1,28 @@
 diff --git a/drivers/media/platform/qcom/camss/camss-csid-gen2.c b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-index 2a1746d..f9e9e28 100644
+index 2a1746d..141fac1 100644
 --- a/drivers/media/platform/qcom/camss/camss-csid-gen2.c
 +++ b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-@@ -253,15 +253,20 @@ static void __csid_configure_testgen(struct csid_device *csid, u8 enable, u8 vc)
+@@ -10,12 +10,19 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/moduleparam.h>
+ #include <linux/of.h>
+ 
+ #include "camss-csid.h"
+ #include "camss-csid-gen2.h"
+ #include "camss.h"
+ 
++/* Diagnostic only: route the IMX519 user-defined PDAF packet via RDI1. */
++static bool probe_phase_dt36;
++module_param(probe_phase_dt36, bool, 0600);
++MODULE_PARM_DESC(probe_phase_dt36,
++		 "Route VC0/DT0x36 instead of VC0/DT0x12 through RDI1");
++
+ /* The CSID 2 IP-block is different from the others,
+  * and is of a bare-bones Lite version, with no PIX
+  * interface support. As a result of that it has an
+@@ -253,15 +260,26 @@ static void __csid_configure_testgen(struct csid_device *csid, u8 enable, u8 vc)
  	writel_relaxed(val, csid->base + CSID_TPG_CTRL);
  }
  
@@ -15,17 +35,23 @@ index 2a1746d..f9e9e28 100644
  	const struct csid_format_info *format = csid_get_fmt_entry(csid->res->formats->formats,
  								   csid->res->formats->nformats,
  								   input_format->code);
-+	/* IMX519 embedded data uses VC0, DT 0x12, alongside RAW10 on RDI0. */
++	/* IMX519 metadata and phase packets share VC0 with RAW10 on RDI0. */
 +	u8 vc = input_format->code == MEDIA_BUS_FMT_SENSOR_DATA ? 0 : rdi;
++	u8 data_type = format ? format->data_type : 0;
  	u32 val;
  
 +	if (!format)
 +		return;
++	if (rdi == 2 && input_format->code == MEDIA_BUS_FMT_SENSOR_DATA)
++		data_type = 0x36;
++	if (rdi == 1 && input_format->code == MEDIA_BUS_FMT_SENSOR_DATA &&
++	    probe_phase_dt36)
++		data_type = 0x36;
 +
  	/*
  	 * DT_ID is a two bit bitfield that is concatenated with
  	 * the four least significant bits of the five bit VC
-@@ -274,7 +279,7 @@ static void __csid_configure_rdi_stream(struct csid_device *csid, u8 enable, u8
+@@ -274,52 +292,52 @@ static void __csid_configure_rdi_stream(struct csid_device *csid, u8 enable, u8
  	 *
  	 * CID   : VC 3:0 << 2 | DT_ID 1:0
  	 */
@@ -34,8 +60,11 @@ index 2a1746d..f9e9e28 100644
  
  	val = 1 << RDI_CFG0_BYTE_CNTR_EN;
  	val |= 1 << RDI_CFG0_FORMAT_MEASURE_EN;
-@@ -284,42 +289,42 @@ static void __csid_configure_rdi_stream(struct csid_device *csid, u8 enable, u8
- 	val |= format->data_type << RDI_CFG0_DATA_TYPE;
+ 	val |= 1 << RDI_CFG0_TIMESTAMP_EN;
+ 	/* note: for non-RDI path, this should be format->decode_format */
+ 	val |= DECODE_FORMAT_PAYLOAD_ONLY << RDI_CFG0_DECODE_FORMAT;
+-	val |= format->data_type << RDI_CFG0_DATA_TYPE;
++	val |= data_type << RDI_CFG0_DATA_TYPE;
  	val |= vc << RDI_CFG0_VIRTUAL_CHANNEL;
  	val |= dt_id << RDI_CFG0_DT_ID;
 -	writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
@@ -91,7 +120,7 @@ index 2a1746d..f9e9e28 100644
  
  static void csid_configure_stream(struct csid_device *csid, u8 enable)
 diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
-index ed18204..f2bdcd7 100644
+index ed18204..4e8f7aa 100644
 --- a/drivers/media/platform/qcom/camss/camss-csid.c
 +++ b/drivers/media/platform/qcom/camss/camss-csid.c
 @@ -324,6 +324,13 @@ static const struct csid_format_info formats_4_7[] = {
@@ -108,12 +137,13 @@ index ed18204..f2bdcd7 100644
  	{
  		MEDIA_BUS_FMT_UYVY8_1X16,
  		MIPI_CSI2_DT_YUV422_8B,
-@@ -839,6 +846,15 @@ static void csid_try_format(struct csid_device *csid,
+@@ -839,6 +846,16 @@ static void csid_try_format(struct csid_device *csid,
  		fmt->colorspace = V4L2_COLORSPACE_SRGB;
  
  		break;
 +	case MSM_CSID_PAD_FIRST_SRC + 1:
-+		/* RDI1 may carry embedded data on the same VC as RAW on RDI0. */
++	case MSM_CSID_PAD_FIRST_SRC + 2:
++		/* RDI1/RDI2 carry embedded/phase data on RAW's VC0. */
 +		if (fmt->code == MEDIA_BUS_FMT_SENSOR_DATA) {
 +			fmt->width = clamp_t(u32, fmt->width, 1, 65535);
 +			fmt->height = clamp_t(u32, fmt->height, 1, 8191);
@@ -124,11 +154,12 @@ index ed18204..f2bdcd7 100644
  
  	case MSM_CSID_PAD_SRC:
  		if (csid->testgen.nmodes == CSID_PAYLOAD_MODE_DISABLED ||
-@@ -892,6 +908,11 @@ static int csid_enum_mbus_code(struct v4l2_subdev *sd,
+@@ -892,6 +909,12 @@ static int csid_enum_mbus_code(struct v4l2_subdev *sd,
  
  		code->code = csid->res->formats->formats[code->index].code;
  	} else {
-+		if (code->pad == MSM_CSID_PAD_FIRST_SRC + 1 &&
++		if ((code->pad == MSM_CSID_PAD_FIRST_SRC + 1 ||
++		     code->pad == MSM_CSID_PAD_FIRST_SRC + 2) &&
 +		    code->index == 1) {
 +			code->code = MEDIA_BUS_FMT_SENSOR_DATA;
 +			return 0;
@@ -136,18 +167,19 @@ index ed18204..f2bdcd7 100644
  		if (csid->testgen.nmodes == CSID_PAYLOAD_MODE_DISABLED ||
  		    csid->testgen_mode->cur.val == 0) {
  			struct v4l2_mbus_framefmt *sink_fmt;
-@@ -1003,6 +1024,9 @@ static int csid_set_format(struct v4l2_subdev *sd,
+@@ -1003,6 +1026,10 @@ static int csid_set_format(struct v4l2_subdev *sd,
  	if (fmt->pad == MSM_CSID_PAD_SINK) {
  		for (i = MSM_CSID_PAD_FIRST_SRC; i < MSM_CSID_PADS_NUM; ++i) {
  			format = __csid_get_format(csid, sd_state, i, fmt->which);
-+			if (i == MSM_CSID_PAD_FIRST_SRC + 1 &&
++			if ((i == MSM_CSID_PAD_FIRST_SRC + 1 ||
++			     i == MSM_CSID_PAD_FIRST_SRC + 2) &&
 +			    format->code == MEDIA_BUS_FMT_SENSOR_DATA)
 +				continue;
  
  			*format = fmt->format;
  			csid_try_format(csid, sd_state, i, format, fmt->which);
 diff --git a/drivers/media/platform/qcom/camss/camss-vfe-17x.c b/drivers/media/platform/qcom/camss/camss-vfe-17x.c
-index e5ee7e7..4e3e2d9 100644
+index e5ee7e7..067dac5 100644
 --- a/drivers/media/platform/qcom/camss/camss-vfe-17x.c
 +++ b/drivers/media/platform/qcom/camss/camss-vfe-17x.c
 @@ -258,10 +258,15 @@ static void vfe_wm_update(struct vfe_device *vfe, u8 wm, u32 addr,
@@ -180,8 +212,80 @@ index e5ee7e7..4e3e2d9 100644
  
  	return IRQ_HANDLED;
  }
+@@ -383,45 +387,6 @@ static int vfe_halt(struct vfe_device *vfe)
+ 	return 0;
+ }
+ 
+-static int vfe_get_output(struct vfe_line *line)
+-{
+-	struct vfe_device *vfe = to_vfe(line);
+-	struct vfe_output *output;
+-	unsigned long flags;
+-	int wm_idx;
+-
+-	spin_lock_irqsave(&vfe->output_lock, flags);
+-
+-	output = &line->output;
+-	if (output->state > VFE_OUTPUT_RESERVED) {
+-		dev_err(vfe->camss->dev, "Output is running\n");
+-		goto error;
+-	}
+-
+-	output->wm_num = 1;
+-
+-	wm_idx = vfe_reserve_wm(vfe, line->id);
+-	if (wm_idx < 0) {
+-		dev_err(vfe->camss->dev, "Can not reserve wm\n");
+-		goto error_get_wm;
+-	}
+-	output->wm_idx[0] = wm_idx;
+-
+-	output->drop_update_idx = 0;
+-
+-	spin_unlock_irqrestore(&vfe->output_lock, flags);
+-
+-	return 0;
+-
+-error_get_wm:
+-	vfe_release_wm(vfe, output->wm_idx[0]);
+-	output->state = VFE_OUTPUT_OFF;
+-error:
+-	spin_unlock_irqrestore(&vfe->output_lock, flags);
+-
+-	return -EINVAL;
+-}
+-
+ /*
+  * vfe_enable - Enable streaming on VFE line
+  * @line: VFE line
+@@ -442,7 +407,7 @@ static int vfe_enable(struct vfe_line *line)
+ 
+ 	mutex_unlock(&vfe->stream_lock);
+ 
+-	ret = vfe_get_output(line);
++	ret = vfe_get_output_v2(line);
+ 	if (ret < 0)
+ 		goto error_get_output;
+ 
+@@ -507,7 +472,7 @@ static void vfe_isr_reg_update(struct vfe_device *vfe, enum vfe_line_id line_id)
+  */
+ static void vfe_isr_wm_done(struct vfe_device *vfe, u8 wm)
+ {
+-	struct vfe_line *line = &vfe->line[vfe->wm_output_map[wm]];
++	struct vfe_line *line;
+ 	struct camss_buffer *ready_buf;
+ 	struct vfe_output *output;
+ 	unsigned long flags;
+@@ -521,6 +486,7 @@ static void vfe_isr_wm_done(struct vfe_device *vfe, u8 wm)
+ 				    "Received wm done for unmapped index\n");
+ 		goto out_unlock;
+ 	}
++	line = &vfe->line[vfe->wm_output_map[wm]];
+ 	output = &vfe->line[vfe->wm_output_map[wm]].output;
+ 
+ 	ready_buf = output->buf[0];
 diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
-index 5baf0e3..5927648 100644
+index 5baf0e3..cd2f207 100644
 --- a/drivers/media/platform/qcom/camss/camss-vfe.c
 +++ b/drivers/media/platform/qcom/camss/camss-vfe.c
 @@ -124,6 +124,8 @@ static const struct camss_format_info formats_rdi_8x96[] = {
@@ -193,7 +297,80 @@ index 5baf0e3..5927648 100644
  	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_UYVY, 1,
  	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
  	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_VYUY, 1,
-@@ -1350,7 +1352,8 @@ static void vfe_try_format(struct vfe_line *line,
+@@ -448,7 +450,7 @@ u32 vfe_hw_version(struct vfe_device *vfe)
+  */
+ void vfe_buf_done(struct vfe_device *vfe, int wm)
+ {
+-	struct vfe_line *line = &vfe->line[vfe->wm_output_map[wm]];
++	struct vfe_line *line;
+ 	const struct vfe_hw_ops *ops = vfe->res->hw_ops;
+ 	struct camss_buffer *ready_buf;
+ 	struct vfe_output *output;
+@@ -463,6 +465,7 @@ void vfe_buf_done(struct vfe_device *vfe, int wm)
+ 				    "Received wm done for unmapped index\n");
+ 		goto out_unlock;
+ 	}
++	line = &vfe->line[vfe->wm_output_map[wm]];
+ 	output = &vfe->line[vfe->wm_output_map[wm]].output;
+ 
+ 	ready_buf = output->buf[0];
+@@ -813,14 +816,32 @@ static int vfe_disable_output(struct vfe_line *line)
+ 	struct vfe_output *output = &line->output;
+ 	unsigned long flags;
+ 	unsigned int i;
++	unsigned long time;
+ 
+ 	spin_lock_irqsave(&vfe->output_lock, flags);
++	reinit_completion(&output->reg_update);
++	output->wait_reg_update = 1;
+ 	for (i = 0; i < output->wm_num; i++)
+ 		vfe->res->hw_ops->vfe_wm_stop(vfe, output->wm_idx[i]);
++	/* Apply the WM disable before vb2 can unmap its DMA buffers. */
++	vfe->res->hw_ops->reg_update(vfe, line->id);
+ 	output->gen2.active_num = 0;
+ 	spin_unlock_irqrestore(&vfe->output_lock, flags);
+ 
+-	return vfe_reset(vfe);
++	time = wait_for_completion_timeout(&output->reg_update,
++					   msecs_to_jiffies(500));
++	if (!time) {
++		spin_lock_irqsave(&vfe->output_lock, flags);
++		output->wait_reg_update = 0;
++		spin_unlock_irqrestore(&vfe->output_lock, flags);
++		dev_err(vfe->camss->dev, "VFE WM stop update timeout\n");
++		/* A stalled WM must be reset before vb2 returns its DMA buffers. */
++		vfe_reset(vfe);
++		return -ETIMEDOUT;
++	}
++	synchronize_irq(vfe->irq);
++
++	return 0;
+ }
+ 
+ /*
+@@ -835,18 +856,17 @@ int vfe_disable(struct vfe_line *line)
+ 	int ret;
+ 
+ 	ret = vfe_disable_output(line);
+-	if (ret)
+-		goto error;
+-
+ 	vfe_put_output(line);
+ 
+ 	mutex_lock(&vfe->stream_lock);
+ 
+ 	vfe->stream_count--;
++	/* Resetting VFE also stops other RDI write masters still streaming. */
++	if (!vfe->stream_count)
++		ret = vfe_reset(vfe);
+ 
+ 	mutex_unlock(&vfe->stream_lock);
+ 
+-error:
+ 	return ret;
+ }
+ 
+@@ -1350,7 +1370,8 @@ static void vfe_try_format(struct vfe_line *line,
  		if (i >= line->nformats)
  			fmt->code = MEDIA_BUS_FMT_UYVY8_1X16;
  
@@ -204,7 +381,7 @@ index 5baf0e3..5927648 100644
  
  		fmt->field = V4L2_FIELD_NONE;
 diff --git a/drivers/media/platform/qcom/camss/camss-video.c b/drivers/media/platform/qcom/camss/camss-video.c
-index 831486e..fa71daa 100644
+index 831486e..d6789b2 100644
 --- a/drivers/media/platform/qcom/camss/camss-video.c
 +++ b/drivers/media/platform/qcom/camss/camss-video.c
 @@ -124,6 +124,16 @@ static int video_queue_setup(struct vb2_queue *q,
@@ -284,10 +461,72 @@ index 831486e..fa71daa 100644
  	struct v4l2_pix_format_mplane *pix = &video->active_fmt.fmt.pix_mp;
  	struct v4l2_format format;
  	struct v4l2_pix_format_mplane *sd_pix = &format.fmt.pix_mp;
-@@ -240,6 +289,32 @@ static int video_prepare_streaming(struct vb2_queue *q)
+@@ -240,6 +289,94 @@ static int video_prepare_streaming(struct vb2_queue *q)
  	return ret;
  }
  
++/* Multiple RDI video nodes share the same CSID, CSIPHY and sensor subdevs. */
++struct camss_subdev_stream {
++	struct v4l2_subdev *subdev;
++	unsigned int users;
++	struct list_head list;
++};
++
++static LIST_HEAD(camss_subdev_streams);
++static DEFINE_MUTEX(camss_subdev_stream_lock);
++
++static int video_start_subdev(struct v4l2_subdev *subdev)
++{
++	struct camss_subdev_stream *stream;
++	int ret;
++
++	mutex_lock(&camss_subdev_stream_lock);
++	list_for_each_entry(stream, &camss_subdev_streams, list) {
++		if (stream->subdev == subdev) {
++			stream->users++;
++			mutex_unlock(&camss_subdev_stream_lock);
++			return 0;
++		}
++	}
++	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
++	if (!stream) {
++		mutex_unlock(&camss_subdev_stream_lock);
++		return -ENOMEM;
++	}
++	ret = v4l2_subdev_call(subdev, video, s_stream, 1);
++	if (ret && ret != -ENOIOCTLCMD) {
++		kfree(stream);
++		mutex_unlock(&camss_subdev_stream_lock);
++		return ret;
++	}
++	stream->subdev = subdev;
++	stream->users = 1;
++	list_add(&stream->list, &camss_subdev_streams);
++	mutex_unlock(&camss_subdev_stream_lock);
++	return 0;
++}
++
++static int video_stop_subdev(struct v4l2_subdev *subdev)
++{
++	struct camss_subdev_stream *stream;
++	int ret = 0;
++
++	mutex_lock(&camss_subdev_stream_lock);
++	list_for_each_entry(stream, &camss_subdev_streams, list) {
++		if (stream->subdev != subdev)
++			continue;
++		if (--stream->users == 0) {
++			ret = v4l2_subdev_call(subdev, video, s_stream, 0);
++			list_del(&stream->list);
++			kfree(stream);
++		}
++		mutex_unlock(&camss_subdev_stream_lock);
++		return ret;
++	}
++	mutex_unlock(&camss_subdev_stream_lock);
++	return -ENOENT;
++}
++
 +/* Stop every subdevice that started, including on a partial STREAMON failure. */
 +static void video_stop_subdevs(struct camss_video *video,
 +			       struct media_entity *first_not_started)
@@ -307,7 +546,7 @@ index 831486e..fa71daa 100644
 +			break;
 +		entity = pad->entity;
 +		subdev = media_entity_to_v4l2_subdev(entity);
-+		ret = v4l2_subdev_call(subdev, video, s_stream, 0);
++		ret = video_stop_subdev(subdev);
 +		if (ret && ret != -ENOIOCTLCMD)
 +			dev_err(video->camss->dev,
 +				"Video pipeline stop failed: %d\n", ret);
@@ -317,7 +556,7 @@ index 831486e..fa71daa 100644
  static int video_start_streaming(struct vb2_queue *q, unsigned int count)
  {
  	struct camss_video *video = vb2_get_drv_priv(q);
-@@ -248,6 +323,7 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+@@ -248,6 +385,7 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
  	struct media_pad *pad;
  	struct v4l2_subdev *subdev;
  	int ret;
@@ -325,7 +564,7 @@ index 831486e..fa71daa 100644
  
  	ret = video_device_pipeline_alloc_start(vdev);
  	if (ret < 0) {
-@@ -257,7 +333,7 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+@@ -257,7 +395,7 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
  
  	ret = video_check_format(video);
  	if (ret < 0)
@@ -334,12 +573,14 @@ index 831486e..fa71daa 100644
  
  	entity = &vdev->entity;
  	while (1) {
-@@ -273,13 +349,17 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+@@ -272,14 +410,18 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+ 		entity = pad->entity;
  		subdev = media_entity_to_v4l2_subdev(entity);
  
- 		ret = v4l2_subdev_call(subdev, video, s_stream, 1);
+-		ret = v4l2_subdev_call(subdev, video, s_stream, 1);
 -		if (ret < 0 && ret != -ENOIOCTLCMD)
-+		if (ret < 0 && ret != -ENOIOCTLCMD) {
++		ret = video_start_subdev(subdev);
++		if (ret < 0) {
 +			first_not_started = entity;
  			goto error;
 +		}
@@ -353,7 +594,7 @@ index 831486e..fa71daa 100644
  	video_device_pipeline_stop(vdev);
  
  flush_buffers:
-@@ -292,32 +372,7 @@ static void video_stop_streaming(struct vb2_queue *q)
+@@ -292,32 +434,7 @@ static void video_stop_streaming(struct vb2_queue *q)
  {
  	struct camss_video *video = vb2_get_drv_priv(q);
  	struct video_device *vdev = &video->vdev;
@@ -387,7 +628,7 @@ index 831486e..fa71daa 100644
  	video_device_pipeline_stop(vdev);
  
  	video->ops->flush_buffers(video, VB2_BUF_STATE_ERROR);
-@@ -361,6 +416,14 @@ static int video_enum_fmt(struct file *file, void *fh, struct v4l2_fmtdesc *f)
+@@ -361,6 +478,14 @@ static int video_enum_fmt(struct file *file, void *fh, struct v4l2_fmtdesc *f)
  	int i, j, k;
  	u32 mcode = f->mbus_code;
  
@@ -402,7 +643,7 @@ index 831486e..fa71daa 100644
  	if (f->type != video->type)
  		return -EINVAL;
  
-@@ -445,6 +508,8 @@ static int video_enum_framesizes(struct file *file, void *fh,
+@@ -445,6 +570,8 @@ static int video_enum_framesizes(struct file *file, void *fh,
  static int video_g_fmt(struct file *file, void *fh, struct v4l2_format *f)
  {
  	struct camss_video *video = video_drvdata(file);
@@ -411,7 +652,7 @@ index 831486e..fa71daa 100644
  
  	*f = video->active_fmt;
  
-@@ -549,9 +614,65 @@ static int video_s_fmt(struct file *file, void *fh, struct v4l2_format *f)
+@@ -549,9 +676,65 @@ static int video_s_fmt(struct file *file, void *fh, struct v4l2_format *f)
  	ret = __video_try_fmt(video, f);
  	if (ret < 0)
  		return ret;
@@ -438,7 +679,7 @@ index 831486e..fa71daa 100644
 +	struct v4l2_subdev *subdev;
 +	u32 pad;
 +	int ret;
- 
++
 +	if (video->line_based)
 +		return -EINVAL;
 +	subdev = video_remote_subdev(video, &pad);
@@ -461,7 +702,7 @@ index 831486e..fa71daa 100644
 +{
 +	struct camss_video *video = video_drvdata(file);
 +	int ret;
-+
+ 
 +	if (vb2_is_busy(&video->vb2_q))
 +		return -EBUSY;
 +	ret = video_try_fmt_meta(file, fh, f);
@@ -477,7 +718,7 @@ index 831486e..fa71daa 100644
  	return 0;
  }
  
-@@ -586,6 +707,10 @@ static const struct v4l2_ioctl_ops msm_vid_ioctl_ops = {
+@@ -586,6 +769,10 @@ static const struct v4l2_ioctl_ops msm_vid_ioctl_ops = {
  	.vidioc_g_fmt_vid_cap_mplane	= video_g_fmt,
  	.vidioc_s_fmt_vid_cap_mplane	= video_s_fmt,
  	.vidioc_try_fmt_vid_cap_mplane	= video_try_fmt,
@@ -488,7 +729,7 @@ index 831486e..fa71daa 100644
  	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
  	.vidioc_querybuf		= vb2_ioctl_querybuf,
  	.vidioc_qbuf			= vb2_ioctl_qbuf,
-@@ -681,6 +806,7 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+@@ -681,6 +868,7 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
  	int ret;
  
  	vdev = &video->vdev;
@@ -496,7 +737,7 @@ index 831486e..fa71daa 100644
  
  	mutex_init(&video->q_lock);
  
-@@ -717,7 +843,9 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+@@ -717,7 +905,9 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
  	}
  
  	vdev->fops = &msm_vid_fops;

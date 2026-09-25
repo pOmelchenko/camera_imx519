@@ -1,0 +1,129 @@
+{
+  "module_sha256": "338ff57678402fbde17b9c4ea1b4c7a16d732f51c8342fa1241b06bb62ba7dc0",
+  "modes": [
+    {
+      "mode": "4656x3496",
+      "artifact": "phase-mode-4656x3496-20260925T070808Z",
+      "target_fps": 9,
+      "measured_fps": 9.003,
+      "embedded_frames": 16,
+      "phase_frames": 16,
+      "paired_sequences": 16,
+      "embedded_buffer_bytes": 11648,
+      "phase_buffer_bytes": 5824,
+      "phase_minus_embedded_timestamp_us": {
+        "min": 32,
+        "median": 33.5,
+        "max": 40,
+        "max_absolute": 40
+      },
+      "qualified_regions_range": [
+        57,
+        60
+      ],
+      "median_phase": -119.0
+    },
+    {
+      "mode": "3840x2160",
+      "artifact": "phase-mode-3840x2160-20260925T070756Z",
+      "target_fps": 18,
+      "measured_fps": 17.999,
+      "embedded_frames": 16,
+      "phase_frames": 16,
+      "paired_sequences": 16,
+      "embedded_buffer_bytes": 9600,
+      "phase_buffer_bytes": 4800,
+      "phase_minus_embedded_timestamp_us": {
+        "min": 32,
+        "median": 35.5,
+        "max": 43,
+        "max_absolute": 43
+      },
+      "qualified_regions_range": [
+        60,
+        62
+      ],
+      "median_phase": -120.5
+    },
+    {
+      "mode": "2328x1748",
+      "artifact": "phase-mode-2328x1748-20260925T070759Z",
+      "target_fps": 30,
+      "measured_fps": 29.996,
+      "embedded_frames": 16,
+      "phase_frames": 16,
+      "paired_sequences": 16,
+      "embedded_buffer_bytes": 5824,
+      "phase_buffer_bytes": 2912,
+      "phase_minus_embedded_timestamp_us": {
+        "min": 30,
+        "median": 48.0,
+        "max": 64,
+        "max_absolute": 64
+      },
+      "qualified_regions_range": [
+        48,
+        51
+      ],
+      "median_phase": -117.75
+    },
+    {
+      "mode": "1920x1080",
+      "artifact": "phase-mode-1920x1080-20260925T070746Z",
+      "target_fps": 60,
+      "measured_fps": 59.941,
+      "embedded_frames": 16,
+      "phase_frames": 16,
+      "paired_sequences": 16,
+      "embedded_buffer_bytes": 4800,
+      "phase_buffer_bytes": 2400,
+      "phase_minus_embedded_timestamp_us": {
+        "min": 21,
+        "median": 34.5,
+        "max": 48,
+        "max_absolute": 48
+      },
+      "qualified_regions_range": [
+        53,
+        56
+      ],
+      "median_phase": -117.0
+    },
+    {
+      "mode": "1280x720",
+      "artifact": "phase-mode-1280x720-20260925T070801Z",
+      "target_fps": 80,
+      "measured_fps": 79.997,
+      "embedded_frames": 16,
+      "phase_frames": 16,
+      "paired_sequences": 16,
+      "embedded_buffer_bytes": 3200,
+      "phase_buffer_bytes": 1600,
+      "phase_minus_embedded_timestamp_us": {
+        "min": 29,
+        "median": 45.5,
+        "max": 59,
+        "max_absolute": 59
+      },
+      "qualified_regions_range": [
+        67,
+        78
+      ],
+      "median_phase": -113.0
+    }
+  ],
+  "raw_phase_trials": [
+    {
+      "artifact": "raw-phase-20260925T070417Z",
+      "raw_frames": 48,
+      "phase_frames": 24,
+      "phase_sequences_contiguous": true
+    },
+    {
+      "artifact": "raw-phase-20260925T070506Z",
+      "raw_frames": 48,
+      "phase_frames": 24,
+      "phase_sequences_contiguous": true
+    }
+  ]
+}

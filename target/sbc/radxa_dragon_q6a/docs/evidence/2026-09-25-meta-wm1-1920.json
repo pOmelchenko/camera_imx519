@@ -1,0 +1,60 @@
+{
+  "frames": 4,
+  "buffer_bytes": 17472,
+  "image_width": 1920,
+  "bit_depth": 10,
+  "payload_bytes_per_line": 2400,
+  "aligned_line_stride": 2400,
+  "sequences": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "sequences_contiguous": true,
+  "last_nonzero_offset": [
+    4799,
+    4799,
+    4799,
+    4799
+  ],
+  "nonzero_bytes_per_row": [
+    [
+      2370,
+      2363,
+      0
+    ],
+    [
+      2370,
+      2363,
+      0
+    ],
+    [
+      2370,
+      2363,
+      0
+    ],
+    [
+      2370,
+      2363,
+      0
+    ]
+  ],
+  "changed_bytes_between_frames_per_row": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ]
+  ]
+}
