@@ -60,11 +60,17 @@ qualification of phase autofocus.
   A reboot is required to clear the hung process and restore the stock module
   before retesting. Do not claim that embedded data or PDAF is available until
   a real buffer is captured and its contents are validated.
+- The owner power-cycled Q6A to recover the wedged task. After that action,
+  SSH to the previous address `192.168.1.67` timed out from both the owner and
+  workstation; an ICMP check also timed out. The board's boot and camera
+  state are therefore unverified after the power cycle. The experimental
+  module had only been loaded in memory; no CAMSS module was installed on disk.
 
 ## Remaining gates
 
-1. Reboot to clear the wedged process, load the corrected module in memory,
-   and confirm that `VIDIOC_QUERYBUF` and stream shutdown work without faults.
+1. Restore Q6A access and verify boot ID, stock module, and camera topology.
+   Then load the corrected module in memory and confirm that `VIDIOC_QUERYBUF`
+   and stream shutdown work without faults.
 2. Capture actual CSI metadata per sensor mode. Confirm VC, DT, payload
    length, sequence/timestamp pairing, and whether phase samples are present.
 3. Parse and calibrate the phase grid from observed bytes. Determine near/far
