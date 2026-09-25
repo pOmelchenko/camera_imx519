@@ -1,0 +1,60 @@
+{
+  "autofocus_artifact": "snapshot-pdaf-48s0geqb",
+  "sharpness_artifact": "phase-sharpness-20260925T081622Z",
+  "method": "PDAF",
+  "selected_raw_code": 2104,
+  "phase_samples": [
+    {
+      "raw_code": 2047,
+      "phase": -12.0,
+      "phase_range": [
+        -14,
+        -9.0
+      ],
+      "qualified_frames": 12,
+      "qualified_regions_min": 11
+    },
+    {
+      "raw_code": 2133,
+      "phase": 6.0,
+      "phase_range": [
+        3.0,
+        7
+      ],
+      "qualified_frames": 12,
+      "qualified_regions_min": 12
+    },
+    {
+      "raw_code": 2104,
+      "phase": -0.25,
+      "phase_range": [
+        -4,
+        1
+      ],
+      "qualified_frames": 12,
+      "qualified_regions_min": 10
+    }
+  ],
+  "optical_roi": [
+    0.25,
+    0.25,
+    0.5,
+    0.5
+  ],
+  "optical_scores": [
+    {
+      "raw_code": 1804,
+      "normalized_energy": 0.0006347965464878651
+    },
+    {
+      "raw_code": 2104,
+      "normalized_energy": 0.0015117554639178963
+    },
+    {
+      "raw_code": 2404,
+      "normalized_energy": 0.0008284069809217745
+    }
+  ],
+  "optical_best_raw_code": 2104,
+  "scene_note": "Scene changed after the earlier far sweep; actual distance unmeasured"
+}

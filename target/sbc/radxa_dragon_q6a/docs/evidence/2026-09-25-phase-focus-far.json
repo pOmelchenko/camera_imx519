@@ -1,0 +1,113 @@
+{
+  "sweep_artifact": "phase-focus-20260925T081010Z",
+  "sharpness_artifact": "phase-sharpness-20260925T081129Z",
+  "scene_note": "Target moved to approximately 1 m at user request; actual distance unmeasured; ROI on central appliance",
+  "initial_estimate": {
+    "samples": [
+      {
+        "code": 512,
+        "median_phase": -58.25,
+        "qualified_regions_min": 11,
+        "phase_range": [
+          -64,
+          -50
+        ],
+        "usable": true
+      },
+      {
+        "code": 1024,
+        "median_phase": -55.5,
+        "qualified_regions_min": 11,
+        "phase_range": [
+          -60.0,
+          -52
+        ],
+        "usable": true
+      },
+      {
+        "code": 2047,
+        "median_phase": 47.5,
+        "qualified_regions_min": 12,
+        "phase_range": [
+          43.5,
+          49
+        ],
+        "usable": true
+      },
+      {
+        "code": 3072,
+        "median_phase": 196.0,
+        "qualified_regions_min": 4,
+        "phase_range": [
+          181,
+          204.5
+        ],
+        "usable": false
+      }
+    ],
+    "status": "bracketed",
+    "candidate_raw_code": 1575
+  },
+  "verification": [
+    {
+      "raw_code": 1575,
+      "frames": 16,
+      "median_central_phase": -12.0,
+      "phase_range": [
+        -15,
+        -9.5
+      ],
+      "qualified_regions_range": [
+        11,
+        13
+      ]
+    },
+    {
+      "raw_code": 1646,
+      "frames": 16,
+      "median_central_phase": 0.25,
+      "phase_range": [
+        -3.0,
+        7
+      ],
+      "qualified_regions_range": [
+        11,
+        13
+      ]
+    },
+    {
+      "raw_code": 1670,
+      "frames": 16,
+      "median_central_phase": 4.0,
+      "phase_range": [
+        -4.0,
+        8.5
+      ],
+      "qualified_regions_range": [
+        10,
+        13
+      ]
+    }
+  ],
+  "optical_roi": [
+    0.43,
+    0.56,
+    0.16,
+    0.24
+  ],
+  "optical_scores": [
+    {
+      "raw_code": 1346,
+      "normalized_energy": 0.0005651018745727112
+    },
+    {
+      "raw_code": 1646,
+      "normalized_energy": 0.0008790291599081103
+    },
+    {
+      "raw_code": 1946,
+      "normalized_energy": 0.0005561744518895046
+    }
+  ],
+  "optical_best_raw_code": 1646
+}

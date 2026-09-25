@@ -45,9 +45,13 @@ A separate VC0/DT `0x36` packet contains the PDAF row. Sixteen consecutive
 phase buffers were parsed as a 12×16 grid; moving the AK7375 from code 2047
 to 2496 shifted median phase from about −17 to +44 on the same scene.
 An independent RDI2 now captures phase concurrently with RDI1 embedded data
-in all five native modes. Two short RAW+phase runs also completed after the
-VFE stop fix. The camera still uses CDAF while image/phase pairing,
-calibration and phase-driven lens control are developed.
+in all five native modes. Short RAW+phase runs completed in all five modes
+after the VFE stop fix, with unique timestamp pairing and no sequence gaps.
+The private libcamera still uses CDAF. An external one-shot controller now
+performs phase-driven lens moves and takes a color picture after convergence;
+its [evidence](../docs/evidence/2026-09-25-snapshot-pdaf.json) also compares
+optical sharpness at adjacent lens codes. It is a bring-up tool, not a
+continuous libcamera AF implementation.
 
 The installed `linux-image-7.0.11-6-qcom` package reports version `7.0.11-6`.
 The matching [Radxa linux-qcom tag 7.0.11-6](https://github.com/radxa-pkg/linux-qcom/tree/7.0.11-6)
@@ -86,7 +90,8 @@ pairing with image frames, then parse and calibrate the phase grid in the IPA.
 The [IMX519 PDAF parser proposal](https://lists.libcamera.org/pipermail/libcamera-devel/2023-June/038275.html)
 matches the captured row header and yields a lens-dependent signal. Test
 near/far phase sign and confidence on the physical module before enabling
-phase-based lens moves.
+phase-based lens moves in libcamera. Two scene tests have now confirmed the
+phase sign and a one-shot external controller. Distances were not measured.
 
 ## Build and hardware evidence
 

@@ -1,0 +1,15 @@
+{
+  "artifact": "raw-phase-20260925T071343Z",
+  "raw_frames": 48,
+  "phase_frames": 24,
+  "raw_sequences_contiguous": true,
+  "phase_sequences_contiguous": true,
+  "raw_minus_phase_sequence_offset": 5,
+  "phase_minus_raw_completion_timestamp_us": {
+    "min": 907,
+    "median": 2389.0,
+    "max": 2418
+  },
+  "raw_frames_after_last_phase": 19,
+  "raw_median_period_us": 111070
+}

@@ -19,7 +19,7 @@ HEADER_BYTES = 10
 MIN_BYTES = HEADER_BYTES + ROWS * COLS * ENTRY_BYTES
 
 
-def summarize(path: Path) -> dict:
+def summarize(path: Path, center: bool = False) -> dict:
     data = path.read_bytes()
     if len(data) < MIN_BYTES:
         raise ValueError(f"{path}: {len(data)} bytes, need at least {MIN_BYTES}")
@@ -27,6 +27,10 @@ def summarize(path: Path) -> dict:
         raise ValueError(f"{path}: unexpected PDAF header {data[:2].hex()}")
     regions = []
     for index in range(ROWS * COLS):
+        # Keep a central target separate from the background when requested.
+        row, column = divmod(index, COLS)
+        if center and not (3 <= row < 9 and 4 <= column < 12):
+            continue
         start = HEADER_BYTES + index * ENTRY_BYTES
         b0, b1, b2 = data[start:start + 3]
         confidence = (b0 << 3) | (b1 >> 5)
@@ -50,11 +54,13 @@ def summarize(path: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
+    parser.add_argument("--center", action="store_true",
+                        help="Use the central 6x8 phase regions")
     args = parser.parse_args()
     paths = sorted(args.directory.glob("frame-*.bin"))
     if not paths:
         parser.error("No frame-*.bin files found")
-    frames = [summarize(path) for path in paths]
+    frames = [summarize(path, args.center) for path in paths]
     print(json.dumps({
         "source_directory": args.directory.name,
         "layout": {"rows": ROWS, "columns": COLS, "entry_bytes": ENTRY_BYTES},
