@@ -12,7 +12,8 @@ done < debian/patches/series
 patch --batch --fuzz=0 -p1 < /recipe/imx519.patch
 patch --batch --fuzz=0 -p1 < /recipe/autofocus-simple.patch
 patch --batch --fuzz=0 -p1 < /recipe/color-native-size.patch
-printf '0.7.1+radxa.de1e9bc0.imx519.af1\n' > .tarball-version
+patch --batch --fuzz=0 -p1 < /recipe/pdaf-simple.patch
+printf '0.7.1+radxa.de1e9bc0.imx519.pdaf5\n' > .tarball-version
 meson setup out --prefix=/opt/imx519-libcamera --libdir=lib --libexecdir=libexec \
     --buildtype=release -Dpipelines=simple -Dipas=simple -Dsoftisp-gpu=enabled \
     -Dcam=enabled -Dqcam=enabled -Dgstreamer=disabled -Dpycamera=disabled \
@@ -29,6 +30,7 @@ cp /output/source-revision.txt "$runtime_dir/"
 cp /recipe/imx519.patch "$runtime_dir/"
 cp /recipe/autofocus-simple.patch "$runtime_dir/"
 cp /recipe/color-native-size.patch "$runtime_dir/"
+cp /recipe/pdaf-simple.patch "$runtime_dir/"
 dpkg-query -W > "$runtime_dir/build-packages.tsv"
 cp /output/testlog.txt "$runtime_dir/"
 cp .tarball-version "$runtime_dir/version.txt"

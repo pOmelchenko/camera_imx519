@@ -1,0 +1,81 @@
+{
+  "status": "physically verified on one lit fixed scene",
+  "board": "Radxa Dragon Q6A",
+  "camera": "Arducam IMX519 with AK7375",
+  "kernel": "7.0.11-6-qcom",
+  "camss_module_sha256": "338ff57678402fbde17b9c4ea1b4c7a16d732f51c8342fa1241b06bb62ba7dc0",
+  "private_libcamera_version": "0.7.1+radxa.de1e9bc0.imx519.pdaf5",
+  "runtime_archive_sha256": "bd10eaf6783fe0cf6108139ceb01eb7130de6814d571c22ec3530199a71be657",
+  "libcamera_phase_patch_sha256": "7c2f1577a7243c8fe0be07a6dfe6f9c5c4edff504235fb630094f66b8d133ee4",
+  "scene": "User arranged a lit, stationary contrasting target at approximately 1 m; distance unmeasured; image center includes objects at mixed depths",
+  "initial_trials_runtime_version": "0.7.1+radxa.de1e9bc0.imx519.pdaf4",
+  "auto": {
+    "board_artifact": "snapshot-af-20260925T085314Z.kJHJn8",
+    "frames": 360,
+    "format": "1920x1080 XRGB8888",
+    "phase_device": "/dev/video4",
+    "phase_buffer_bytes": 2400,
+    "moves": [
+      { "raw_code": 2495, "median_phase": 84, "next_raw_code": 1895 },
+      { "raw_code": 1895, "median_phase": 15, "next_raw_code": 1788 }
+    ],
+    "focused_raw_code": 1788,
+    "final_median_phase": 1,
+    "final_af_state": "Focused",
+    "contrast_fallback": false,
+    "local_photo": "var/q6a-imx519/pdaf4/focused.png",
+    "local_photo_sha256": "8538f0cbce23cc9c3cebab05c83c662332386255e95076159ef6991c426e016f"
+  },
+  "continuous": {
+    "board_artifact": "snapshot-af-20260925T085453Z.zLezDN",
+    "frames": 360,
+    "moves": [
+      { "raw_code": 2495, "median_phase": 81, "next_raw_code": 1916 },
+      { "raw_code": 1916, "median_phase": 15, "next_raw_code": 1809 },
+      { "raw_code": 1809, "median_phase": 6, "next_raw_code": 1766 }
+    ],
+    "focused_raw_code": 1766,
+    "final_median_phase": -5,
+    "final_af_state": "Focused",
+    "contrast_fallback": false
+  },
+  "manual_sharpness_control": {
+    "board_artifact": "phase-sharpness-20260925T085359Z",
+    "metric": "score-focus.py normalized gradient energy",
+    "roi": [0.25, 0.25, 0.5, 0.5],
+    "samples": [
+      { "raw_code": 1488, "normalized_energy": 0.0009782717526931354 },
+      { "raw_code": 1788, "normalized_energy": 0.0018441963924727073 },
+      { "raw_code": 2088, "normalized_energy": 0.0011168437355947864 }
+    ],
+    "best_raw_code": 1788
+  },
+  "fallback_trial": {
+    "board_artifact": "snapshot-af-20260925T085029Z.yJdsSz",
+    "scene": "Earlier mixed-depth scene with a foreground wooden object across the central ROI",
+    "phase_spread": 36,
+    "fallback_reason": "Unstable phase spread above 25",
+    "contrast_focused_raw_code": 1793,
+    "final_af_state": "Focused"
+  },
+  "final_runtime_smoke": {
+    "board_artifact": "snapshot-af-20260925T090020Z.5YwDeL",
+    "color_frames": 360,
+    "moves": [
+      { "raw_code": 2495, "median_phase": 77, "next_raw_code": 1945 },
+      { "raw_code": 1945, "median_phase": 15, "next_raw_code": 1838 },
+      { "raw_code": 1838, "median_phase": 8, "next_raw_code": 1781 }
+    ],
+    "focused_raw_code": 1781,
+    "final_median_phase": 0,
+    "contrast_fallback": false,
+    "raw_only_artifact": "capture-raw-20260925T090038Z.5j1zYo",
+    "raw_only_frames": 3
+  },
+  "limitations": [
+    "No moving-subject reacquisition test",
+    "No prolonged simultaneous color and phase run",
+    "No measured optical distance or lens calibration",
+    "Experimental CAMSS module remains loaded only in memory"
+  ]
+}

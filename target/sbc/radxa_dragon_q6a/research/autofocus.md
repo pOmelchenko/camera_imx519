@@ -36,7 +36,8 @@ as `unknown/17460x1` with no outgoing link, while pad 0 was linked to
 `msm_csiphy3`. The stock CAMSS exposed no metadata capture node.
 The full read-only [media graph](../docs/evidence/2026-09-25-media-topology.txt)
 is retained with the working kit. The experimental CAMSS module now exposes
-metadata nodes, but libcamera still cannot receive or pair their frames.
+metadata nodes; a later private libcamera runtime pairs their phase frames
+with RAW by timestamp.
 An [experimental CAMSS patch](pdaf-bringup.md) now exposes a `MET8` node in
 memory. A buffer-queue fault and an RDI1/write-master mapping error were
 fixed. MET8 now delivers frames at 9 fps in the full-resolution mode and
@@ -47,11 +48,15 @@ to 2496 shifted median phase from about −17 to +44 on the same scene.
 An independent RDI2 now captures phase concurrently with RDI1 embedded data
 in all five native modes. Short RAW+phase runs completed in all five modes
 after the VFE stop fix, with unique timestamp pairing and no sequence gaps.
-The private libcamera still uses CDAF. An external one-shot controller now
-performs phase-driven lens moves and takes a color picture after convergence;
-its [evidence](../docs/evidence/2026-09-25-snapshot-pdaf.json) also compares
-optical sharpness at adjacent lens codes. It is a bring-up tool, not a
-continuous libcamera AF implementation.
+An external one-shot controller performs phase-driven lens moves and takes a
+color picture after convergence; its
+[evidence](../docs/evidence/2026-09-25-snapshot-pdaf.json) also compares
+optical sharpness at adjacent lens codes. A later private libcamera runtime
+feeds center-grid phase into the simple IPA and moves the lens during color
+streaming. Auto and Continuous reached phase focus on one lit fixed scene.
+A mixed-depth scene produced unstable phase and fell back to CDAF. The
+[in-stream evidence](../docs/evidence/2026-09-25-libcamera-pdaf.json) records
+the moves and manual sharpness controls.
 
 The installed `linux-image-7.0.11-6-qcom` package reports version `7.0.11-6`.
 The matching [Radxa linux-qcom tag 7.0.11-6](https://github.com/radxa-pkg/linux-qcom/tree/7.0.11-6)
@@ -80,18 +85,21 @@ two embedded rows and VC0/DT `0x36` for the PDAF row.
 The original CSID/VFE format propagation copied the image format and clamped
 metadata height. The experimental module now exposes the two actual embedded
 rows and separate phase row with buffer lengths derived from the selected
-RAW10 width. Short simultaneous embedded/phase captures passed in five modes;
-full image-to-phase pairing and libcamera delivery remain. The experimental
-module has not replaced the packaged module on disk.
+RAW10 width. Short simultaneous embedded/phase and RAW/phase captures passed
+in five modes, with unique RAW/phase timestamp pairing. Libcamera now delivers
+phase values to the IPA at 1080p. The experimental module has not replaced
+the packaged module on disk.
 
-To complete PDAF, expose the phase stream through independent QCOM CAMSS
-CSID/VFE metadata routing in each active mode, preserve sequence/timestamp
-pairing with image frames, then parse and calibrate the phase grid in the IPA.
+PDAF now has independent QCOM CAMSS CSID/VFE metadata routing in each native
+mode, short-run sequence/timestamp pairing with image frames, and center-grid
+phase parsing in the IPA. Remaining work includes lens and scene calibration,
+continuous reacquisition across distances, adverse-scene handling and
+prolonged concurrent streaming.
 The [IMX519 PDAF parser proposal](https://lists.libcamera.org/pipermail/libcamera-devel/2023-June/038275.html)
 matches the captured row header and yields a lens-dependent signal. Test
-near/far phase sign and confidence on the physical module before enabling
-phase-based lens moves in libcamera. Two scene tests have now confirmed the
-phase sign and a one-shot external controller. Distances were not measured.
+near/far phase sign and confidence on the physical module. Two scene tests
+confirmed the sign before phase-based lens moves were enabled in the private
+libcamera. Distances were not measured.
 
 ## Build and hardware evidence
 
@@ -100,7 +108,7 @@ phase sign and a one-shot external controller. Distances were not measured.
   patch series, `imx519.patch`, then `autofocus-simple.patch` (SHA-256
   `fd25bd5842f392c617ddaf63b143f570d019fe41c4ef25b5bf68a18aa3e4fbae`).
 - Docker Ubuntu 24.04 arm64 build succeeded; `meson test --suite ipa` reported
-  8 passed, 0 failed. Active private runtime archive SHA-256
+  8 passed, 0 failed. The earlier CDAF runtime archive SHA-256 is
   `989d44efdfd20091514a1c9607c10a1e8f9b0758ada8b7438c38c7c125423f03`.
   It is deployed under `~/camera-imx519/runtime/`; system libcamera packages,
   DKMS modules and boot overlay were not replaced.
@@ -122,6 +130,22 @@ phase sign and a one-shot external controller. Distances were not measured.
   state was Focused at raw code 2174. The copied image and capture log are
   `var/q6a-imx519/autofocus-1080p.{ppm,log}`; parsed results are in
   `var/q6a-imx519/af-summary.json`.
+- The later PDAF runtime adds `color-native-size.patch` and
+  `pdaf-simple.patch` to the same pinned source. Docker arm64 build and the
+  eight IPA tests passed; archive SHA-256 is
+  `bd10eaf6783fe0cf6108139ceb01eb7130de6814d571c22ec3530199a71be657`.
+  A mixed-depth 1080p scene produced a phase spread of 36 and fell back to
+  CDAF, ending Focused at raw code 1793. After the user arranged a fixed,
+  lit contrasting target, Auto moved 2495 → 1895 → 1788 and reached median
+  phase +1 without CDAF. The 1788 image scored 0.001844 normalized gradient
+  energy in the central ROI, versus 0.000978 at 1488 and 0.001117 at 2088.
+  Continuous moved 2495 → 1916 → 1809 → 1766 and reached phase −5 without
+  fallback. Each libcamera run completed 360 color frames. The compact
+  [evidence](../docs/evidence/2026-09-25-libcamera-pdaf.json) identifies the
+  board artifacts and local photo. The final `pdaf5` runtime limits RAW
+  timestamp storage to an active phase stream. It repeated phase focus at
+  raw code 1781 (median phase 0) in 360 color frames, then captured three
+  RAW-only frames successfully.
 
 Run the checks using `cam.sh` and the `libcamera/af-*.yaml` scripts. For a
 single AF photograph on the board run `bash snapshot-af.sh auto`. For a
@@ -131,9 +155,10 @@ before `bash cam.sh ...`; `IMX519_LIBCAMERA=system` selects the apt build.
 
 ## Remaining qualification
 
-The current image contrast metric covers the full sampled RAW frame; region
-selection, optical distance calibration, low-light/flat-scene failure, moving
-subject reacquisition and restart after a reboot need separate physical
-checks. PDAF requires the metadata path above. Do not label
-the stack phase autofocus capable until phase samples and phase-driven focus
-are observed on this board.
+The phase result uses a center 6×8 sensor grid and an eight-frame temporal
+median, with CDAF fallback above a trimmed phase spread of 25. This threshold
+and the provisional phase-to-lens slope need broader scene calibration.
+Measured distance, low-light/flat-scene behavior, moving-subject reacquisition,
+prolonged concurrent color/phase streaming and restart after a reboot still
+need physical checks. The system libcamera and packaged CAMSS have not been
+replaced by these private experimental builds.

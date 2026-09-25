@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Capture one 1080p PPM after an in-stream contrast autofocus scan.
+# Capture one 1080p PPM after in-stream AF (PDAF with CDAF fallback when available).
 # Usage: bash snapshot-af.sh [auto|continuous]
 set -euo pipefail
 task_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"

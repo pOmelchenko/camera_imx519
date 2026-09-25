@@ -232,6 +232,16 @@ qualification of phase autofocus.
   samples and scores; complete artifacts are ignored under `var/`. This
   controller drives the lens between separate phase captures and uses the
   existing CDAF snapshot as fallback. It is not yet libcamera's in-stream AF.
+- A later private libcamera build now streams RAW and VC0/DT `0x36` phase
+  metadata together at 1080p, pairs their timestamps, and feeds the simple
+  IPA. An eight-frame median drove AK7375 from 2495 through 1895 to 1788,
+  where central phase was +1. A second Continuous run converged at 1766 with
+  phase −5. Manual color frames at raw codes 1488, 1788 and 2088 had their
+  highest selected-region sharpness at 1788. An earlier mixed-depth scene
+  produced unstable phase and exercised CDAF fallback. See
+  [libcamera PDAF evidence](../docs/evidence/2026-09-25-libcamera-pdaf.json).
+  These are short physical tests of one lit scene, not prolonged qualification
+  or proof of moving-subject reacquisition.
 
 ## Remaining gates
 
@@ -239,8 +249,9 @@ qualification of phase autofocus.
    streaming, repeated start/stop and long runs in all five modes. RAW/phase
    pairing is established; all three simultaneous streams remain untested.
 2. Calibrate the phase grid, focus distance and confidence across more measured
-   scenes. Integrate the proven one-shot phase move with the private libcamera
-   IPA and retain CDAF fallback for absent or weak phase data.
+   scenes. The private libcamera IPA now moves the lens from phase and falls
+   back to CDAF for missing or unstable phase; validate those thresholds on
+   flat, dark and mixed-depth scenes.
 3. Run simultaneous color and metadata capture for each mode and five-minute
    per-mode qualification: target FPS, zero sequence gaps/errors, stable AF
    state, and near/far transitions. Archive compact summaries; leave raw
