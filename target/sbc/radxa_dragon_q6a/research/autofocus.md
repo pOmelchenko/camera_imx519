@@ -39,8 +39,9 @@ is retained with the working kit.
 Consequently libcamera cannot receive or pair per-frame phase samples. Merely
 porting Arducam's Raspberry Pi AF algorithm would not supply missing samples.
 An [experimental CAMSS patch](pdaf-bringup.md) now exposes a `MET8` node in
-memory, but no metadata buffer has been captured: the first capture attempt
-hung in `vb2_fop_release`. The camera still uses CDAF.
+memory. A buffer-queue fault from the first attempt was fixed and
+`REQBUFS`/`QUERYBUF` now pass, but no metadata frame has yet been delivered.
+The camera still uses CDAF.
 
 The installed `linux-image-7.0.11-6-qcom` package reports version `7.0.11-6`.
 The matching [Radxa linux-qcom tag 7.0.11-6](https://github.com/radxa-pkg/linux-qcom/tree/7.0.11-6)

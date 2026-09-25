@@ -147,7 +147,7 @@ index ed18204..f2bdcd7 100644
  			*format = fmt->format;
  			csid_try_format(csid, sd_state, i, format, fmt->which);
 diff --git a/drivers/media/platform/qcom/camss/camss-vfe-17x.c b/drivers/media/platform/qcom/camss/camss-vfe-17x.c
-index e5ee7e7..16090ed 100644
+index e5ee7e7..4e3e2d9 100644
 --- a/drivers/media/platform/qcom/camss/camss-vfe-17x.c
 +++ b/drivers/media/platform/qcom/camss/camss-vfe-17x.c
 @@ -258,10 +258,15 @@ static void vfe_wm_update(struct vfe_device *vfe, u8 wm, u32 addr,
@@ -168,6 +168,18 @@ index e5ee7e7..16090ed 100644
  }
  
  static void vfe_reg_update(struct vfe_device *vfe, enum vfe_line_id line_id)
+@@ -364,9 +369,8 @@ static irqreturn_t vfe_isr(int irq, void *dev)
+ 			vfe->isr_ops.comp_done(vfe, i);
+ 
+ 	for (wm = 0; wm < MSM_VFE_IMAGE_MASTERS_NUM; wm++)
+-		if (status0 & BIT(9))
+-			if (vfe_bus_status[1] & STATUS1_WM_CLIENT_BUF_DONE(wm))
+-				vfe->isr_ops.wm_done(vfe, wm);
++		if (vfe_bus_status[1] & STATUS1_WM_CLIENT_BUF_DONE(wm))
++			vfe->isr_ops.wm_done(vfe, wm);
+ 
+ 	return IRQ_HANDLED;
+ }
 diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
 index 5baf0e3..5927648 100644
 --- a/drivers/media/platform/qcom/camss/camss-vfe.c
@@ -192,7 +204,7 @@ index 5baf0e3..5927648 100644
  
  		fmt->field = V4L2_FIELD_NONE;
 diff --git a/drivers/media/platform/qcom/camss/camss-video.c b/drivers/media/platform/qcom/camss/camss-video.c
-index 831486e..ef1947b 100644
+index 831486e..fa71daa 100644
 --- a/drivers/media/platform/qcom/camss/camss-video.c
 +++ b/drivers/media/platform/qcom/camss/camss-video.c
 @@ -124,6 +124,16 @@ static int video_queue_setup(struct vb2_queue *q,
@@ -272,7 +284,110 @@ index 831486e..ef1947b 100644
  	struct v4l2_pix_format_mplane *pix = &video->active_fmt.fmt.pix_mp;
  	struct v4l2_format format;
  	struct v4l2_pix_format_mplane *sd_pix = &format.fmt.pix_mp;
-@@ -361,6 +410,14 @@ static int video_enum_fmt(struct file *file, void *fh, struct v4l2_fmtdesc *f)
+@@ -240,6 +289,32 @@ static int video_prepare_streaming(struct vb2_queue *q)
+ 	return ret;
+ }
+ 
++/* Stop every subdevice that started, including on a partial STREAMON failure. */
++static void video_stop_subdevs(struct camss_video *video,
++			       struct media_entity *first_not_started)
++{
++	struct media_entity *entity = &video->vdev.entity;
++	struct media_pad *pad;
++	struct v4l2_subdev *subdev;
++	int ret;
++
++	while (1) {
++		pad = &entity->pads[0];
++		if (!(pad->flags & MEDIA_PAD_FL_SINK))
++			break;
++		pad = media_pad_remote_pad_first(pad);
++		if (!pad || !is_media_entity_v4l2_subdev(pad->entity) ||
++		    pad->entity == first_not_started)
++			break;
++		entity = pad->entity;
++		subdev = media_entity_to_v4l2_subdev(entity);
++		ret = v4l2_subdev_call(subdev, video, s_stream, 0);
++		if (ret && ret != -ENOIOCTLCMD)
++			dev_err(video->camss->dev,
++				"Video pipeline stop failed: %d\n", ret);
++	}
++}
++
+ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+ {
+ 	struct camss_video *video = vb2_get_drv_priv(q);
+@@ -248,6 +323,7 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+ 	struct media_pad *pad;
+ 	struct v4l2_subdev *subdev;
+ 	int ret;
++	struct media_entity *first_not_started = NULL;
+ 
+ 	ret = video_device_pipeline_alloc_start(vdev);
+ 	if (ret < 0) {
+@@ -257,7 +333,7 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+ 
+ 	ret = video_check_format(video);
+ 	if (ret < 0)
+-		goto error;
++		goto stop_pipeline;
+ 
+ 	entity = &vdev->entity;
+ 	while (1) {
+@@ -273,13 +349,17 @@ static int video_start_streaming(struct vb2_queue *q, unsigned int count)
+ 		subdev = media_entity_to_v4l2_subdev(entity);
+ 
+ 		ret = v4l2_subdev_call(subdev, video, s_stream, 1);
+-		if (ret < 0 && ret != -ENOIOCTLCMD)
++		if (ret < 0 && ret != -ENOIOCTLCMD) {
++			first_not_started = entity;
+ 			goto error;
++		}
+ 	}
+ 
+ 	return 0;
+ 
+ error:
++	video_stop_subdevs(video, first_not_started);
++stop_pipeline:
+ 	video_device_pipeline_stop(vdev);
+ 
+ flush_buffers:
+@@ -292,32 +372,7 @@ static void video_stop_streaming(struct vb2_queue *q)
+ {
+ 	struct camss_video *video = vb2_get_drv_priv(q);
+ 	struct video_device *vdev = &video->vdev;
+-	struct media_entity *entity;
+-	struct media_pad *pad;
+-	struct v4l2_subdev *subdev;
+-	int ret;
+-
+-	entity = &vdev->entity;
+-	while (1) {
+-		pad = &entity->pads[0];
+-		if (!(pad->flags & MEDIA_PAD_FL_SINK))
+-			break;
+-
+-		pad = media_pad_remote_pad_first(pad);
+-		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
+-			break;
+-
+-		entity = pad->entity;
+-		subdev = media_entity_to_v4l2_subdev(entity);
+-
+-		ret = v4l2_subdev_call(subdev, video, s_stream, 0);
+-
+-		if (ret) {
+-			dev_err(video->camss->dev, "Video pipeline stop failed: %d\n", ret);
+-			return;
+-		}
+-	}
+-
++	video_stop_subdevs(video, NULL);
+ 	video_device_pipeline_stop(vdev);
+ 
+ 	video->ops->flush_buffers(video, VB2_BUF_STATE_ERROR);
+@@ -361,6 +416,14 @@ static int video_enum_fmt(struct file *file, void *fh, struct v4l2_fmtdesc *f)
  	int i, j, k;
  	u32 mcode = f->mbus_code;
  
@@ -287,7 +402,7 @@ index 831486e..ef1947b 100644
  	if (f->type != video->type)
  		return -EINVAL;
  
-@@ -445,6 +502,8 @@ static int video_enum_framesizes(struct file *file, void *fh,
+@@ -445,6 +508,8 @@ static int video_enum_framesizes(struct file *file, void *fh,
  static int video_g_fmt(struct file *file, void *fh, struct v4l2_format *f)
  {
  	struct camss_video *video = video_drvdata(file);
@@ -296,7 +411,7 @@ index 831486e..ef1947b 100644
  
  	*f = video->active_fmt;
  
-@@ -549,9 +608,65 @@ static int video_s_fmt(struct file *file, void *fh, struct v4l2_format *f)
+@@ -549,9 +614,65 @@ static int video_s_fmt(struct file *file, void *fh, struct v4l2_format *f)
  	ret = __video_try_fmt(video, f);
  	if (ret < 0)
  		return ret;
@@ -311,7 +426,7 @@ index 831486e..ef1947b 100644
 +
 +	return 0;
 +}
- 
++
 +static int video_try_fmt_meta(struct file *file, void *fh,
 +			      struct v4l2_format *f)
 +{
@@ -323,7 +438,7 @@ index 831486e..ef1947b 100644
 +	struct v4l2_subdev *subdev;
 +	u32 pad;
 +	int ret;
-+
+ 
 +	if (video->line_based)
 +		return -EINVAL;
 +	subdev = video_remote_subdev(video, &pad);
@@ -362,7 +477,7 @@ index 831486e..ef1947b 100644
  	return 0;
  }
  
-@@ -586,6 +701,10 @@ static const struct v4l2_ioctl_ops msm_vid_ioctl_ops = {
+@@ -586,6 +707,10 @@ static const struct v4l2_ioctl_ops msm_vid_ioctl_ops = {
  	.vidioc_g_fmt_vid_cap_mplane	= video_g_fmt,
  	.vidioc_s_fmt_vid_cap_mplane	= video_s_fmt,
  	.vidioc_try_fmt_vid_cap_mplane	= video_try_fmt,
@@ -373,7 +488,7 @@ index 831486e..ef1947b 100644
  	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
  	.vidioc_querybuf		= vb2_ioctl_querybuf,
  	.vidioc_qbuf			= vb2_ioctl_qbuf,
-@@ -681,6 +800,7 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+@@ -681,6 +806,7 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
  	int ret;
  
  	vdev = &video->vdev;
@@ -381,7 +496,7 @@ index 831486e..ef1947b 100644
  
  	mutex_init(&video->q_lock);
  
-@@ -717,7 +837,9 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+@@ -717,7 +843,9 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
  	}
  
  	vdev->fops = &msm_vid_fops;
