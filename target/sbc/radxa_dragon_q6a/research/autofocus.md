@@ -24,9 +24,11 @@ is that draft's mbox, not applied by the build.
 The lens position mapping `0..15` dioptres to AK7375 raw `0..4095` is taken as
 a **provisional** mapping from Arducam's Raspberry Pi IMX519 tuning. It is not
 calibrated for the owner's 80° lens; `LensPosition` should not be used as a
-measured distance yet. Existing `focus.py` raw-code workflows remain available:
-in Manual mode the new runtime does not send lens commands until the client
-explicitly supplies `LensPosition`.
+measured distance yet. Direct `focus.py` control remains useful for raw V4L2
+phase capture. For color capture with the private AF runtime, use a libcamera
+`LensPosition` request: setting V4L2 focus before `cam` starts did not retain
+the requested sharpness in the 2026-09-26 chart test. `snapshot.sh`,
+`focus-sweep.sh` and `web-preview.py` now send the request through libcamera.
 
 ## Phase-data status
 

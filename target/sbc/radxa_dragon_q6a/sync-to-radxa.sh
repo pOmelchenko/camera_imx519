@@ -19,8 +19,8 @@ if [[ "$(uname -s)" == Darwin ]]; then
     tar_options+=(--no-xattrs --no-acls --no-fflags)
 fi
 tar "${tar_options[@]}" -cf "$archive" .gitignore README.md SOURCES.sha256 docs libcamera research kernel \
-    build.sh install.sh check.sh cam.sh capture.sh focus.py focus-sweep.sh score-focus.py af-log-summary.py stability.sh color-five-modes.sh \
-    collect-diagnostics.sh disable-autosuspend.sh snapshot.sh snapshot-af.sh snapshot-pdaf.py preview.sh focus-position.txt sync-to-radxa.sh \
+    build.sh install.sh check.sh cam.sh capture.sh focus.py focus_control.py focus-sweep.sh score-focus.py af-log-summary.py stability.sh color-five-modes.sh \
+    collect-diagnostics.sh disable-autosuspend.sh snapshot.sh snapshot-af.sh snapshot-pdaf.py preview.sh web-preview.py focus-position.txt sync-to-radxa.sh \
     driver/imx519.c driver/ak7375.c driver/Makefile driver/dkms.conf \
     overlays/qcs6490-radxa-dragon-q6a-cam3-imx519.dts
 ssh -o BatchMode=yes -o ConnectTimeout=10 "$target" \

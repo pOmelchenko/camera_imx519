@@ -19,7 +19,7 @@
 | `rsync: command not found` на плате | Для переноса комплекта использовать sync-to-radxa.sh (SSH+tar). |
 | SSH пропадает, `Host is down` | В проверенном обрыве плата ушла в s2idle. Полный журнал показал `The system will suspend now!`; отключён AC autosuspend GDM/radxa. |
 | `systemctl show systemd-suspend.service` без timestamps | Завершённый unit может быть выгружен; это не доказательство отсутствия сна. Проверять полный journalctl. |
-| `v4l2-ctl --set-ctrl=focus_absolute=...` не удерживает фокус | После закрытия lens subdev драйвер паркует линзу. Использовать focus.py, snapshot.sh или preview.sh. |
+| `v4l2-ctl --set-ctrl=focus_absolute=...` не удерживает фокус | После закрытия lens subdev драйвер паркует линзу. Для прямого V4L2-захвата используйте `focus.py`; для цветного захвата через частную libcamera — `snapshot.sh`, `focus-sweep.sh` или `web-preview.py`, которые задают `LensPosition` через libcamera. |
 
 ## Устранённый обрыв SSH: автоматический сон
 
