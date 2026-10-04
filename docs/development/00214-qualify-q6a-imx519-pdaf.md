@@ -1,13 +1,13 @@
 ---
 type: backlog-task
 status: deferred
-number: 00211
+number: 00214
 epic: Camera
 priority: P2
-updated: 2026-09-25
+updated: 2026-10-04
 ---
 
-# 00211 Qualify Q6A IMX519 PDAF And Recovery
+# 00214 Qualify Q6A IMX519 PDAF And Recovery
 
 ## Goal
 

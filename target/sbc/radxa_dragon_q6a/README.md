@@ -59,7 +59,7 @@ libcamera содержит корректный IMX519 helper и базовый 
 длительная работа и перенаводка при движении объекта ещё не проверены.
 Сводка: [PDAF внутри libcamera](docs/evidence/2026-09-25-libcamera-pdaf.json).
 Следующая аппаратная квалификация записана в
-[задаче 00211](../../../../docs/wiki/internal/backlog/00211-qualify-q6a-imx519-pdaf.md).
+[задаче 00214](../../../../docs/wiki/internal/backlog/00214-qualify-q6a-imx519-pdaf.md).
 Подробности:
 [журнал PDAF bring-up](research/pdaf-bringup.md). Цветовая калибровка не
 завершена. Полный журнал: [WORKLOG](docs/WORKLOG.md).
