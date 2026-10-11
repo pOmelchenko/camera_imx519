@@ -71,19 +71,23 @@
     },
     {
       "path": "overlay/imx519-cam1.dts",
-      "sha256": "08e17786a724b58f720611be2d9480d2d857f4e14f3b3dca7001403caa152b31"
+      "sha256": "f9256fbd868d4a07179faa8b2eb9341b5af6a660c856c3665b8a9eae652ded07"
     },
     {
       "path": "overlay/imx519-cam2.dts",
-      "sha256": "af543995cf38380a0acda501f7b19ed18739cd1ac8d1b3e70fc8b65e6bb62cb3"
+      "sha256": "9f040aba7f05b23112be41d360af23c93d7e8582899b3df5a03f8cdcb8b77a91"
     },
     {
       "path": "overlay/imx519-cam3.dts",
-      "sha256": "90e5a336f7a8c560905e681f10edb5743bbbb6f524b502e5a3ecbfe5a07500a9"
+      "sha256": "5c53ffd634d9170bd8ae1cba24e72007d426089d0e3aebca74e093fa4a9ccd87"
     },
     {
       "path": "patches/imx519-linux-7.patch",
-      "sha256": "7a512fcba1b16930a3752dae26bca4e8007d0b6a68c7b3bace34245d0076f41b"
+      "sha256": "ed6da20d584fd70256315c0ecebd0c21a7e57f551028d72f57c1370d74d3acc8"
+    },
+    {
+      "path": "tools/check-overlays.py",
+      "sha256": "b42bf1940542303a32de78a828533a2294c55b42c2700de1df17c488a52228e4"
     }
   ]
 }

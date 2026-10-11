@@ -9,6 +9,15 @@
  	try_fmt_meta->field = V4L2_FIELD_NONE;
  
  	/* Initialize try_crop */
+@@ -1239,7 +1239,7 @@
+ 	 * Applying V4L2 control value only happens
+ 	 * when power is up for streaming
+ 	 */
+-	if (pm_runtime_get_if_in_use(&client->dev) == 0)
++	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
+ 		return 0;
+ 
+ 	switch (ctrl->id) {
 @@ -1322,7 +1322,7 @@
  		if (code->index > 0)
  			return -EINVAL;
@@ -45,3 +54,14 @@
  		fmt->format = *try_fmt;
  	} else {
  		if (fmt->pad == IMAGE_PAD) {
+@@ -2100,7 +2100,9 @@
+ 	imx519_free_controls(imx519);
+ 
+ error_power_off:
+-	pm_runtime_disable(&client->dev);
++	/* A failed chip-ID check precedes pm_runtime_enable(). */
++	if (pm_runtime_enabled(&client->dev))
++		pm_runtime_disable(&client->dev);
+ 	pm_runtime_set_suspended(&client->dev);
+ 	imx519_power_off(&client->dev);
+ 

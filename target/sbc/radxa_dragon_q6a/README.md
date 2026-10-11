@@ -1,10 +1,11 @@
 # IMX519 на Radxa Dragon Q6A
 
-**Статус: драйверы, три оверлея и демка собраны на Q6A; захват и фокус пока не проверены.**
+**Статус: физический захват CAM3 и демка проверены; CAM1/2 отключены, AF не проверен.**
 Проверка выполнена на Ubuntu 24.04.5 LTS / `7.0.11-7-qcom`.
-Оверлеи установлены как `.dtbo.disabled`; активная конфигурация камер
-и загрузки не менялась. Имеющийся IMX519 с объективом 80° планируется
-проверить на CAM3. Маркировка физического модуля и схема кабеля не зафиксированы.
+CAM3 включён вместе с прежним AR0234 CAM2. CAM1/2 для IMX519 остаются
+`.dtbo.disabled`. Демка получила 600 кадров 1920×1080, 29,9002 кадр/с,
+без пропусков и ошибок захвата. [Проверенная инструкция](../../../docs/guides/sbc/radxa_dragon_q6a.md).
+Маркировка физического модуля и поконтактная схема кабеля не зафиксированы.
 
 ## Оверлеи CAM1, CAM2 и CAM3
 
@@ -66,9 +67,14 @@ make overlay-check
 того же порта не подходит.
 
 `make driver` получает закреплённые SHA-256 исходники IMX519 из Raspberry Pi
-Linux и AK7375 из Linux 7.0. Единственный патч сенсора заменяет Pi-specific
+Linux и AK7375 из Linux 7.0. Патч сенсора заменяет Pi-specific
 `MEDIA_BUS_FMT_SENSOR_DATA` на mainline `MEDIA_BUS_FMT_METADATA_FIXED`
-для незадействованного metadata pad; регистры изображения не меняются.
+для незадействованного metadata pad и исправляет обработку runtime PM:
+ошибка проверки ID до включения PM не должна повторно отключать PM,
+а отрицательный результат `pm_runtime_get_if_in_use()` не разрешает I2C.
+Регистры изображения и строгая проверка ID `0x0519` не меняются.
+Fixed regulator оверлеев ждёт 100 мс после включения модуля перед опросом.
+Оверлей задаёт I2C 400 кГц вместо унаследованного от Q6A значения 1 МГц.
 Сборка проверена с `-Werror` под `7.0.11-7-qcom`. После смены ядра
 модули нужно пересобрать. Источники и лицензии — [sources.json](sources.json).
 
@@ -94,8 +100,9 @@ sudo depmod -a
 загрузки обычным способом RadxaOS. Первую активацию выполнять с доступным
 резервным вариантом загрузки по [репозиторию платы](https://github.com/pOmelchenko/radxa_dragon_q6a).
 После загрузки проверить `dmesg`, `v4l2-ctl --list-devices`,
-`media-ctl -d /dev/media0 -p` и `cam -l`. Первый кадр ещё не получен;
-это этап проверки, а не подтверждённая инструкция захвата.
+`media-ctl -d /dev/media0 -p` и `cam -l`.
+Для CAM3 фактическая конфигурация и команды захвата приведены в
+[инструкции](../../../docs/guides/sbc/radxa_dragon_q6a.md).
 
 ## Демка
 
@@ -115,7 +122,8 @@ sh tools/preview.sh
 Подробнее — [demo/README.md](demo/README.md).
 
 Автофокус в демку не добавлен. Узел AK7375 готовит драйвер привода;
-распознавание, ручное управление и алгоритм AF ещё требуют проверки.
+AK7375 зарегистрирован с `focus_absolute` 0–4095; ручное управление
+и алгоритм AF ещё требуют проверки.
 Поддержка IMX519 в Pi libcamera не подтверждает tuning или автофокус
 в CAMSS simple/software ISP на Q6A.
 
@@ -125,15 +133,18 @@ sh tools/preview.sh
 | --- | --- |
 | [Makefile](Makefile) | Сборка драйверов, оверлеев, демки и проверки |
 | [tools/fetch-driver.py](tools/fetch-driver.py) | Загрузка исходников с проверкой SHA-256 |
-| [patches/imx519-linux-7.patch](patches/imx519-linux-7.patch) | Адаптация metadata code к mainline Linux |
+| [patches/imx519-linux-7.patch](patches/imx519-linux-7.patch) | Metadata code и обработка ошибок runtime PM |
 | [tools/check-overlays.py](tools/check-overlays.py) | Проверка CSI, питания, clocks, lens-focus и 15 сочетаний |
 | [tools/install-overlays-disabled.py](tools/install-overlays-disabled.py) | Установка без активации |
 | [demo/imx519-demo.cpp](demo/imx519-demo.cpp) | libcamera + SDL2 + OpenGL ES 3 |
-| [validation/2026-10-11.json](validation/2026-10-11.json) | Конфигурация, сборка, тесты и ограничения |
+| [validation/2026-10-11.json](validation/2026-10-11.json) | Первичная сборка и GPU/DT-тесты до активации камеры |
+| [validation/cam3-2026-10-11.json](validation/cam3-2026-10-11.json) | Физический поток, исправления, состояние загрузки и хеш снимка |
 
 Драйверы и адаптация — GPL-2.0; оверлеи — GPL-2.0-only с сохранением
 Radxa [BSD-условий](LICENSE.Radxa). Демка — [MIT](LICENSE.MIT).
 Зависимости остаются в исключённом `vendor/`, сборки — в `build/`,
-захваты и журналы — в `runs/`. Первый захват, Bayer/crop, частота,
-цвет/экспозиция, ручной фокус и AF, cold boot и длительный прогон
-не подтверждены.
+захваты и журналы — в `runs/`. На CAM3 вход software ISP —
+2328×1748 RGGB RAW10 CSI2P, stride 2912; выход — 1920×1080 RGBX.
+Работает fallback `uncalibrated.yaml`, специализированных tuning/helper нет.
+Кадр получен, но цвет и экспозиция не калиброваны; ручной фокус и AF,
+cold boot, полный режим 4656×3496, CAM1/2 и одновременные потоки не проверены.

@@ -32,6 +32,7 @@
         compatible = "regulator-fixed";
         regulator-name = "imx519_cam2_enable";
         regulator-always-on;
+        startup-delay-us = <100000>;
         enable-active-high;
         gpios = <&tlmm 77 0>;
         pinctrl-names = "default";
@@ -71,6 +72,7 @@
 &cci1_i2c0 {
     #address-cells = <1>;
     #size-cells = <0>;
+    clock-frequency = <400000>;
     status = "okay";
     imx519@1a {
         compatible = "sony,imx519";

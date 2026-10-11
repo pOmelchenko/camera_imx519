@@ -35,6 +35,7 @@ def check_graph(dtb, cameras, symbols):
         pinctrl = symbols['tlmm'] + f'/imx519-cam{camera}-enable-state'
         require(get(dtb, symbols[config['controller']], 'status') == 'okay', 'CCI disabled')
         require(get(dtb, symbols[config['bus']], 'status') == 'okay', 'I2C bus disabled')
+        require(get(dtb, symbols[config['bus']], 'clock-frequency', True) == [400000], 'Wrong camera I2C speed')
         require(get(dtb, sensor, 'compatible') == 'sony,imx519', 'Wrong sensor')
         require(get(dtb, sensor, 'reg', True) == [0x1a], 'Wrong I2C address')
         require(get(dtb, endpoint, 'data-lanes', True) == [1, 2], 'Wrong sensor lanes')
@@ -49,6 +50,7 @@ def check_graph(dtb, cameras, symbols):
         require(get(dtb, sensor, 'VANA-supply', True) == get(dtb, regulator, 'phandle', True), 'Supply cross-link')
         require(get(dtb, regulator, 'gpios', True) == get(dtb, symbols['tlmm'], 'phandle', True) + [config['gpio'], 0], 'Wrong enable GPIO')
         require(get(dtb, regulator, 'pinctrl-0', True) == get(dtb, pinctrl, 'phandle', True), 'Pinctrl cross-link')
+        require(get(dtb, regulator, 'startup-delay-us', True) == [100000], 'Missing module startup delay')
         require(get(dtb, pinctrl, 'pins') == f'gpio{config["gpio"]}', 'Wrong pinctrl GPIO')
         require(get(dtb, lens, 'compatible') == 'asahi-kasei,ak7375', 'Wrong lens driver')
         require(get(dtb, lens, 'reg', True) == [0x0c], 'Wrong lens address')
