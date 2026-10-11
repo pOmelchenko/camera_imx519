@@ -2,7 +2,7 @@
 
 | Платформа | Подключение этой камеры |
 | --- | --- |
-| Radxa Dragon Q6A | [Состояние и порядок проверки](radxa_dragon_q6a/README.md) |
+| Radxa Dragon Q6A | [Оверлеи CAM1/2/3, драйверы и демка](radxa_dragon_q6a/README.md) |
 | Raspberry Pi | [Состояние и порядок проверки](raspberry_pi/README.md) |
 | NVIDIA Jetson | [Состояние и порядок проверки](nvidia_jetson/README.md) |
 

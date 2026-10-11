@@ -1,0 +1,231 @@
+{
+  "verified_on": "2026-10-11",
+  "status": "Build and GPU/device-tree validation passed; IMX519 physical capture and focus not tested",
+  "board": "Radxa Dragon Q6A",
+  "os": "Ubuntu 24.04.5 LTS",
+  "kernel": "7.0.11-7-qcom",
+  "physical_module": {
+    "sensor": "IMX519",
+    "lens": "80 degrees, autofocus according to owner/source",
+    "planned_connector": "J7 / CAM3",
+    "pcb_revision": null,
+    "cable_pinout": null
+  },
+  "userspace": {
+    "libcamera_pkg_config": "0.7.1",
+    "libcamera_runtime": "v0.0.0+1-de1e9bc0-dirty (2026-09-02T10:59:06UTC)",
+    "sdl2": "2.30.0",
+    "gles": "3.2",
+    "mesa": "25.2.8-0ubuntu0.24.04.4"
+  },
+  "driver_build": {
+    "exit_code": 0,
+    "warnings_as_errors": true,
+    "compiler": "gcc 13.3.0",
+    "kernel_compiler": "gcc 12.2.0",
+    "compiler_version_warning": true,
+    "module_vermagic": {
+      "imx519": "7.0.11-7-qcom SMP preempt mod_unload aarch64",
+      "ak7375": "7.0.11-7-qcom SMP preempt mod_unload aarch64"
+    }
+  },
+  "demo_build": {
+    "warnings_as_errors": true,
+    "passed": true
+  },
+  "gpu_self_test": {
+    "passed": true,
+    "output": [
+      "GPU FD643 | OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.4",
+      "SELF_TEST noise_rms_ratio=0.595826 mean_bias=-0.000985512 moving_edge_rmse=0.0423663",
+      "SHADOW_TEST strength=1 noise_rms_ratio=0.163242 mean_bias=-0.000106899 dim_line_contrast=0.942431 green_excess=0.00721133 moving_edge_rmse=0.0113927",
+      "SHADOW_TEST strength=2 noise_rms_ratio=0.115386 mean_bias=-0.000253595 dim_line_contrast=0.930442 green_excess=0.00831699 moving_edge_rmse=0.0104929",
+      "SHADOW_TEST strength=3 noise_rms_ratio=0.112583 mean_bias=-0.000314742 dim_line_contrast=0.91685 green_excess=0.00960784 moving_edge_rmse=0.00990359"
+    ]
+  },
+  "overlays": {
+    "verified_on": "2026-10-11",
+    "validation_kind": "Device tree build/apply and graph validation; not physical multi-camera capture",
+    "base_sha256": "647d22e8f8aa5789b65339b7b80412c355a6bfbb6723e2023f6564df55252549",
+    "cases": [
+      {
+        "order": [
+          1
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          2
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          3
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          1,
+          2
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          1,
+          3
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          2,
+          1
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          2,
+          3
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          3,
+          1
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          3,
+          2
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          1,
+          2,
+          3
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          1,
+          3,
+          2
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          2,
+          1,
+          3
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          2,
+          3,
+          1
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          3,
+          1,
+          2
+        ],
+        "graph_valid": true
+      },
+      {
+        "order": [
+          3,
+          2,
+          1
+        ],
+        "graph_valid": true
+      }
+    ],
+    "shared_cma_bytes": 134217728
+  },
+  "mixed_camera_graph_cases": [
+    {
+      "order": [
+        "ar0234-cam2.dtbo",
+        "imx519-cam3.dtbo"
+      ],
+      "graph_valid": true
+    },
+    {
+      "order": [
+        "imx519-cam3.dtbo",
+        "ar0234-cam2.dtbo"
+      ],
+      "graph_valid": true
+    }
+  ],
+  "dtc_warnings": [
+    "CAM1: graph_child_address for single port@0 in overlay fragment; composed graph validated"
+  ],
+  "absent_sensor_error_verified": true,
+  "installation": {
+    "install_output": "/boot/efi/RadxaOS/7.0.11-7-qcom/dtbo/imx519-cam1.dtbo.disabled: disabled, SHA-256 e2436ea4191ecabe8644b09a90d123d549896eee98afb4fddcdd36d65860670c\n/boot/efi/RadxaOS/7.0.11-7-qcom/dtbo/imx519-cam2.dtbo.disabled: disabled, SHA-256 ac3f8f667581684a50da9a51ff000723f3f522a1c4fd477802cd2653a8160cb4\n/boot/efi/RadxaOS/7.0.11-7-qcom/dtbo/imx519-cam3.dtbo.disabled: disabled, SHA-256 d0640b0499896dc60cb6e24cc16e6cbeeffdcab4052b21925ad68a2a1dff04c0\nActive overlays and boot entries unchanged. No reboot or activation performed.\n",
+    "active_overlays_unchanged": true,
+    "boot_entries_unchanged": true,
+    "base_dtb_unchanged": true,
+    "modules_installed_not_loaded": true,
+    "no_reboot": true,
+    "installed_overlays": [
+      {
+        "path": "/boot/efi/RadxaOS/7.0.11-7-qcom/dtbo/imx519-cam1.dtbo.disabled",
+        "sha256": "e2436ea4191ecabe8644b09a90d123d549896eee98afb4fddcdd36d65860670c"
+      },
+      {
+        "path": "/boot/efi/RadxaOS/7.0.11-7-qcom/dtbo/imx519-cam2.dtbo.disabled",
+        "sha256": "ac3f8f667581684a50da9a51ff000723f3f522a1c4fd477802cd2653a8160cb4"
+      },
+      {
+        "path": "/boot/efi/RadxaOS/7.0.11-7-qcom/dtbo/imx519-cam3.dtbo.disabled",
+        "sha256": "d0640b0499896dc60cb6e24cc16e6cbeeffdcab4052b21925ad68a2a1dff04c0"
+      }
+    ],
+    "installed_modules": [
+      {
+        "path": "/lib/modules/7.0.11-7-qcom/updates/imx519.ko",
+        "sha256": "cc733ae40b2b986939c17ca9ae5ed0f7a6f269ced7ecfcf114fe5739c74f7d25"
+      },
+      {
+        "path": "/lib/modules/7.0.11-7-qcom/updates/ak7375.ko",
+        "sha256": "de1db89d4521a472f0b14e65ccc98ab8f60653fb8b6509cdc672e2ce70c54fe6"
+      }
+    ]
+  },
+  "artifacts_sha256": {
+    "build/imx519-demo": "50b4b7226d0a8990fbcafb071ee11ff636bbd84f785b14b20133ef2447bee543",
+    "build/driver/imx519.ko": "cc733ae40b2b986939c17ca9ae5ed0f7a6f269ced7ecfcf114fe5739c74f7d25",
+    "build/driver/ak7375.ko": "de1db89d4521a472f0b14e65ccc98ab8f60653fb8b6509cdc672e2ce70c54fe6",
+    "build/imx519-cam1.dtbo": "e2436ea4191ecabe8644b09a90d123d549896eee98afb4fddcdd36d65860670c",
+    "build/imx519-cam2.dtbo": "ac3f8f667581684a50da9a51ff000723f3f522a1c4fd477802cd2653a8160cb4",
+    "build/imx519-cam3.dtbo": "d0640b0499896dc60cb6e24cc16e6cbeeffdcab4052b21925ad68a2a1dff04c0"
+  },
+  "target_build_directory": "/home/radxa/camera-imx519-20261011/target",
+  "limitations": [
+    "No IMX519 overlay enabled or reboot performed",
+    "First IMX519 frame, color/Bayer/crop, frame rate and exposure not tested",
+    "Module oscillator, internal regulators and cable not physically verified",
+    "AK7375 identification, manual lens motion and autofocus not tested",
+    "Demo has no autofocus algorithm; CAMSS simple ISP tuning unverified",
+    "Simultaneous multi-camera streams, CMA capacity, cold boot and sustained capture not tested"
+  ]
+}
