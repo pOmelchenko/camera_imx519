@@ -1,0 +1,9 @@
+*.pdf binary
+*.png binary
+*.html -text
+*.adoc -text
+aliexpress-description.md -text
+sources.json -text
+official-sources.json -text
+pinout-sources.json -text
+driver-sources.json -text

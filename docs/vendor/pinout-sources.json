@@ -1,0 +1,71 @@
+{
+  "retrieved_on": "2026-10-11",
+  "purpose": "Recover module connector documentation gap without claiming physical qualification",
+  "physical_board_revision_confirmed": false,
+  "physical_pinout_verified": false,
+  "documents": [
+    {
+      "file": "arducam-csi-pinout-2026-10-11.html",
+      "publisher": "Arducam",
+      "title": "Raspberry Pi Camera Pinout",
+      "source_url": "https://docs.arducam.com/Raspberry-Pi-Camera/raspberry-pi-camera-pinout/",
+      "resolved_url": "https://docs.arducam.com/Raspberry-Pi-Camera/raspberry-pi-camera-pinout/",
+      "retrieved_on": "2026-10-11",
+      "bytes": 252042,
+      "sha256": "8a3cf8f5f3146e65a6419804d2cf254ebf7fbf6e8745407f147f4686ab61cbf8",
+      "transformation": "none; original response body bytes",
+      "scope": "Standard 15/22-pin signal assignments, connector pitch and derived upper-contact connector; generic module reference, not a UC-875 schematic.",
+      "source_kind": "manufacturer HTML",
+      "revision": "No explicit document revision; dated snapshot",
+      "external_assets_retained": false
+    },
+    {
+      "file": "arducam-imx519-guide-2026-10-11.html",
+      "publisher": "Arducam",
+      "title": "16MP IMX519",
+      "source_url": "https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/16MP-IMX519/",
+      "resolved_url": "https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/16MP-IMX519/",
+      "retrieved_on": "2026-10-11",
+      "bytes": 261511,
+      "sha256": "54d5269211a3d6663174be8a04823f60ddcbf7bedad3abbd7f6d4d9e215ccacc",
+      "transformation": "none; original response body bytes",
+      "scope": "Two-lane CSI-2 and conflicting B0371 connector entries: 22pin/Top in catalog, 15/Bottom in autofocus section.",
+      "source_kind": "manufacturer HTML",
+      "revision": "No explicit document revision; dated snapshot",
+      "external_assets_retained": false
+    },
+    {
+      "file": "arducam-csi-connection-guide-2026-10-11.html",
+      "publisher": "Arducam",
+      "title": "Native Camera Quick Start Guide",
+      "source_url": "https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/Quick-Start-Guide/",
+      "resolved_url": "https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/Quick-Start-Guide/",
+      "retrieved_on": "2026-10-11",
+      "bytes": 231964,
+      "sha256": "39f08e1e232577d9f8d6d7cbd7f2ca2c1330c04beb0163d5cd6d609464e40605",
+      "transformation": "none; original response body bytes",
+      "scope": "Cable-to-connector metal contact alignment; illustrations are external resources and are not embedded in the saved HTML.",
+      "source_kind": "manufacturer HTML",
+      "revision": "No explicit document revision; dated snapshot",
+      "external_assets_retained": false
+    },
+    {
+      "file": "raspberry-pi-camera-advanced-2026-10-11.adoc",
+      "publisher": "Raspberry Pi Ltd",
+      "title": "Camera advanced information: pinout information",
+      "source_url": "https://raw.githubusercontent.com/raspberrypi/documentation/62ba0a0c2dd5030fe9b19458fa9bd174a451f79b/documentation/asciidoc/accessories/camera/advanced.adoc",
+      "resolved_url": "https://raw.githubusercontent.com/raspberrypi/documentation/62ba0a0c2dd5030fe9b19458fa9bd174a451f79b/documentation/asciidoc/accessories/camera/advanced.adoc",
+      "retrieved_on": "2026-10-11",
+      "bytes": 6075,
+      "sha256": "f0586004c12983ae20164de2dead3ecd3cc414771ddda0cf445d60c844cb5758",
+      "transformation": "none; original response body bytes",
+      "scope": "Official standard 15/22-pin host assignments and host-side I2C/control voltage; no Arducam board-specific numbering proof.",
+      "source_kind": "official documentation source",
+      "revision": "Git commit 62ba0a0c2dd5030fe9b19458fa9bd174a451f79b",
+      "rendered_page_url": "https://www.raspberrypi.com/documentation/accessories/camera.html#pinout-information",
+      "license": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+      "license_url": "https://github.com/raspberrypi/documentation/blob/62ba0a0c2dd5030fe9b19458fa9bd174a451f79b/LICENSE.md",
+      "retrieval_note": "Rendered page read through web tool; direct curl returned HTTP 403, so the original official source was retained at a pinned commit."
+    }
+  ]
+}

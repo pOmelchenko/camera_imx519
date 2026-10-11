@@ -1,0 +1,145 @@
+{
+  "collected_on": "2026-09-23",
+  "inventory_status": "in owner possession",
+  "inventory_evidence": "owner confirmation on 2026-09-23",
+  "landing_page": "https://aliexpress.ru/item/1005007908489775.html?sku_id=12000042797436463",
+  "item_id": "1005007908489775",
+  "sku_id": "12000042797436463",
+  "owner_identified_module": "Arducam IMX519 autofocus, 80-degree option",
+  "pictured_board_marking": "UC-875 Rev.B",
+  "physical_board_revision_confirmed": false,
+  "manufacturer_sales_sku_confirmed": false,
+  "live_listing_retrieved": false,
+  "physical_capture_recorded": false,
+  "documents": [
+    {
+      "title": "IMX519 PDAF/CDAF autofocus and 80-degree option",
+      "file": "product-introduction.png",
+      "source_kind": "owner-provided product image",
+      "original_filename": "pasted-image-7.png",
+      "provided_on": "2026-09-23",
+      "bytes": 362447,
+      "width": 800,
+      "height": 800,
+      "sha256": "f56f301efc149231a38abf41f3588c4b5051c3cd1d6465c14667c34e0a2932e0",
+      "transformation": "none; original attachment bytes"
+    },
+    {
+      "title": "Module front/back with UC-875 and Rev.B markings",
+      "file": "module-front-and-back.png",
+      "source_kind": "owner-provided product image",
+      "original_filename": "pasted-image-4912.png",
+      "provided_on": "2026-09-23",
+      "bytes": 756026,
+      "width": 1200,
+      "height": 1200,
+      "sha256": "95d86380e3bb5fdc91e857d0b673dba0a28cb8859f71f3250cbcd3b5f3e9b607",
+      "transformation": "none; original attachment bytes"
+    },
+    {
+      "title": "Seller Jetson connection example",
+      "file": "jetson-connection-example.png",
+      "source_kind": "owner-provided product image",
+      "original_filename": "pasted-image-11.png",
+      "provided_on": "2026-09-23",
+      "bytes": 658652,
+      "width": 1200,
+      "height": 1200,
+      "sha256": "0236a966a22c48afa2ebd3fe1bdb21f3caa87d86ca925f3fe8897902adf94f61",
+      "transformation": "none; original attachment bytes"
+    },
+    {
+      "title": "Seller Raspberry Pi connection example",
+      "file": "raspberry-pi-connection-example.png",
+      "source_kind": "owner-provided product image",
+      "original_filename": "pasted-image-4905.png",
+      "provided_on": "2026-09-23",
+      "bytes": 786647,
+      "width": 1200,
+      "height": 1200,
+      "sha256": "739a7a7403d7b13544e1af9334ff594a5cda12f2789ae7dfb97c803aed5b0618",
+      "transformation": "none; original attachment bytes"
+    },
+    {
+      "title": "Module, lens and ribbon-cable details",
+      "file": "module-and-cable-details.png",
+      "source_kind": "owner-provided product image",
+      "original_filename": "pasted-image-4795.png",
+      "provided_on": "2026-09-23",
+      "bytes": 1245833,
+      "width": 1200,
+      "height": 1200,
+      "sha256": "cfd642d3ae6b7b3ec22ce9a85ac9a78556160dda8f7242ad6a51be1f5098172d",
+      "transformation": "none; original attachment bytes"
+    },
+    {
+      "title": "Owner-pasted AliExpress description",
+      "file": "aliexpress-description.md",
+      "source_kind": "owner-provided seller text",
+      "provided_on": "2026-09-23",
+      "bytes": 2416,
+      "sha256": "141b2dda72cea2b5ae8da393ea78e572e35a70cbd09595e83764f43602ea2537",
+      "transformation": "supplied listing text inside a text fence under a provenance header"
+    },
+    {
+      "file": "arducam-product-brief.pdf",
+      "source_url": "https://www.arducam.com/downloads/arducam-16mp-autofocus-camera-product-brief.pdf",
+      "resolved_url": "https://blog.arducam.com/downloads/arducam-16mp-autofocus-camera-product-brief.pdf",
+      "retrieved_on": "2026-09-23",
+      "bytes": 5908503,
+      "sha256": "326441d7493323672bd8f365ab139eab69222cfd95b677e96b51b0c564a67756",
+      "transformation": "none; original downloaded PDF",
+      "publisher": "Arducam",
+      "source_kind": "manufacturer PDF",
+      "pages": 6,
+      "title": "16MP High-Resolution Autofocus Camera Product Brief",
+      "revision": "Cover publication September 2021; no explicit revision; PDF modification metadata 2021-11-12"
+    },
+    {
+      "file": "arducam-start-guide.pdf",
+      "source_url": "https://www.arducam.com/downloads/arducam-imx519-start-guide.pdf",
+      "resolved_url": "https://blog.arducam.com/downloads/arducam-imx519-start-guide.pdf",
+      "retrieved_on": "2026-09-23",
+      "bytes": 495934,
+      "sha256": "94ec107f4e0af1a980dff73318fb07c45db8f0268bcf95eb90cc749659772963",
+      "transformation": "none; original downloaded PDF",
+      "publisher": "Arducam",
+      "source_kind": "manufacturer PDF",
+      "pages": 7,
+      "title": "High-Resolution Autofocus Camera Getting Started",
+      "revision": "Cover publication September 2021; no explicit revision; PDF title identifies B0371/B0371C, modification metadata 2023-03-21"
+    }
+  ],
+  "online_reviews": [
+    {
+      "url": "https://www.arducam.com/blog/product/imx519-autofocus-camera-module-for-raspberry-pi-arducam-b0371/",
+      "reviewed_on": "2026-09-23",
+      "scope": "B0371 family, older advertised Jetson rates, rolling shutter and onboard ISP boundary",
+      "local_html_retained": false
+    },
+    {
+      "url": "https://www.arducam.com/arducam-imx519-pdaf-cdaf-autofocus-camera-module-for-raspberry-pi-nvidiar-jetson-orin-series.html",
+      "reviewed_on": "2026-09-23",
+      "scope": "Separate B0500 SKU; explicit diagonal FoV, different rate/pixel-size/cable references",
+      "local_html_retained": false
+    },
+    {
+      "url": "https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/16MP-IMX519/",
+      "reviewed_on": "2026-09-23",
+      "scope": "Sensor/link table, contradictory B0371 connector entries, autofocus setup via custom libcamera and imx519 overlay",
+      "local_html_retained": false
+    },
+    {
+      "url": "https://docs.arducam.com/Nvidia-Jetson-Camera/Native-Camera/imx519/",
+      "reviewed_on": "2026-09-23",
+      "scope": "Jetson rates separated by vendor-labelled L4T rows; platform setup links",
+      "local_html_retained": false
+    },
+    {
+      "url": "https://docs.arducam.com/Nvidia-Jetson-Camera/Nvidia-Jetson-Orin-Series/NVIDIA-Jetson-Orin-Nano%26NX/Quick-Start/",
+      "reviewed_on": "2026-09-23",
+      "scope": "Orin Nano/NX connection and links to supported-version matrix/native-camera installation; no software installed",
+      "local_html_retained": false
+    }
+  ]
+}
