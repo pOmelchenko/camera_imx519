@@ -1,0 +1,86 @@
+[
+  {
+    "source_commit": "9c325150c5e11a600c1ac997c7e49f274cdce622",
+    "destination_commit": "ecbbcc32e7e3f3f9b90d4f68a8eb42790833f431",
+    "subject": "feat(camera): bring up Q6A IMX519 contrast autofocus",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T02:08:42+03:00"
+  },
+  {
+    "source_commit": "db767d4365217237d760f959bacb4452adc3359c",
+    "destination_commit": "1d0e7c3f2ccc71d793df409cca3452cc28e6fa78",
+    "subject": "camera: stage Q6A IMX519 native color and PDAF prototype",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T08:07:24+03:00"
+  },
+  {
+    "source_commit": "8ca17e7c0007c2ae56accd762fbbaba6a7e92a9a",
+    "destination_commit": "b8c9d3905b0e4d5f02b1402f3d0c4160d0944f3c",
+    "subject": "camera: require five-minute color mode evidence",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T08:11:07+03:00"
+  },
+  {
+    "source_commit": "a8cf2c4162102c777f0b3e8008f44210edd075f7",
+    "destination_commit": "78a149bfc24085378700c2b30779ea6aa8f2cc17",
+    "subject": "camera: record Q6A recovery access blocker",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T08:26:02+03:00"
+  },
+  {
+    "source_commit": "e227a968ec8bcb7415343028aaf305e894e88202",
+    "destination_commit": "b53978b629d2915dcd8ec98498b9c19fb17cdae6",
+    "subject": "camera: harden Q6A CAMSS metadata bring-up",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T08:56:21+03:00"
+  },
+  {
+    "source_commit": "52ad8a7ea18d810981fdd7421c66b4f86f2ee7c4",
+    "destination_commit": "c8995b100551edf2ac749f43e9d797b8a0bdf0e1",
+    "subject": "camera: capture IMX519 phase data across Q6A modes",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T10:12:03+03:00"
+  },
+  {
+    "source_commit": "30c4faf5e4af4f09867b2d6ab2bbc208611a5772",
+    "destination_commit": "4d0df9997bd9275745ec53ae48c7810a0d03bccf",
+    "subject": "camera: verify phase guided focus and add Q6A one-shot capture",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T11:20:09+03:00"
+  },
+  {
+    "source_commit": "2038ee7ba1e05317fc1d93d3c98dfd0be6da256a",
+    "destination_commit": "5021abaafca443124481fc3dc08ce8b4fa4f8492",
+    "subject": "camera: integrate IMX519 PDAF into private libcamera",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T12:01:56+03:00"
+  },
+  {
+    "source_commit": "8867d7210c099f03dc7ef7bac182dbe683b1fe3f",
+    "destination_commit": "5c584614327f6376200f74bf1912d02336d9b30d",
+    "subject": "docs(backlog): plan Q6A IMX519 PDAF qualification",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-25T12:11:28+03:00"
+  },
+  {
+    "source_commit": "f339b429414178ef65f410e19b118aa34b84ac83",
+    "destination_commit": "baabd994eae0508f24a3a44f7aa01ba529d3b8e9",
+    "subject": "feat(camera): improve Q6A IMX519 focus capture and chart preview",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-26T12:41:32+03:00"
+  },
+  {
+    "source_commit": "ce33a9abcf1ea787aa1b1603fa562486d9030ebb",
+    "destination_commit": "3f82b5e57f984fb8ece9a954e84daf3e29037ea0",
+    "subject": "docs(camera): add shared printable test charts",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-09-26T19:25:48+03:00"
+  },
+  {
+    "source_commit": "ab8420b705d62f583f82532dbcb98cb3a87710d4",
+    "destination_commit": "3d25d1bc0476aea21617cabb8d6cc16f4d984f48",
+    "subject": "docs(backlog): resolve Q6A PDAF task number collision",
+    "author": "Pavel Omelchenko <p.Omelchenko@gmail.com>",
+    "author_date": "2026-10-04T15:11:59+03:00"
+  }
+]

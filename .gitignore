@@ -10,3 +10,4 @@ target/**/vendor/
 artifacts/
 runs/
 .work/
+._*

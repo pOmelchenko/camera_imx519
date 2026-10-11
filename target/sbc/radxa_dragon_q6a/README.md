@@ -59,7 +59,7 @@ libcamera содержит корректный IMX519 helper и базовый 
 длительная работа и перенаводка при движении объекта ещё не проверены.
 Сводка: [PDAF внутри libcamera](docs/evidence/2026-09-25-libcamera-pdaf.json).
 Следующая аппаратная квалификация записана в
-[задаче 00214](../../../../docs/wiki/internal/backlog/00214-qualify-q6a-imx519-pdaf.md).
+[задаче 00214](../../../docs/development/00214-qualify-q6a-imx519-pdaf.md).
 Подробности:
 [журнал PDAF bring-up](research/pdaf-bringup.md). Цветовая калибровка не
 завершена. Полный журнал: [WORKLOG](docs/WORKLOG.md).
@@ -111,7 +111,7 @@ libcamera из `runtime/current`, если она установлена. Для
 если фазовые образцы пропали или нестабильны.
 
 Исходники миры и PDF A4 для печати сохранены в
-[общем каталоге мишеней](../../test-charts/README.md). Для снимка всей миры на
+[общем каталоге мишеней](test-charts/README.md). Для снимка всей миры на
 расстоянии около 22 см используйте формат 4:3.
 После перезагрузки со штатным CAMSS выберите `runtime/preview` для
 контрастного AF и остановите веб-предпросмотр перед захватом:
@@ -129,8 +129,8 @@ IMX519_RUNTIME="$PWD/runtime/preview" IMX519_WIDTH=1920 IMX519_HEIGHT=1440 bash 
 
 ```sh
 export IMX519_SSH_TARGET='radxa@<board-address>'
-bash hardware/camera/imx519/q6a/libcamera/build-runtime.sh   # Docker, Ubuntu 24.04 arm64
-bash hardware/camera/imx519/q6a/libcamera/deploy-runtime.sh # SHA-256 и cam -l
+bash target/sbc/radxa_dragon_q6a/libcamera/build-runtime.sh   # Docker, Ubuntu 24.04 arm64
+bash target/sbc/radxa_dragon_q6a/libcamera/deploy-runtime.sh # SHA-256 и cam -l
 ```
 
 Исходники закреплены на commit `de1e9bc095e23085e77533357d2582176de0a582`,
@@ -225,7 +225,7 @@ python3 web-preview.py --host <адрес-Q6A-в-LAN>
 
 ```sh
 export IMX519_SSH_TARGET='radxa@<board-address>'
-bash hardware/camera/imx519/q6a/sync-to-radxa.sh
+bash target/sbc/radxa_dragon_q6a/sync-to-radxa.sh
 ssh "$IMX519_SSH_TARGET"
 ```
 
@@ -259,6 +259,13 @@ libcamera/V4L2-инструменты и DKMS-модули. Перед вклю�
 SSH-сеансе агента. Пароль вводится в терминале платы.
 
 ## Подключение и overlay
+
+Распиновка модуля: [справочник IMX519](../../../docs/reference/pinout.md).
+Q6A J7/CAM3 имеет 15 контактов с шагом 1 мм и две линии CSI;
+питание разъёма 3,3 В, I2C/reset проходят через преобразователи 1,8↔3,3 В.
+Разводка J14/CAM1 отличается и требует отдельного подключения.
+Подготовка ОС, boot firmware и общие интерфейсы описаны в
+[репозитории платы Q6A](https://github.com/pOmelchenko/radxa_dragon_q6a).
 
 CAM3 подтверждён пользователем. Привязка: CCI1/I2C1, сенсор `0x1a`, линза
 `0x0c`, CSIPHY3, GPIO78 включения модуля; clock 24 MHz, link frequency
@@ -324,6 +331,11 @@ IMX519_RUNTIME="$PWD/runtime/preview" bash stability.sh rgb 9000
 Путь фактически выбранного YAML записывается в capture.log.
 
 ## Где искать детали
+
+- [Проверенный рецепт захвата](../../../docs/guides/sbc/radxa_dragon_q6a.md)
+- [Короткий захват и ручной фокус 2026-09-24](docs/CAPTURE-2026-09-24.md)
+- [Открытое замечание: отложенная пауза PDAF](../../../docs/development/q6a-pdaf-deferred-pause.md)
+- [История переноса и сохранность файлов](../../../docs/development/migrations/2026-10-12-q6a-autofocus.md)
 
 - [Журнал решений и проверок](docs/WORKLOG.md)
 - [Диагностика: libcamera, Qt, DISPLAY, журнал ядра, доступ](docs/TROUBLESHOOTING.md)

@@ -1,0 +1,1141 @@
+{
+  "source_repository": "https://github.com/pOmelchenko/lidar_viewer",
+  "source_branch": "agent/imx519-q6a-autofocus",
+  "source_commit": "ab8420b705d62f583f82532dbcb98cb3a87710d4",
+  "destination_repository": "https://github.com/pOmelchenko/camera_imx519",
+  "destination_branch": "agent/imx519-q6a-autofocus",
+  "destination_base": "9cf2e24bdec129c5840c47c085ef5c388325bb13",
+  "files": [
+    {
+      "source_path": "docs/wiki/internal/backlog/00214-qualify-q6a-imx519-pdaf.md",
+      "destination_path": "docs/development/00214-qualify-q6a-imx519-pdaf.md",
+      "mode": "100644",
+      "source_git_blob": "52c9c6098431719f370b055c14031e84c54129f9",
+      "source_sha256": "11a097f88f7176f4888d2452c79f8b3d6a45a42c9bb736025cefd9f5ab4b1fcc",
+      "destination_sha256": "f04551d4a5ff50933ee2de236c4c44b8fd9d69a428ecf4ba0804efa7fee4201b",
+      "status": "maintained-documentation-adapted"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/.gitignore",
+      "destination_path": "target/sbc/radxa_dragon_q6a/.gitignore",
+      "mode": "100644",
+      "source_git_blob": "12b255596c831063645fc59116fa8b5d0c099dd5",
+      "source_sha256": "bdd3988e9f0f6dd784f04da55148cb572479e9aeff9c4f10044e9f4b4de8eecf",
+      "destination_sha256": "bdd3988e9f0f6dd784f04da55148cb572479e9aeff9c4f10044e9f4b4de8eecf",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/README.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/README.md",
+      "mode": "100644",
+      "source_git_blob": "f88a7c29c68f0ee54ba28433dc2581bdc66c2f8d",
+      "source_sha256": "af02b9289836c2b082628166abe4f05681338016f53fc956d6fb45e020081be4",
+      "destination_sha256": "76879f2d51aea13550d7749cba6f762e8c89be25806a31310ba2ff6c0f2beafd",
+      "status": "maintained-documentation-adapted"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/SOURCES.sha256",
+      "destination_path": "target/sbc/radxa_dragon_q6a/SOURCES.sha256",
+      "mode": "100644",
+      "source_git_blob": "6e93b6a86847d83cf2bca08cd0aa4720aa4dd98f",
+      "source_sha256": "725538fe1c024f1e833989ecefeff7c2d7e910d1cecfa4cc745f10812bb9818c",
+      "destination_sha256": "725538fe1c024f1e833989ecefeff7c2d7e910d1cecfa4cc745f10812bb9818c",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/af-log-summary.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/af-log-summary.py",
+      "mode": "100644",
+      "source_git_blob": "4fcd29b001d9c27a01ec629d325080526b942fd0",
+      "source_sha256": "b6690f3ab78f8f8fd0b6a251f54d5c10a8b9f1ba4eed53302bd4d9859485302d",
+      "destination_sha256": "b6690f3ab78f8f8fd0b6a251f54d5c10a8b9f1ba4eed53302bd4d9859485302d",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/build.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/build.sh",
+      "mode": "100755",
+      "source_git_blob": "7c83044efbe1f787f6c2c0171d095bea2fdfa3ac",
+      "source_sha256": "492c17d078ed11699501b73fcab9d9bb4cae550765c1d2d59c134fb2cf6c7922",
+      "destination_sha256": "492c17d078ed11699501b73fcab9d9bb4cae550765c1d2d59c134fb2cf6c7922",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/cam.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/cam.sh",
+      "mode": "100644",
+      "source_git_blob": "1d03d3b04c33bae645a2a1ab124221f87ab725ca",
+      "source_sha256": "e2b93416c4e3706cd35d7f08a88cff9dee04f4e67a49de945b0be4a1dae1f0e6",
+      "destination_sha256": "e2b93416c4e3706cd35d7f08a88cff9dee04f4e67a49de945b0be4a1dae1f0e6",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/capture.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/capture.sh",
+      "mode": "100755",
+      "source_git_blob": "e1471d2d5b57d4d939dddbe8d66610dbdcb3e03a",
+      "source_sha256": "b6fcbe66f57a632b9c27126c17461458b2cbf2c98920870af8970d7a27c3d278",
+      "destination_sha256": "b6fcbe66f57a632b9c27126c17461458b2cbf2c98920870af8970d7a27c3d278",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/check.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/check.sh",
+      "mode": "100755",
+      "source_git_blob": "32bc942418f7b3b3e12cac49970949a8f46762d2",
+      "source_sha256": "3512d93688a091d64800f8660f71e27faa365be6a69f76a7a79610fdaa6da8ef",
+      "destination_sha256": "3512d93688a091d64800f8660f71e27faa365be6a69f76a7a79610fdaa6da8ef",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/collect-diagnostics.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/collect-diagnostics.sh",
+      "mode": "100755",
+      "source_git_blob": "20b57a98894404abf6f2882fb0904387795bb5c1",
+      "source_sha256": "db4b764bb085156f4b792e90393c1956c8bccc9d0e4572e83e6f4a06449ece31",
+      "destination_sha256": "db4b764bb085156f4b792e90393c1956c8bccc9d0e4572e83e6f4a06449ece31",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/color-five-modes.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/color-five-modes.sh",
+      "mode": "100644",
+      "source_git_blob": "e692534ad334155c2d75aad5abab90db70082d0f",
+      "source_sha256": "211b961e360515392cc520cc93d65db6dabc9c29f5fcee3dc643e7ad4602aab3",
+      "destination_sha256": "211b961e360515392cc520cc93d65db6dabc9c29f5fcee3dc643e7ad4602aab3",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/disable-autosuspend.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/disable-autosuspend.sh",
+      "mode": "100644",
+      "source_git_blob": "93a8033dde3330db058fdee4ebd39844ab966526",
+      "source_sha256": "ff1c867c3daf9d893e49ad87cc1f37a161e082d421147fb864639f5f5e739528",
+      "destination_sha256": "ff1c867c3daf9d893e49ad87cc1f37a161e082d421147fb864639f5f5e739528",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/PROVENANCE.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/PROVENANCE.md",
+      "mode": "100644",
+      "source_git_blob": "11e1749bc2e0589456d27ca1c5c56329ee6f9e08",
+      "source_sha256": "06a4b1fc8dd97680c0a9f2a1284c272c44bbc9991829fe466bc4d127a730ec61",
+      "destination_sha256": "06a4b1fc8dd97680c0a9f2a1284c272c44bbc9991829fe466bc4d127a730ec61",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/TROUBLESHOOTING.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/TROUBLESHOOTING.md",
+      "mode": "100644",
+      "source_git_blob": "c53203ecc7a78a934dcfc460a5b1af9f3dd557df",
+      "source_sha256": "5914d3da170e0098083b51aab398f7f66f04a93e771bb917683f74dd2c82abe6",
+      "destination_sha256": "5914d3da170e0098083b51aab398f7f66f04a93e771bb917683f74dd2c82abe6",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/WORKLOG.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/WORKLOG.md",
+      "mode": "100644",
+      "source_git_blob": "669616dbb9c0991ef27443a290415045e7097a1e",
+      "source_sha256": "da8c8d870406700a50646bca90137e02429eed00f4519a4110534348d62ea96b",
+      "destination_sha256": "da8c8d870406700a50646bca90137e02429eed00f4519a4110534348d62ea96b",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-display-warning.txt",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-display-warning.txt",
+      "mode": "100644",
+      "source_git_blob": "a61c45b7534ccde7b0e151ce08bab902c81d1509",
+      "source_sha256": "0259effe80dd1c4dbda066977e3d90b881e1e27810bb4721a39d674a6a8d0d55",
+      "destination_sha256": "0259effe80dd1c4dbda066977e3d90b881e1e27810bb4721a39d674a6a8d0d55",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-exposure-v2.png",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-exposure-v2.png",
+      "mode": "100644",
+      "source_git_blob": "52961c8f1a7e834e157d31b965255abde83f08b2",
+      "source_sha256": "a999c19caa9a0d54b421d590b307d511b67baf36dd743f4f62e9c209df9f63d8",
+      "destination_sha256": "a999c19caa9a0d54b421d590b307d511b67baf36dd743f4f62e9c209df9f63d8",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-final-frame.png",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-final-frame.png",
+      "mode": "100644",
+      "source_git_blob": "5c05d140684c0a5daadf2beb1e06b1145e393f67",
+      "source_sha256": "604093d9f0b3fc060b9caa995894ac5cf6553da01df94f2315b1e665206ddc6a",
+      "destination_sha256": "604093d9f0b3fc060b9caa995894ac5cf6553da01df94f2315b1e665206ddc6a",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-focus-20cm.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-focus-20cm.json",
+      "mode": "100644",
+      "source_git_blob": "4e575d7edc8d09b2a62512493b03fcf9779c3633",
+      "source_sha256": "96aafc33992bb16e4f08dd5bea63f4de1d9066fcac9631560c79a53efafe2696",
+      "destination_sha256": "96aafc33992bb16e4f08dd5bea63f4de1d9066fcac9631560c79a53efafe2696",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-initial-capture.txt",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-initial-capture.txt",
+      "mode": "100644",
+      "source_git_blob": "0b0dead7773cb639f4a9784fb97ddb7730010e6e",
+      "source_sha256": "c1d8920228acb69c506eb9421c11c9944ebeb0301c0ea724a783726359eb2482",
+      "destination_sha256": "c1d8920228acb69c506eb9421c11c9944ebeb0301c0ea724a783726359eb2482",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-libcamera-tests.txt",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-libcamera-tests.txt",
+      "mode": "100644",
+      "source_git_blob": "77d38b002edfdd9a9a3aa215d30227dd9a41654c",
+      "source_sha256": "e8d96e8de73dff428e6a3383def7213df2e0b9616caad503c643adfbf3edd8ff",
+      "destination_sha256": "e8d96e8de73dff428e6a3383def7213df2e0b9616caad503c643adfbf3edd8ff",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-post-reboot.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-post-reboot.json",
+      "mode": "100644",
+      "source_git_blob": "844824bc9140881db0497751bab93f00268abda2",
+      "source_sha256": "6a5edfd343161f706d2bf2cccd39b0dcd79f6d29648446ef414ecbb0dc919266",
+      "destination_sha256": "6a5edfd343161f706d2bf2cccd39b0dcd79f6d29648446ef414ecbb0dc919266",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-post-reboot.png",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-post-reboot.png",
+      "mode": "100644",
+      "source_git_blob": "7d4a7201b8e692e4ea941c028be3cf0eb2397652",
+      "source_sha256": "ff5b9deb425f3172341a09eed0eeca799ae976acafe1bc919c4846c8f4ba84f4",
+      "destination_sha256": "ff5b9deb425f3172341a09eed0eeca799ae976acafe1bc919c4846c8f4ba84f4",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-suspend-cause.txt",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-suspend-cause.txt",
+      "mode": "100644",
+      "source_git_blob": "7d3e0a11abe7e15848e00ecc78070641f2bc81f5",
+      "source_sha256": "393adc4bef623c55eb9b9d9247fed678c1abb13862b8a1e8d8c1c366b4f07cb5",
+      "destination_sha256": "393adc4bef623c55eb9b9d9247fed678c1abb13862b8a1e8d8c1c366b4f07cb5",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-09-tooling-validation.txt",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-09-tooling-validation.txt",
+      "mode": "100644",
+      "source_git_blob": "f23ad14057dbccf6f5eee776a6d24e0353c5c97e",
+      "source_sha256": "7607750cc27008546c1882d5a2001f060c0467422161d84ab51d6c67604561c0",
+      "destination_sha256": "7607750cc27008546c1882d5a2001f060c0467422161d84ab51d6c67604561c0",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-concurrent-raw-phase-five-modes.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-concurrent-raw-phase-five-modes.json",
+      "mode": "100644",
+      "source_git_blob": "757bb8d73505cb0e65a523d8ced48277e6946df2",
+      "source_sha256": "e68ac106357dd7dc26aff80b4d0885b4e8199d63ee5e8062c7a5ea31d6cdbbe6",
+      "destination_sha256": "e68ac106357dd7dc26aff80b4d0885b4e8199d63ee5e8062c7a5ea31d6cdbbe6",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-dual-meta-pairing.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-dual-meta-pairing.json",
+      "mode": "100644",
+      "source_git_blob": "4b09c6aa4a550bcc199627f65d4af89a61bc3d27",
+      "source_sha256": "81cefa4bc9fa714828fcf6e4944c24cbff8d87c316f518668cfa488f3198a72a",
+      "destination_sha256": "81cefa4bc9fa714828fcf6e4944c24cbff8d87c316f518668cfa488f3198a72a",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-image-phase-pairing.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-image-phase-pairing.json",
+      "mode": "100644",
+      "source_git_blob": "6b870e3747b0cfe2ccb31c411c52415901bb61aa",
+      "source_sha256": "6dd9c6f8c90b73f3bee24a856a712db24d5a75c3c797f8dc52ec2d5a7141ac25",
+      "destination_sha256": "6dd9c6f8c90b73f3bee24a856a712db24d5a75c3c797f8dc52ec2d5a7141ac25",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-libcamera-pdaf.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-libcamera-pdaf.json",
+      "mode": "100644",
+      "source_git_blob": "c809a22ad71ea67f443027999e9f7dd9780e0f0f",
+      "source_sha256": "65934af05759762e561f0e27c20f16773acd2765bdc78aa4cbb7bfb0083cbaa2",
+      "destination_sha256": "65934af05759762e561f0e27c20f16773acd2765bdc78aa4cbb7bfb0083cbaa2",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-media-topology.txt",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-media-topology.txt",
+      "mode": "100644",
+      "source_git_blob": "bce07674b5c4e8e6340a8805ba3f0289a794882b",
+      "source_sha256": "dfd291bd72ddeb8255b12fe8c4b4a02d8982c9089d43603a83d9832e8269e69f",
+      "destination_sha256": "dfd291bd72ddeb8255b12fe8c4b4a02d8982c9089d43603a83d9832e8269e69f",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-meta-wm1-1920.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-meta-wm1-1920.json",
+      "mode": "100644",
+      "source_git_blob": "5fc40b082759d2928f4805ce0c622f686d75cc22",
+      "source_sha256": "f370574be5f0728865f6f67741eb900b8a3b2965076621172d7fcb2cd2d2ef23",
+      "destination_sha256": "f370574be5f0728865f6f67741eb900b8a3b2965076621172d7fcb2cd2d2ef23",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-meta-wm1.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-meta-wm1.json",
+      "mode": "100644",
+      "source_git_blob": "8ed9a56de2d8100efca29a4bf1e78d57904d23a9",
+      "source_sha256": "5b3e6cbe4cba58dfe3d2ccd74f70dc16c3ff6b543c285fd827106f9b50b80c72",
+      "destination_sha256": "5b3e6cbe4cba58dfe3d2ccd74f70dc16c3ff6b543c285fd827106f9b50b80c72",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-pdaf-five-modes.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-pdaf-five-modes.json",
+      "mode": "100644",
+      "source_git_blob": "e7ee7b37a6264802807fabe34d50711c1d346191",
+      "source_sha256": "81e73633be705fa45568605b19285aa1bbc73929468c198c566cc818e818298d",
+      "destination_sha256": "81e73633be705fa45568605b19285aa1bbc73929468c198c566cc818e818298d",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-phase-dt36.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-phase-dt36.json",
+      "mode": "100644",
+      "source_git_blob": "dad2bcca31400918ed66accc82bb0cb326761ee2",
+      "source_sha256": "b76b5aef1439eee65023d11ca21ff0c842b07866af10938bda5a474744486ac9",
+      "destination_sha256": "b76b5aef1439eee65023d11ca21ff0c842b07866af10938bda5a474744486ac9",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-phase-focus-2047.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-phase-focus-2047.json",
+      "mode": "100644",
+      "source_git_blob": "aaebad5c63fc85b3dd1f088969c64e217b509afb",
+      "source_sha256": "ecdbcd8f738c25bff39a44df12f2f2b2839fe9e7bb294b96cc787f47bc070a80",
+      "destination_sha256": "ecdbcd8f738c25bff39a44df12f2f2b2839fe9e7bb294b96cc787f47bc070a80",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-phase-focus-2496.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-phase-focus-2496.json",
+      "mode": "100644",
+      "source_git_blob": "85f972e3c16e38100f20a9e998f9d75e5865fa6d",
+      "source_sha256": "f6b3b8938b344d4a56a0e36d49538274f1b867e917e42cf2f31eb5e6aa384027",
+      "destination_sha256": "f6b3b8938b344d4a56a0e36d49538274f1b867e917e42cf2f31eb5e6aa384027",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-phase-focus-far.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-phase-focus-far.json",
+      "mode": "100644",
+      "source_git_blob": "93e2439cf14bdd87dd92db5fa5d6cafedd43c9af",
+      "source_sha256": "deb7d12bcf1b849461937e77f6a84a76ef3801a18f7a4e92113f9c5a57b6a687",
+      "destination_sha256": "deb7d12bcf1b849461937e77f6a84a76ef3801a18f7a4e92113f9c5a57b6a687",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-phase-focus-near.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-phase-focus-near.json",
+      "mode": "100644",
+      "source_git_blob": "a7dd18a10862dee1f6d0402a369f35f9b6c8bea9",
+      "source_sha256": "6f46a42c0235310f0c6d0138e84c14ec7543781a60873f9182d2fc3149028c85",
+      "destination_sha256": "6f46a42c0235310f0c6d0138e84c14ec7543781a60873f9182d2fc3149028c85",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-phase-rdi2.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-phase-rdi2.json",
+      "mode": "100644",
+      "source_git_blob": "3238eb315622cf72cc64e98033e32fdf53dac580",
+      "source_sha256": "144ebe7d1495bdf276001baa449de2abe9731d4ebfee6c232bf8af5fff486d43",
+      "destination_sha256": "144ebe7d1495bdf276001baa449de2abe9731d4ebfee6c232bf8af5fff486d43",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/2026-09-25-snapshot-pdaf.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-snapshot-pdaf.json",
+      "mode": "100644",
+      "source_git_blob": "a599bbe8cfacbec02b2a4c68679db99169c9f124",
+      "source_sha256": "4cc17da2ed5d55183e46ab5beaea2310c4af75152e406a9f20431fd88aa9daf5",
+      "destination_sha256": "4cc17da2ed5d55183e46ab5beaea2310c4af75152e406a9f20431fd88aa9daf5",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/focus-20260908T224859Z.XPCH1O-scores.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/focus-20260908T224859Z.XPCH1O-scores.json",
+      "mode": "100644",
+      "source_git_blob": "87b3db0b6ca34323e99161c33916b9cdfae2c1a0",
+      "source_sha256": "1d7f10bfa2ca7b21cf7b1f1a4dde4ff313680cdee353dc78bf2683ec76735f96",
+      "destination_sha256": "1d7f10bfa2ca7b21cf7b1f1a4dde4ff313680cdee353dc78bf2683ec76735f96",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/focus-20260908T225407Z.6iYsE5-scores.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/focus-20260908T225407Z.6iYsE5-scores.json",
+      "mode": "100644",
+      "source_git_blob": "c219ffd886ce3eb3e1d66e8cc221de5f9eddc88b",
+      "source_sha256": "36cc5ff18020be31018bba24a7885d0ca304b7f9d1b93cf82dae7a63b349d649",
+      "destination_sha256": "36cc5ff18020be31018bba24a7885d0ca304b7f9d1b93cf82dae7a63b349d649",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/stability-rgb-20260908T225536Z.uY8DaC.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/stability-rgb-20260908T225536Z.uY8DaC.json",
+      "mode": "100644",
+      "source_git_blob": "a79d5eb366c333255f23e0ae21435c2303096500",
+      "source_sha256": "bc76dff8c5edb7280742c9c562062abe57cc062c22bc2f4db6b8325e4c409a28",
+      "destination_sha256": "bc76dff8c5edb7280742c9c562062abe57cc062c22bc2f4db6b8325e4c409a28",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/evidence/stability-rgb-20260908T230425Z.FCWYLb.json",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/evidence/stability-rgb-20260908T230425Z.FCWYLb.json",
+      "mode": "100644",
+      "source_git_blob": "3486326b560ec0af85d637ba591943bf4628203b",
+      "source_sha256": "cb3e8fa5788f7a68dbff8684809a504a5c8cbc9424113135a673e6d538dfad88",
+      "destination_sha256": "cb3e8fa5788f7a68dbff8684809a504a5c8cbc9424113135a673e6d538dfad88",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/docs/reference-q6a-cam3-imx219.dtso",
+      "destination_path": "target/sbc/radxa_dragon_q6a/docs/reference-q6a-cam3-imx219.dtso",
+      "mode": "100644",
+      "source_git_blob": "e81ed6464c3f4c0508b51efbb8505791448dac6e",
+      "source_sha256": "77e8b76336e87052f40238e6588c91c2476cc04fbbc1ee9f28a723dfd56feb67",
+      "destination_sha256": "77e8b76336e87052f40238e6588c91c2476cc04fbbc1ee9f28a723dfd56feb67",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/driver/Makefile",
+      "destination_path": "target/sbc/radxa_dragon_q6a/driver/Makefile",
+      "mode": "100644",
+      "source_git_blob": "35dcbdf7e5751ba6b30b01ef115913f6a287770c",
+      "source_sha256": "0b8a18999eff596d80a956f4a8d579e5db60fa5bdacd8fa774966c9b6b130c4a",
+      "destination_sha256": "0b8a18999eff596d80a956f4a8d579e5db60fa5bdacd8fa774966c9b6b130c4a",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/driver/ak7375.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/driver/ak7375.c",
+      "mode": "100644",
+      "source_git_blob": "9a2432cea3fff9f0ff41796f97236449792dccfc",
+      "source_sha256": "00bbe54d59367ccb33c1e281a4bf19edacf47203ab0c664f0c2c1f535a89202c",
+      "destination_sha256": "00bbe54d59367ccb33c1e281a4bf19edacf47203ab0c664f0c2c1f535a89202c",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/driver/dkms.conf",
+      "destination_path": "target/sbc/radxa_dragon_q6a/driver/dkms.conf",
+      "mode": "100644",
+      "source_git_blob": "3b050a9f1fe2834e6f040c4657c842231afc9289",
+      "source_sha256": "0e6e4e6e7991a9622ae8147f09c841db44d1965b423abe6993af95498aaa532c",
+      "destination_sha256": "0e6e4e6e7991a9622ae8147f09c841db44d1965b423abe6993af95498aaa532c",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/driver/imx519.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/driver/imx519.c",
+      "mode": "100644",
+      "source_git_blob": "5fe002ec3b2652a024e1b3e92c7a6263e9bc93c3",
+      "source_sha256": "687afa60dd4f7eabc428ff5ea60a50ab7f3501a798f52a80167739d1b191d0fe",
+      "destination_sha256": "687afa60dd4f7eabc428ff5ea60a50ab7f3501a798f52a80167739d1b191d0fe",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/focus-position.txt",
+      "destination_path": "target/sbc/radxa_dragon_q6a/focus-position.txt",
+      "mode": "100644",
+      "source_git_blob": "b0812e9d3fe3ace8a0ef7282163a5a8a45a51246",
+      "source_sha256": "0449eb1a50317f07c0c797eeb898ee562bc18a02925dfec8da488791634771ca",
+      "destination_sha256": "0449eb1a50317f07c0c797eeb898ee562bc18a02925dfec8da488791634771ca",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/focus-sweep.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/focus-sweep.sh",
+      "mode": "100644",
+      "source_git_blob": "4ca9b1bd7253baa297bf8986a08e8a06a2dd90e2",
+      "source_sha256": "dfade9331fdbb37a7aa923536b51f90d156d4aeefbbdd653267c7104cb11a375",
+      "destination_sha256": "dfade9331fdbb37a7aa923536b51f90d156d4aeefbbdd653267c7104cb11a375",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/focus.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/focus.py",
+      "mode": "100644",
+      "source_git_blob": "3aca782b3f20dc9c5617f406593eaf981eec0fb0",
+      "source_sha256": "a70eb99b540f5989bd7e246b501b067130ae564fb2ec2cb2f63c983defd36e5a",
+      "destination_sha256": "a70eb99b540f5989bd7e246b501b067130ae564fb2ec2cb2f63c983defd36e5a",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/focus_control.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/focus_control.py",
+      "mode": "100644",
+      "source_git_blob": "301930a7d67da477cf2e0bf38bb8f77f1451d3bc",
+      "source_sha256": "4d4db7008b08e675e6cd3efdb93e9cc38a7bcfa3abb87725117fe0590c452f01",
+      "destination_sha256": "4d4db7008b08e675e6cd3efdb93e9cc38a7bcfa3abb87725117fe0590c452f01",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/install.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/install.sh",
+      "mode": "100755",
+      "source_git_blob": "f166db76691331a1807857a7dae818213f0b5c0b",
+      "source_sha256": "fca1afe1b84bb621bae109e7b19b2e02dcc923e2760b23716d25206ab2e1eff0",
+      "destination_sha256": "fca1afe1b84bb621bae109e7b19b2e02dcc923e2760b23716d25206ab2e1eff0",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/activate-pdaf.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/activate-pdaf.sh",
+      "mode": "100644",
+      "source_git_blob": "2feee2cfc9f7b41ce038fefb7c8a2318961c457d",
+      "source_sha256": "065c3724c3054cc4ecddc7c43cd2904ec79f33fc2507f15a00b9be9d97cf80c9",
+      "destination_sha256": "065c3724c3054cc4ecddc7c43cd2904ec79f33fc2507f15a00b9be9d97cf80c9",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/analyze-meta.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/analyze-meta.py",
+      "mode": "100644",
+      "source_git_blob": "3690aa8fc0a6182221dca287260f13dc0ba45790",
+      "source_sha256": "c27fba0d22967739e0470e6dacea2a6a777eedb6618e37d4348c029e2a2fd4ad",
+      "destination_sha256": "c27fba0d22967739e0470e6dacea2a6a777eedb6618e37d4348c029e2a2fd4ad",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/analyze-phase.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/analyze-phase.py",
+      "mode": "100644",
+      "source_git_blob": "2fe4e11ab2a89c0349a6ffa84972171ca4e18e52",
+      "source_sha256": "5a52b1aacb3a81e515e02ae7ae37d28c16c2c21237c3b2afa4d8f7059c9bf36f",
+      "destination_sha256": "5a52b1aacb3a81e515e02ae7ae37d28c16c2c21237c3b2afa4d8f7059c9bf36f",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/build-and-stage.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/build-and-stage.sh",
+      "mode": "100644",
+      "source_git_blob": "c8dd18b73821192bf098b0fc6723083d3c10d356",
+      "source_sha256": "dd996b9dbf9fe7700d15a167b1547f86922847e1f326364018a11408c76b36a1",
+      "destination_sha256": "dd996b9dbf9fe7700d15a167b1547f86922847e1f326364018a11408c76b36a1",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/camss-pdaf.patch",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/camss-pdaf.patch",
+      "mode": "100644",
+      "source_git_blob": "29f154a3145bd3c57e60c0acdb88eb904f40ae89",
+      "source_sha256": "9583a998acebc48ee16f5a21ae8b39b95bce3008c4fbe154c0c5df8a3fd9a1c3",
+      "destination_sha256": "9583a998acebc48ee16f5a21ae8b39b95bce3008c4fbe154c0c5df8a3fd9a1c3",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/capture-dual-meta.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/capture-dual-meta.sh",
+      "mode": "100644",
+      "source_git_blob": "c9e1904ce8e894b31e08d94605fd798c5c8abda8",
+      "source_sha256": "2116e8a27cddbbc2f6957a4d9d8b846467012a69498fb2f8b216bee7d4c9f86d",
+      "destination_sha256": "2116e8a27cddbbc2f6957a4d9d8b846467012a69498fb2f8b216bee7d4c9f86d",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/capture-meta.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/capture-meta.c",
+      "mode": "100644",
+      "source_git_blob": "86809dfe2cbd7e76ace1f145aaa5041920a825ad",
+      "source_sha256": "5c6833a92e050bd385fbf4670e90021f98209304ac498b9c22ef4c5b31eefc1a",
+      "destination_sha256": "5c6833a92e050bd385fbf4670e90021f98209304ac498b9c22ef4c5b31eefc1a",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/capture-raw-phase.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/capture-raw-phase.sh",
+      "mode": "100644",
+      "source_git_blob": "22d76c1173bd080f8204fa8f7b1fe4963823e113",
+      "source_sha256": "003945014e7491506b5ecbdf9df998513fafa385fb7edf14ac6612a19bd21971",
+      "destination_sha256": "003945014e7491506b5ecbdf9df998513fafa385fb7edf14ac6612a19bd21971",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/capture-raw-timestamps.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/capture-raw-timestamps.c",
+      "mode": "100644",
+      "source_git_blob": "4b5b416547635514e46b041dc374e37ae6b64469",
+      "source_sha256": "ceb699571aa3faf1e7f055bcc835fd3d3330b72c130140e3b4b345a4d2b6e386",
+      "destination_sha256": "ceb699571aa3faf1e7f055bcc835fd3d3330b72c130140e3b4b345a4d2b6e386",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/estimate-phase-focus.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/estimate-phase-focus.py",
+      "mode": "100644",
+      "source_git_blob": "16f075270792badecd34c43360242079e6925430",
+      "source_sha256": "2bf3089c6b177163e5ea4b0274ccb8c2edfcb6d4fd9763a2abc3fdbc9ba9c94a",
+      "destination_sha256": "2bf3089c6b177163e5ea4b0274ccb8c2edfcb6d4fd9763a2abc3fdbc9ba9c94a",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/pair-image-phase.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/pair-image-phase.py",
+      "mode": "100644",
+      "source_git_blob": "2f6fcfe5fb2b40eba594cb3b62be06ab52301521",
+      "source_sha256": "3df4a24209e3cc9f9f9fd2eb0615b7e2dedbabd59da42ca98b8f09b2f4a09830",
+      "destination_sha256": "3df4a24209e3cc9f9f9fd2eb0615b7e2dedbabd59da42ca98b8f09b2f4a09830",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/pair-meta.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/pair-meta.py",
+      "mode": "100644",
+      "source_git_blob": "b68b8a6be434e596a7997f50f26b5396202c0e33",
+      "source_sha256": "1276cc8befc7c833caf5702600c58544107f190cd4207b73c3a8f326e407fb18",
+      "destination_sha256": "1276cc8befc7c833caf5702600c58544107f190cd4207b73c3a8f326e407fb18",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/prepare-meta.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/prepare-meta.sh",
+      "mode": "100644",
+      "source_git_blob": "6a33d8bf9ee725c75e4e55c950fc7d7558f22580",
+      "source_sha256": "d5235fa9de078472bb8cd62a686b56a97bd983d18e90b5278915243d2f652050",
+      "destination_sha256": "d5235fa9de078472bb8cd62a686b56a97bd983d18e90b5278915243d2f652050",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/prepare-phase.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/prepare-phase.sh",
+      "mode": "100644",
+      "source_git_blob": "8406c00a7cbaa933d48b9c0996cba2c4d84d531f",
+      "source_sha256": "8bc587e2861826fc757a00baf12ece95fbab11c5e1044dfa4033745f6a7cb3f6",
+      "destination_sha256": "8bc587e2861826fc757a00baf12ece95fbab11c5e1044dfa4033745f6a7cb3f6",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/probe-meta-registers.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/probe-meta-registers.sh",
+      "mode": "100644",
+      "source_git_blob": "e79caae652092fe97af4adcff585b1097249ac21",
+      "source_sha256": "a4e914f25f121670517da9326b88bbcba0bab80dcca01601e6ce508e1ea95b44",
+      "destination_sha256": "a4e914f25f121670517da9326b88bbcba0bab80dcca01601e6ce508e1ea95b44",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/probe-phase-dt36.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/probe-phase-dt36.sh",
+      "mode": "100644",
+      "source_git_blob": "a47bcaeb4d860adf5bc3e40124ec6a8bce1a01bf",
+      "source_sha256": "14371816a36f8165d3b4fde3740e638b406dee9bbd891db4b87479d58c85eaf9",
+      "destination_sha256": "14371816a36f8165d3b4fde3740e638b406dee9bbd891db4b87479d58c85eaf9",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/probe-phase-focus.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/probe-phase-focus.sh",
+      "mode": "100644",
+      "source_git_blob": "be75431b648ad19e6f760ba1401d45da8cdca2b5",
+      "source_sha256": "62fe02dab06846ae3366844213c57cf1d1273902e31c2189b7f567df664fe961",
+      "destination_sha256": "62fe02dab06846ae3366844213c57cf1d1273902e31c2189b7f567df664fe961",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/probe-phase-mode.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/probe-phase-mode.sh",
+      "mode": "100644",
+      "source_git_blob": "8deb9149f0d9e94399ecda9d7b5384d09475fa73",
+      "source_sha256": "deffa8a7ebf590eb59bf5eabd43c0c88d0c3f3206a9df2a3860ae7453f46e230",
+      "destination_sha256": "deffa8a7ebf590eb59bf5eabd43c0c88d0c3f3206a9df2a3860ae7453f46e230",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/probe-phase-sharpness.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/probe-phase-sharpness.sh",
+      "mode": "100644",
+      "source_git_blob": "3917b69037eb2dfd1eb7ad34bc6d4b014f632232",
+      "source_sha256": "5a69f7d9351fa1304ad960d7ef5e858a06e9a7f972197a7e222eba986d180f2c",
+      "destination_sha256": "5a69f7d9351fa1304ad960d7ef5e858a06e9a7f972197a7e222eba986d180f2c",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/read-camss-registers.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/read-camss-registers.py",
+      "mode": "100644",
+      "source_git_blob": "d72871837d9b7205093ffa3c09040d3aa9ce27bb",
+      "source_sha256": "6514da5bad4861ca55ee9157488cd7bf721a30f8f69bcea12556a1a01a1de766",
+      "destination_sha256": "6514da5bad4861ca55ee9157488cd7bf721a30f8f69bcea12556a1a01a1de766",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/rollback-pdaf.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/rollback-pdaf.sh",
+      "mode": "100644",
+      "source_git_blob": "84e070880a2c26af992e870316d2296f01f9d9b7",
+      "source_sha256": "e62bacb44e96af0da7b8536176ed473ed618850618384fe2f7c8549be718ebb4",
+      "destination_sha256": "e62bacb44e96af0da7b8536176ed473ed618850618384fe2f7c8549be718ebb4",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/set-meta-formats.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/set-meta-formats.c",
+      "mode": "100644",
+      "source_git_blob": "4374e6586230af69c058046cb0380d88d7e587fc",
+      "source_sha256": "0e8c06a4b4a4adbf07e7eedca0742749720a95c12c7145bfa5976a628e9b274c",
+      "destination_sha256": "0e8c06a4b4a4adbf07e7eedca0742749720a95c12c7145bfa5976a628e9b274c",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/summarize-concurrent-modes.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/summarize-concurrent-modes.py",
+      "mode": "100644",
+      "source_git_blob": "61f593b48e0c34b5e596bc4aeaf614ed7389b39b",
+      "source_sha256": "f950c7980581bb17b49860530b7b86fd7d309de5385fa27deb9456ee84ae1ff3",
+      "destination_sha256": "f950c7980581bb17b49860530b7b86fd7d309de5385fa27deb9456ee84ae1ff3",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/summarize-pdaf-gates.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/summarize-pdaf-gates.py",
+      "mode": "100644",
+      "source_git_blob": "ae6650095755e1ee94a7e5cedb4d5ba3e86fc44b",
+      "source_sha256": "8df5430759a6751a8ca6f1080dab87b957a5fe3ff54bc9bc4f2114e40a871a85",
+      "destination_sha256": "8df5430759a6751a8ca6f1080dab87b957a5fe3ff54bc9bc4f2114e40a871a85",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/summarize-phase-focus-pilot.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/summarize-phase-focus-pilot.py",
+      "mode": "100644",
+      "source_git_blob": "e6c57a47c11e9ce81f4a27c0404bee447c504542",
+      "source_sha256": "ec42f1634d90cca4ea488658c69db6347083865cb6c17130bf5f692a33927da0",
+      "destination_sha256": "ec42f1634d90cca4ea488658c69db6347083865cb6c17130bf5f692a33927da0",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/summarize-snapshot-pdaf.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/summarize-snapshot-pdaf.py",
+      "mode": "100644",
+      "source_git_blob": "e66fedccbf6928361cca74d8f5022d38f768125e",
+      "source_sha256": "31e7b47c5268651939ce74d3ba9dd6fdea0c18a0c2644bb840576dd7c8b002d3",
+      "destination_sha256": "31e7b47c5268651939ce74d3ba9dd6fdea0c18a0c2644bb840576dd7c8b002d3",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/kernel/verify-phase-candidate.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/kernel/verify-phase-candidate.sh",
+      "mode": "100644",
+      "source_git_blob": "fd7856f4f07b6cdad4b58aac5d2ad28d41313bca",
+      "source_sha256": "0f4a6740608211bdb628dc72508c9a86852027122cbb347356b9d4838a53a6e8",
+      "destination_sha256": "0f4a6740608211bdb628dc72508c9a86852027122cbb347356b9d4838a53a6e8",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/Dockerfile",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/Dockerfile",
+      "mode": "100644",
+      "source_git_blob": "334a2f9e041d56985dafb2634318ed4a70ada89f",
+      "source_sha256": "989ec648ebf9adafe64fb867c09a7ee525bbda1145718e0f4c1c93a98c8f9cb9",
+      "destination_sha256": "989ec648ebf9adafe64fb867c09a7ee525bbda1145718e0f4c1c93a98c8f9cb9",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/af-continuous.yaml",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/af-continuous.yaml",
+      "mode": "100644",
+      "source_git_blob": "20fc10db955f1fa3d06cf8d9f8fb3a68e786e86c",
+      "source_sha256": "d0a009accf177c7f5f9db392cc15fe3eb46b49390be6bfcb2f532837170f89c8",
+      "destination_sha256": "d0a009accf177c7f5f9db392cc15fe3eb46b49390be6bfcb2f532837170f89c8",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/af-manual.yaml",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/af-manual.yaml",
+      "mode": "100644",
+      "source_git_blob": "6dccf72f65fcbbfebb40cc7b6e5c8313a00dbb03",
+      "source_sha256": "54328183f1b9f3a8f65bd998452fb958dc4b1fee775b460aea9a0889be43acaa",
+      "destination_sha256": "54328183f1b9f3a8f65bd998452fb958dc4b1fee775b460aea9a0889be43acaa",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/af-once.yaml",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/af-once.yaml",
+      "mode": "100644",
+      "source_git_blob": "082fa2ece05abb987e52ce910fc03e6208d8c677",
+      "source_sha256": "4a03e4c485813477390b5eb3fc8bbcb99d6b71d3175460abc112fe65893e88d5",
+      "destination_sha256": "4a03e4c485813477390b5eb3fc8bbcb99d6b71d3175460abc112fe65893e88d5",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/af-pause.yaml",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/af-pause.yaml",
+      "mode": "100644",
+      "source_git_blob": "bb69a91b7e75749cd1b33fbeb336bb1fdd3c2b3e",
+      "source_sha256": "e1e032b32870c4701c10ec01593e96cca0c91ccd474bda1ced1370f7d75fc8d2",
+      "destination_sha256": "e1e032b32870c4701c10ec01593e96cca0c91ccd474bda1ced1370f7d75fc8d2",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/af-retrigger.yaml",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/af-retrigger.yaml",
+      "mode": "100644",
+      "source_git_blob": "59d7857262dbb73231c0042da4c2716f16e4a0d9",
+      "source_sha256": "5477abb92c78a8cbf16ce8eb554bec1b85bff6fb725b5ef2d1b56709d334db01",
+      "destination_sha256": "5477abb92c78a8cbf16ce8eb554bec1b85bff6fb725b5ef2d1b56709d334db01",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/autofocus-simple.patch",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/autofocus-simple.patch",
+      "mode": "100644",
+      "source_git_blob": "8ab4c0fb1f45d5f795ec978deebfaeb7c619b5af",
+      "source_sha256": "fd25bd5842f392c617ddaf63b143f570d019fe41c4ef25b5bf68a18aa3e4fbae",
+      "destination_sha256": "fd25bd5842f392c617ddaf63b143f570d019fe41c4ef25b5bf68a18aa3e4fbae",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/build-inside.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/build-inside.sh",
+      "mode": "100644",
+      "source_git_blob": "a054e3cf4165306a63be82b11819c5c2c9a8cc30",
+      "source_sha256": "2c34f18156fc4e3123312cb82a04e906d0dbdf366ec9a96f9ec861ed5eb87063",
+      "destination_sha256": "2c34f18156fc4e3123312cb82a04e906d0dbdf366ec9a96f9ec861ed5eb87063",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/build-runtime.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/build-runtime.sh",
+      "mode": "100644",
+      "source_git_blob": "992a7b8861a61e4a5ae7e11301ac24a287ac56e0",
+      "source_sha256": "0ab4aecaa0d602fee77b67883d043548d8a869f25c87f4ff56e793dcb06532c0",
+      "destination_sha256": "0ab4aecaa0d602fee77b67883d043548d8a869f25c87f4ff56e793dcb06532c0",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/color-native-size.patch",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/color-native-size.patch",
+      "mode": "100644",
+      "source_git_blob": "658b8a3f91211add88ac95c5794221bf6f378f5d",
+      "source_sha256": "a428a110ef1c9aeff7342e6fcf1da5418cb2129f080e085a1293cb1a7bcbd634",
+      "destination_sha256": "a428a110ef1c9aeff7342e6fcf1da5418cb2129f080e085a1293cb1a7bcbd634",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/deploy-runtime.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/deploy-runtime.sh",
+      "mode": "100644",
+      "source_git_blob": "81e4958d85efdbb00f8d03d62ca5cc551eb80473",
+      "source_sha256": "6a487aca392b3e985183c8b7bbb6b1b8d9c18feda7dbf5b38e89876959e58a0c",
+      "destination_sha256": "6a487aca392b3e985183c8b7bbb6b1b8d9c18feda7dbf5b38e89876959e58a0c",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/imx519.patch",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/imx519.patch",
+      "mode": "100644",
+      "source_git_blob": "560ce067952fa78816146994c7641d973d6bdd8d",
+      "source_sha256": "3676b6dd3f003b65735e8ace1cb87bf5eae96662a7e12355efda15798845d0a5",
+      "destination_sha256": "3676b6dd3f003b65735e8ace1cb87bf5eae96662a7e12355efda15798845d0a5",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/pdaf-simple.patch",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/pdaf-simple.patch",
+      "mode": "100644",
+      "source_git_blob": "232b99fff42b8c8687182999f8495db69cc450dc",
+      "source_sha256": "7c2f1577a7243c8fe0be07a6dfe6f9c5c4edff504235fb630094f66b8d133ee4",
+      "destination_sha256": "7c2f1577a7243c8fe0be07a6dfe6f9c5c4edff504235fb630094f66b8d133ee4",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/run.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/run.sh",
+      "mode": "100644",
+      "source_git_blob": "33a459049d80147f14688c7aa127eb9bf5676ce6",
+      "source_sha256": "2b2e6c961c089737d342b3ca2f4f718632becc656240ba9859267d2d21d99fdc",
+      "destination_sha256": "2b2e6c961c089737d342b3ca2f4f718632becc656240ba9859267d2d21d99fdc",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/tuning/simple/imx519.yaml",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/tuning/simple/imx519.yaml",
+      "mode": "100644",
+      "source_git_blob": "253b8294010fb34bb4c8ad695288249287d0d5a6",
+      "source_sha256": "3bbefff7e6586667b94a6ee309e8d4adea50d9ea72ca9e1e5faa6456bd96e753",
+      "destination_sha256": "3bbefff7e6586667b94a6ee309e8d4adea50d9ea72ca9e1e5faa6456bd96e753",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/libcamera/upstream-focus-reference.patch",
+      "destination_path": "target/sbc/radxa_dragon_q6a/libcamera/upstream-focus-reference.patch",
+      "mode": "100644",
+      "source_git_blob": "125cc588794ca007dff993466112f9da52aa1a36",
+      "source_sha256": "3cf5824d0b1772aca38ddf019f9c559b7bee4356e4ee34bbb5685e0ea78a413a",
+      "destination_sha256": "3cf5824d0b1772aca38ddf019f9c559b7bee4356e4ee34bbb5685e0ea78a413a",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/overlays/qcs6490-radxa-dragon-q6a-cam3-imx519.dts",
+      "destination_path": "target/sbc/radxa_dragon_q6a/overlays/qcs6490-radxa-dragon-q6a-cam3-imx519.dts",
+      "mode": "100644",
+      "source_git_blob": "22aec148a16588332a5ba2ab03e5832b54f659d8",
+      "source_sha256": "e282e9f7f80dafb8a7705964aeed99c6ffead4b212cc564817b91f163abd50dd",
+      "destination_sha256": "e282e9f7f80dafb8a7705964aeed99c6ffead4b212cc564817b91f163abd50dd",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/preview.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/preview.sh",
+      "mode": "100644",
+      "source_git_blob": "b5b7068eaa2324f16e5fa5f38bc9eb683e0bd7ba",
+      "source_sha256": "f6670b5082329706133d121dc13f559a2070a7096d31233b5a1f2efc5477cf5d",
+      "destination_sha256": "f6670b5082329706133d121dc13f559a2070a7096d31233b5a1f2efc5477cf5d",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/research/autofocus.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/research/autofocus.md",
+      "mode": "100644",
+      "source_git_blob": "7ddc8fc8f2b4f79264f955cfd47a39f127a3e649",
+      "source_sha256": "4d45dfb3a301ad4476555278beb1f8f6d901979bdb9a81e11d6db45b52dc354e",
+      "destination_sha256": "4d45dfb3a301ad4476555278beb1f8f6d901979bdb9a81e11d6db45b52dc354e",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/research/camss-csid-gen2-radxa-7.0.11-6.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/research/camss-csid-gen2-radxa-7.0.11-6.c",
+      "mode": "100644",
+      "source_git_blob": "2a1746dcc1c5b84028dd8bdff7845bd3a912ab8d",
+      "source_sha256": "e41bb25cd436d0b997bab141e20d8b979343ee85f98038dd3e8951f78744a928",
+      "destination_sha256": "e41bb25cd436d0b997bab141e20d8b979343ee85f98038dd3e8951f78744a928",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/research/camss-csid-radxa-7.0.11-6.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/research/camss-csid-radxa-7.0.11-6.c",
+      "mode": "100644",
+      "source_git_blob": "ed1820488c9878df91c173cd4ff0209dfa1e3a8c",
+      "source_sha256": "d81a9a75d251e586429e55007a1ce75dfc60d49603c2aa114035bbf10f683a51",
+      "destination_sha256": "d81a9a75d251e586429e55007a1ce75dfc60d49603c2aa114035bbf10f683a51",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/research/camss-radxa-7.0.11-6.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/research/camss-radxa-7.0.11-6.c",
+      "mode": "100644",
+      "source_git_blob": "9335636d7c4dfc7263af79f0bc8a3f87bd5108d4",
+      "source_sha256": "873122ba4e82e7a56007ef7409c53e70870d44be9e3d168e65be3696f915daae",
+      "destination_sha256": "873122ba4e82e7a56007ef7409c53e70870d44be9e3d168e65be3696f915daae",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/research/camss-vfe-radxa-7.0.11-6.c",
+      "destination_path": "target/sbc/radxa_dragon_q6a/research/camss-vfe-radxa-7.0.11-6.c",
+      "mode": "100644",
+      "source_git_blob": "5baf0e3d4bc461df28d8dcf97a98dec04fa17ceb",
+      "source_sha256": "7cecb05f3da6bd012bbd5c00680ad7ec79fa4a16a5834ced7692147aaac48ec8",
+      "destination_sha256": "7cecb05f3da6bd012bbd5c00680ad7ec79fa4a16a5834ced7692147aaac48ec8",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/research/pdaf-bringup.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/research/pdaf-bringup.md",
+      "mode": "100644",
+      "source_git_blob": "f404ffe31854d9b297be452483dcd0906b6ada81",
+      "source_sha256": "592c1e2b41547498a5cc30881929b7a6f939d6df23ddb19cb330e9c13bcede94",
+      "destination_sha256": "592c1e2b41547498a5cc30881929b7a6f939d6df23ddb19cb330e9c13bcede94",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/score-focus.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/score-focus.py",
+      "mode": "100644",
+      "source_git_blob": "fa24b021e7d485d22d3d3242441658849ffa6aa6",
+      "source_sha256": "3ef97ec8f1188fd68920b0248143a222a9374c6d7e33c7fd74c3c16adb2d5290",
+      "destination_sha256": "3ef97ec8f1188fd68920b0248143a222a9374c6d7e33c7fd74c3c16adb2d5290",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/snapshot-af.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/snapshot-af.sh",
+      "mode": "100644",
+      "source_git_blob": "e1c3729f9198d1b556ba090ae5135757419d1c2f",
+      "source_sha256": "0ddb62caefb6cdb8c09c0dfed7c1d8334fced7f2326dfe51603623bd517ec4ac",
+      "destination_sha256": "0ddb62caefb6cdb8c09c0dfed7c1d8334fced7f2326dfe51603623bd517ec4ac",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/snapshot-pdaf.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/snapshot-pdaf.py",
+      "mode": "100644",
+      "source_git_blob": "48d19afbe3c2544a77b9145068170c331c979bee",
+      "source_sha256": "1e45b948c86e55eb723cc3eb57ffaf2ecdf7554ff9c799dacb7a9b1663c8ce69",
+      "destination_sha256": "1e45b948c86e55eb723cc3eb57ffaf2ecdf7554ff9c799dacb7a9b1663c8ce69",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/snapshot.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/snapshot.sh",
+      "mode": "100644",
+      "source_git_blob": "cccb74eab58429bdf0f6c13929cbbf6b388c0b7d",
+      "source_sha256": "8878f2323dcbbbd121cb227d989bd73e35cb9cf291236a746f85e8b71b721bb7",
+      "destination_sha256": "8878f2323dcbbbd121cb227d989bd73e35cb9cf291236a746f85e8b71b721bb7",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/stability.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/stability.sh",
+      "mode": "100644",
+      "source_git_blob": "b7d24723133e1faf278aecefa7e9db34c7477d87",
+      "source_sha256": "a8e30ebefca0fedc97767c35d9a3fb63f671c13b2fa19829df735710bbf6fdd1",
+      "destination_sha256": "a8e30ebefca0fedc97767c35d9a3fb63f671c13b2fa19829df735710bbf6fdd1",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/sync-to-radxa.sh",
+      "destination_path": "target/sbc/radxa_dragon_q6a/sync-to-radxa.sh",
+      "mode": "100755",
+      "source_git_blob": "e2588585074a8a63f7d278697ad107d86010e3d3",
+      "source_sha256": "8c0943cd4452a861063f1f886e67d25f304f2b9ed92a8ce535258e81fe3d06ce",
+      "destination_sha256": "8c0943cd4452a861063f1f886e67d25f304f2b9ed92a8ce535258e81fe3d06ce",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/.gitattributes",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/.gitattributes",
+      "mode": "100644",
+      "source_git_blob": "d72fd520b1c12f276273f6d5b6cbc0c7f3bbf884",
+      "source_sha256": "547f59603028195ff9f8a87d04c4651551e8bd0d68f075257dfd549cd846b25b",
+      "destination_sha256": "547f59603028195ff9f8a87d04c4651551e8bd0d68f075257dfd549cd846b25b",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/AFTestChart.doc",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/AFTestChart.doc",
+      "mode": "100644",
+      "source_git_blob": "aac88be1f39d721834532332aa7d557d8647985f",
+      "source_sha256": "4a9716b709f59afccc833597bf52f5a65ba855ca4c17da755de1589cd4bd3638",
+      "destination_sha256": "4a9716b709f59afccc833597bf52f5a65ba855ca4c17da755de1589cd4bd3638",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/AFTestChart300dpi.png",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/AFTestChart300dpi.png",
+      "mode": "100644",
+      "source_git_blob": "5e875e6c802ed054c552466bbeeec3aab7b9823e",
+      "source_sha256": "fcf54e3728d003d5dd1475ae73d1c472214fe899dd2d0354004e3f9132d195ec",
+      "destination_sha256": "fcf54e3728d003d5dd1475ae73d1c472214fe899dd2d0354004e3f9132d195ec",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/AFTestChart300dpi_A4_landscape_100pct.pdf",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/AFTestChart300dpi_A4_landscape_100pct.pdf",
+      "mode": "100644",
+      "source_git_blob": "043a5855a6e28b3ecd614c5fbbccc77ca1916361",
+      "source_sha256": "6e8adf45168b66ecf3fdf6eddb09b6b469a7fff2aea29eb44dd8fb4ef5a1f118",
+      "destination_sha256": "6e8adf45168b66ecf3fdf6eddb09b6b469a7fff2aea29eb44dd8fb4ef5a1f118",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/AFTestChart_1mm_depth_45deg_A4_100pct.pdf",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/AFTestChart_1mm_depth_45deg_A4_100pct.pdf",
+      "mode": "100644",
+      "source_git_blob": "85a0c62a8293a3f19f5d5b0d9bb034a8b35c8540",
+      "source_sha256": "a91af7aa198167894a913270f6b2d0903450dc686342c59017e154f580beb6c4",
+      "destination_sha256": "a91af7aa198167894a913270f6b2d0903450dc686342c59017e154f580beb6c4",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/INSTRUCTIONS.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/INSTRUCTIONS.md",
+      "mode": "100644",
+      "source_git_blob": "7bb6bd9856b05760935bd8e75a40f768c691dc76",
+      "source_sha256": "e54c724d7f4881b06cc15a2b850649b3ee4ebff7d6c53f8c6f2de2f67586a2a1",
+      "destination_sha256": "e54c724d7f4881b06cc15a2b850649b3ee4ebff7d6c53f8c6f2de2f67586a2a1",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/Mira600dpi.doc",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/Mira600dpi.doc",
+      "mode": "100644",
+      "source_git_blob": "afaee7f0d21d84a6bf37b5cac8aee4c6a25334ba",
+      "source_sha256": "3d8c439595fdde6386e119c7acca14a46840f76eba923659d34ee1d7bf70e3a2",
+      "destination_sha256": "3d8c439595fdde6386e119c7acca14a46840f76eba923659d34ee1d7bf70e3a2",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/Mira600dpi.png",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/Mira600dpi.png",
+      "mode": "100644",
+      "source_git_blob": "a53e0ffab5d824e3e42644a3fb54ca771e88995e",
+      "source_sha256": "8b0d76f4d2ab3e976a5a94dbc644e6c889cefeb9850e7720ad6acd9f2d026320",
+      "destination_sha256": "8b0d76f4d2ab3e976a5a94dbc644e6c889cefeb9850e7720ad6acd9f2d026320",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/Mira600dpi_A4_landscape_100pct.pdf",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/Mira600dpi_A4_landscape_100pct.pdf",
+      "mode": "100644",
+      "source_git_blob": "8308c2ed31ba2f9be12b0570a1aeba988e904036",
+      "source_sha256": "49701bffff765d519d1e9307334b76c35a2a607e914f6bcb611c6d8a5e58f3af",
+      "destination_sha256": "49701bffff765d519d1e9307334b76c35a2a607e914f6bcb611c6d8a5e58f3af",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/README.md",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/README.md",
+      "mode": "100644",
+      "source_git_blob": "0b8b6fc6d6736580048421dffcad545c8746d967",
+      "source_sha256": "f4e2072b532659d8c9e992ccfcd11cf7acf59ac05591d17c7dc4a26d7dc2bc5d",
+      "destination_sha256": "5789afb290238e3a0e7c6cf7873f54557fd8e5f2078d2bcf5144ca8d26a8ba45",
+      "status": "maintained-documentation-adapted"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/SHA256SUMS",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/SHA256SUMS",
+      "mode": "100644",
+      "source_git_blob": "d2ece3f766c3f7c5a27e5cbd82cc04b3812dfaeb",
+      "source_sha256": "0e96fcef22ac4caaafa48ce9d2c7e70b9f523d5215f66294ee130abeead155e2",
+      "destination_sha256": "0e96fcef22ac4caaafa48ce9d2c7e70b9f523d5215f66294ee130abeead155e2",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/make-af-mm-pdf.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/make-af-mm-pdf.py",
+      "mode": "100644",
+      "source_git_blob": "92b6e4cff6c28298eeaf25c36dd79d8799848820",
+      "source_sha256": "1662cdbacf85c157c936563f6c95d46af7c4360d98aba5ab4c1713169eed9619",
+      "destination_sha256": "1662cdbacf85c157c936563f6c95d46af7c4360d98aba5ab4c1713169eed9619",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/test-charts/make-af-pdf.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/test-charts/make-af-pdf.py",
+      "mode": "100644",
+      "source_git_blob": "3f7ce9370eb9bd4869fd096870ab9483210bb4e7",
+      "source_sha256": "5c960881410edd8c89bdb5c60ab3fb3308c7bd5b8f0aa0fd27d6c936b901c271",
+      "destination_sha256": "5c960881410edd8c89bdb5c60ab3fb3308c7bd5b8f0aa0fd27d6c936b901c271",
+      "status": "identical"
+    },
+    {
+      "source_path": "hardware/camera/imx519/q6a/web-preview.py",
+      "destination_path": "target/sbc/radxa_dragon_q6a/web-preview.py",
+      "mode": "100644",
+      "source_git_blob": "42f1539eff1b8af9accf01f07828bdbe976fc591",
+      "source_sha256": "3cc8ffd20c04ee47e9c91c46fdac5a4b8f9640da39d56737cbfe6af4ed2d9ca6",
+      "destination_sha256": "3cc8ffd20c04ee47e9c91c46fdac5a4b8f9640da39d56737cbfe6af4ed2d9ca6",
+      "status": "identical"
+    }
+  ],
+  "additional_historical_capture_source": {
+    "path": "hardware/board/radxa_dragon_q6a/camera-research.md",
+    "git_commit": "ab8420b705d62f583f82532dbcb98cb3a87710d4",
+    "full_source_sha256": "5b823d00592d70c9ca624ebf39f83d7e3c4959061866db4927b4f60e7e765175",
+    "destination_path": "target/sbc/radxa_dragon_q6a/docs/CAPTURE-2026-09-24.md"
+  }
+}

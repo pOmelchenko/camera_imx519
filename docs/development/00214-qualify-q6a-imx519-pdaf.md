@@ -4,7 +4,7 @@ status: deferred
 number: 00214
 epic: Camera
 priority: P2
-updated: 2026-10-04
+updated: 2026-10-12
 ---
 
 # 00214 Qualify Q6A IMX519 PDAF And Recovery
@@ -36,7 +36,7 @@ for confirmation that the light and scene are ready.
 
 - Record the exact board, kernel, sensor/lens variant, CAMSS module, private
   libcamera build, tuning and test commands before each run. Keep the package
-  under `hardware/camera/imx519/q6a/`; keep large captures in ignored `var/`.
+  under `target/sbc/radxa_dragon_q6a/`; keep large captures in ignored `var/`.
 - Measure Continuous AF through repeated near → far → near transitions on
   stationary targets at measured distances. Record lens codes, phase quality,
   focus-state transitions and time to settle. Compare selected-region image
@@ -77,6 +77,6 @@ for confirmation that the light and scene are ready.
 
 ## Sources
 
-- [Q6A IMX519 package and commands](../../../../hardware/camera/imx519/q6a/README.md).
-- [PDAF bring-up and remaining gates](../../../../hardware/camera/imx519/q6a/research/pdaf-bringup.md).
-- [Short libcamera PDAF evidence](../../../../hardware/camera/imx519/q6a/docs/evidence/2026-09-25-libcamera-pdaf.json).
+- [Q6A IMX519 package and commands](../../target/sbc/radxa_dragon_q6a/README.md).
+- [PDAF bring-up and remaining gates](../../target/sbc/radxa_dragon_q6a/research/pdaf-bringup.md).
+- [Short libcamera PDAF evidence](../../target/sbc/radxa_dragon_q6a/docs/evidence/2026-09-25-libcamera-pdaf.json).

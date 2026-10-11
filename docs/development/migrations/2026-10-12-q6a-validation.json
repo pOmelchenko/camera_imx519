@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-12",
+  "source_commit": "ab8420b705d62f583f82532dbcb98cb3a87710d4",
+  "destination_base": "9cf2e24bdec129c5840c47c085ef5c388325bb13",
+  "imported_files_verified": 125,
+  "unchanged_files": 122,
+  "adapted_documentation": [
+    "docs/development/00214-qualify-q6a-imx519-pdaf.md",
+    "target/sbc/radxa_dragon_q6a/README.md",
+    "target/sbc/radxa_dragon_q6a/test-charts/README.md"
+  ],
+  "commit_mappings_and_authors_verified": 12,
+  "vendor_document_delta": [],
+  "bash_syntax_passed": 31,
+  "python_syntax_passed": 18,
+  "json_files_parsed": 25,
+  "checksum_bindings_verified": 21,
+  "checksum_manifests": 3,
+  "stored_patch_syntax_passed": 6,
+  "relative_links_checked": 194,
+  "broken_relative_links": [],
+  "stale_active_parent_paths": [],
+  "new_documentation_diff_check": "pass",
+  "kernel_libcamera_build_deployment_physical_checks": "not run; migration preserves recorded evidence only"
+}

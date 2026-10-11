@@ -29,7 +29,7 @@
 растеризации или изменения числа пикселей:
 
 ```sh
-python3 hardware/camera/test-charts/make-af-pdf.py
+python3 target/sbc/radxa_dragon_q6a/test-charts/make-af-pdf.py
 ```
 
 Новая миллиметровая версия сохраняет компоновку исходной мишени, но
@@ -41,7 +41,7 @@ python3 hardware/camera/test-charts/make-af-pdf.py
 полю PDF проведена отдельная контрольная линия 100 мм. Для пересборки:
 
 ```sh
-python3 hardware/camera/test-charts/make-af-mm-pdf.py
+python3 target/sbc/radxa_dragon_q6a/test-charts/make-af-mm-pdf.py
 ```
 
 Более мелкая шкала сама по себе не гарантирует точности автофокуса до 1 мм:

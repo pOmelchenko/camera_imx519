@@ -1,9 +1,11 @@
 # Драйвер и автофокус IMX519
 
 [Arducam](https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/16MP-IMX519/)
-описывает программные маршруты Raspberry Pi и Jetson. Рабочая связка
-с имеющимся модулем не зафиксирована. Закреплённого комплекта ОС,
-драйвера, libcamera и tuning пока нет.
+описывает программные маршруты Raspberry Pi и Jetson. Для Q6A сохранён
+[проверенный комплект](../../target/sbc/radxa_dragon_q6a/README.md):
+Ubuntu 24.04.4 LTS, ядро `7.0.11-6-qcom`, драйверы IMX519/AK7375,
+CAM3 overlay и частная libcamera на `de1e9bc095e23085e77533357d2582176de0a582`.
+CDAF проверен; PDAF имеет короткие физические результаты и открытую квалификацию.
 
 ## Raspberry Pi
 
