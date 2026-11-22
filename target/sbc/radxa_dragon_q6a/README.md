@@ -139,3 +139,38 @@ IMX519 на CAM3 в конфигурацию IMX296/CAM1 + AR0234/CAM2. Испы
 для CAMSS, файлы кадра и наблюдение о резкости. При отсутствии сенсора
 посмотрите журнал ядра для `imx519`, `ak7375`, `cci` и `camss`.
 [Критерии аппаратной проверки](../../../docs/development/README.md).
+
+## Повтор прогона CAM3 на установленном модуле
+
+После перезагрузки проверьте `uname -r`, `cat /sys/module/imx519/version`
+и `modinfo -F version imx519`. Для этой проверки загруженный и установленный
+модули должны показывать `q6a-cam3.1`. Сначала выполните
+`python3 ~/q6a-imx519/capture.py --port cam3` и сохраните каталог RAW10 с
+`frame.json`. Для сравнения с октябрьским опытом используйте ту же версию
+программы просмотра. Команды ниже собирают только пользовательскую программу
+и запускаются в графической сессии платы, когда камера свободна. Требуются
+`git`, `make`, C++17 и пакеты разработки libcamera, SDL2 и GLESv2.
+
+```sh
+(
+  set -eu
+  trial=$(mktemp -d "$HOME/imx519-cam3-trial.XXXXXXXX")
+  echo "$trial"
+  git -C "$trial" init -q
+  git -C "$trial" fetch --depth=1 https://github.com/pOmelchenko/camera_imx519.git 93c6e57ca556b0f96ca250a1414a4347fc280b2b
+  git -C "$trial" checkout -q --detach FETCH_HEAD
+  cd "$trial/target/sbc/radxa_dragon_q6a"
+  make demo
+  sh tools/preview.sh --list-cameras
+  sh tools/preview.sh --camera='/base/soc@0/cci@ac4b000/i2c-bus@1/imx519@1a' \
+    --frames=600 --compare --snapshot="$trial/comparison.ppm" > "$trial/preview.log" 2>&1
+  tail "$trial/preview.log"
+  sha256sum "$trial/comparison.ppm"
+)
+```
+
+Зафиксируйте версию ядра и libcamera, фактические форматы и stride, число
+кадров, частоту по меткам времени, счётчики пропущенных при выводе кадров
+и ошибок захвата. Проверьте журнал текущей загрузки на ошибки CCI/I²C.
+Сопоставьте результат с исходным протоколом. Сохраните незавершённый прогон
+с его журналом, если камера не зарегистрировалась или остановилась до 600 кадров.
