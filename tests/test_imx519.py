@@ -288,6 +288,78 @@ class InstallerTest(unittest.TestCase):
             self.assertEqual(sum(c[0] == "make" for c in commands), 1)
             self.assertEqual(sum(c[0] == "depmod" for c in commands), 2)
 
+    def test_cam3_migrates_only_selected_entry_and_preserves_cam2_clock(self):
+        old = self.installer.build_overlay(self.root, "cam3")
+        shutil.copyfile(old, self.catalog / old.name)
+        clock = self.overlay("cam2-clock", '&cci1_i2c0 { clock-frequency = <1000000>; };')
+        self.stock.write_text(self.original + f"devicetree-overlay {clock} /RadxaOS/test-kernel/dtbo/{old.name}\n")
+        saved = self.stock.with_name("rollback.conf")
+        saved.write_bytes(self.stock.read_bytes())
+        self.assertTrue(self.install("cam3")[1])
+        profile = "/RadxaOS/test-kernel/dtbo/imx519-cam3-400khz.dtbo"
+        self.assertIn(profile, self.stock.read_text())
+        self.assertNotIn(profile, saved.read_text())
+        self.assertEqual(old.read_bytes(), (self.catalog / old.name).read_bytes())
+        get = self.installer.get
+        self.assertEqual(get(self.root / "camera.dtb", "/cci1/bus1", "clock-frequency", "u"), "400000")
+        self.assertEqual(get(self.root / "camera.dtb", "/cci1/bus0", "clock-frequency", "u"), "1000000")
+        self.assertEqual(get(self.root / "camera.dtb", "/imx519-cam3-enable", "startup-delay-us", "u"), "100000")
+        self.assertFalse(self.install("cam3")[1])
+
+    def test_cam3_refuses_to_retime_unrelated_i2c_device(self):
+        eeprom = self.overlay("cam3-eeprom", '&cci1_i2c1 { eeprom@50 { reg = <0x50>; }; };')
+        self.stock.write_text(self.original + f"devicetree-overlay {eeprom}\n")
+        before = self.snapshot()
+        with self.assertRaisesRegex(ValueError, "устройств"):
+            self.install("cam3")
+        self.assertEqual(self.snapshot(), before)
+
+    def test_cam3_driver_upgrade_backup_and_retry(self):
+        drivers = load_script("drivers")
+        modules = self.root / "modules"
+        updates = modules / "test-kernel/updates"
+        headers = updates.parent / "build"
+        headers.mkdir(parents=True)
+        (headers / "Makefile").touch()
+        updates.mkdir()
+        old = updates / "imx519.ko"
+        old.write_bytes(b"old driver")
+        loaded = self.root / "loaded"
+        loaded.mkdir()
+        index = {"version": ""}
+        calls = []
+        def field(kernel, key, name):
+            if key == "filename":
+                return str(old)
+            if isinstance(name, Path):
+                return drivers.CAM3_VERSION if name.read_bytes() == b"fixed driver" else ""
+            return index["version"]
+        def run(cmd, **options):
+            calls.append(cmd[0])
+            if cmd[0] == "patch":
+                self.assertTrue(Path(cmd[-1]).is_file())
+            if cmd[0] == "make":
+                self.assertIn(drivers.CAM3_VERSION, (self.root / "driver/imx519.c").read_text())
+                (self.root / "driver/imx519.ko").write_bytes(b"fixed driver")
+            if cmd[0] == "depmod":
+                index["version"] = drivers.CAM3_VERSION
+            return subprocess.CompletedProcess(cmd, 0)
+        with patch.object(drivers, "module_field", side_effect=field), patch.object(subprocess, "run", side_effect=run), \
+                patch.object(drivers, "read_source", return_value=b""):
+            def install():
+                return drivers.prepare_modules("test-kernel", self.root, self.installer.atomic_write,
+                                               modules, cam3=True, loaded=loaded)
+            self.assertTrue(install())
+            self.assertEqual(old.with_suffix(".ko.before-q6a-cam3").read_bytes(), b"old driver")
+            # A lost depmod index is repaired without recompiling or replacing the backup.
+            index["version"] = ""
+            (loaded / "version").write_text(drivers.CAM3_VERSION)
+            self.assertFalse(install())
+            self.assertEqual(calls.count("make"), 1)
+            self.assertEqual(calls.count("depmod"), 2)
+            self.assertFalse(install())
+            self.assertEqual(calls.count("depmod"), 2)
+
     def test_existing_drivers_need_no_build_or_source_download(self):
         drivers = load_script("drivers")
         with patch.object(subprocess, "run", return_value=subprocess.CompletedProcess([], 0)) as run:

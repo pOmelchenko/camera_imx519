@@ -248,12 +248,26 @@ def install(esp, token, kernel, work, port, modules_file, devices, replace=False
     loader = esp / "loader/loader.conf"
     next_loader = loader_config(esp, entry, loader_lines)
     built = {p: build_overlay(work, p) for p in PORTS}
+    old = [p for row in fields(lines, "devicetree-overlay") for p in row]
+    legacy_camera = None
+    if port == "cam3":
+        legacy = built[port]
+        old_blob = catalog / legacy.name
+        legacy_camera = "/" + old_blob.relative_to(esp).as_posix()
+        next_blob = build_overlay(work, "cam3-400khz")
+        next_camera = "/" + (catalog / next_blob.name).relative_to(esp).as_posix()
+        candidates = (old_blob, old_blob.with_suffix(".dtbo.disabled"))
+        installed = next((p for p in candidates if p.is_file()), None)
+        # Keep custom profiles. Only migrate the exact old package overlay.
+        if next_camera in old or installed is None or installed.read_bytes() == legacy.read_bytes():
+            if next_camera in old and legacy_camera in old:
+                raise ValueError("В записи одновременно включены два профиля IMX519 CAM3.")
+            built[port] = next_blob
     name = built[port].name
     enabled_camera = catalog / name
     inactive_camera = catalog / (name + ".disabled")
     selected = next((p for p in (enabled_camera, inactive_camera) if p.is_file()), built[port])
     camera = "/" + enabled_camera.relative_to(esp).as_posix()
-    old = [p for row in fields(lines, "devicetree-overlay") for p in row]
     material = {camera: selected}
 
     def assemble(name, order):
@@ -309,7 +323,11 @@ def install(esp, token, kernel, work, port, modules_file, devices, replace=False
         node, compatible, profile, digest, saved_boot = json.loads(payload)
         saved_camera = "/" + (catalog / built[saved_port].name).relative_to(esp).as_posix()
         saved_bus = get(current, "/__symbols__", PORTS[saved_port][0])
-        if saved_camera not in old or str(PurePosixPath(node).parent) != saved_bus:
+        saved_profiles = {saved_camera}
+        if saved_port == "cam3":
+            saved_profiles.update("/" + (catalog / fname).relative_to(esp).as_posix() for fname in
+                                  ("imx519-cam3.dtbo", "imx519-cam3-400khz.dtbo"))
+        if not saved_profiles.intersection(old) or str(PurePosixPath(node).parent) != saved_bus:
             continue
         if saved_boot == boot_id and protected.get(node) == compatible:
             del protected[node]
@@ -338,6 +356,9 @@ def install(esp, token, kernel, work, port, modules_file, devices, replace=False
         digest = hashlib.sha256(blob.read_bytes()).hexdigest()
         retirement = retire_catalog_profile(esp, catalog, entry, replaced, digest)
         previous = (old_node, compatible)
+    elif configured and legacy_camera in old and legacy_camera != camera:
+        wanted[wanted.index(legacy_camera)] = camera
+        merged = assemble("camera.dtb", wanted)
     elif not configured:
         if camera in old:
             raise ValueError(f"Профиль IMX519 уже указан, но маршрут {port.upper()} отсутствует.")
@@ -382,6 +403,15 @@ def install(esp, token, kernel, work, port, modules_file, devices, replace=False
             other_phy = camss + f"/ports/port@{index}"
             if routes(current, other_bus, other_phy) != routes(merged, other_bus, other_phy):
                 raise ValueError(f"Итоговая конфигурация меняет маршрут соседнего {other.upper()}.")
+    if port == "cam3":
+        if (get(merged, bus, "clock-frequency", "u") != "400000"
+                or get(merged, "/imx519-cam3-enable", "startup-delay-us", "u") != "100000"
+                or get(merged, sensor, "VANA-supply", "x") != get(merged, "/imx519-cam3-enable", "phandle", "x")):
+            raise ValueError("Проверьте пользовательский профиль CAM3: ожидаются I²C 400 кГц и задержка питания 100 мс.")
+        if get(current, bus, "clock-frequency", "u") != "400000":
+            unrelated = set(listing(merged, bus)) - {"imx519@1a", "ak7375@c"}
+            if unrelated:
+                raise ValueError("Частота I²C изменится для других устройств на CAM3: " + ", ".join(sorted(unrelated)))
     if previous and protected.get(previous[0]) == previous[1]:
         del protected[previous[0]]
     verify_peripherals(merged, protected)
@@ -407,10 +437,8 @@ def install(esp, token, kernel, work, port, modules_file, devices, replace=False
             files[inactive] = blob.read_bytes()
     # Every prerequisite is published before the entry referencing it. If interrupted
     # at any point, the previous or new entry is usable and the install can be retried.
-    if prepare_driver is not None:
-        prepare_driver()
+    changed = bool(prepare_driver()) if prepare_driver is not None else False
     catalog.mkdir(exist_ok=True)
-    changed = False
     for path, data in files.items():
         if write_if_changed(path, data) and path == catalog / name:
             changed = True
@@ -462,7 +490,8 @@ def main():
                                  Path("/etc/modules-load.d/q6a-imx519.conf"),
                                  bound_peripherals(dt_root, Path("/sys/bus")), replace=args.replace,
                                  boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
-                                 prepare_driver=lambda: prepare_modules(kernel, Path(work), atomic_write))
+                                 prepare_driver=lambda: prepare_modules(kernel, Path(work), atomic_write,
+                                                                        cam3=args.port == "cam3"))
     print(f"IMX519 {args.port.upper()}: {entry.name}")
     if not changed:
         from capture import find_camera
