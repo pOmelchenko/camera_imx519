@@ -11,7 +11,7 @@
 | SBC | Материал | Статус |
 | --- | --- | --- |
 | Raspberry Pi | [Стек Arducam и автофокус](../target/sbc/raspberry_pi/README.md) | Есть инструкция производителя; экземпляр не проверен |
-| Radxa Dragon Q6A | [Подключение и портирование](../target/sbc/radxa_dragon_q6a/README.md) | Маршрут разработки; BSP, захват и автофокус не проверены |
+| Radxa Dragon Q6A | [Установка по SSH и захват RAW10](../target/sbc/radxa_dragon_q6a/README.md) | Модули собраны для 7.0.11-7-qcom, оверлеи проверены на DTB. Захват и фокус ожидают проверки на плате |
 | NVIDIA Jetson | [Стек Arducam](../target/sbc/nvidia_jetson/README.md) | Есть инструкция производителя; экземпляр не проверен |
 
 ## Микроконтроллеры

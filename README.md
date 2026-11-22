@@ -31,7 +31,8 @@ Arducam для имеющегося экземпляра не подтвержд
 | Подключение шлейфа | [Распиновка 15/22 контакта](docs/reference/pinout.md) |
 | Выбрать стек захвата и управления фокусом | [Справочник драйверов](docs/reference/drivers.md) |
 | Подготовить запуск на Raspberry Pi | [Разработка подключения Raspberry Pi](target/sbc/raspberry_pi/README.md) |
-| Подготовить запуск на Q6A или Jetson | [Radxa Dragon Q6A](target/sbc/radxa_dragon_q6a/README.md), [NVIDIA Jetson](target/sbc/nvidia_jetson/README.md) |
+| Установить комплект для Q6A, снять RAW10 и проверить фокус | [Пробный запуск на CAM1/CAM2/CAM3](target/sbc/radxa_dragon_q6a/README.md) |
+| Подготовить запуск на Jetson | [NVIDIA Jetson](target/sbc/nvidia_jetson/README.md) |
 | Найти все SBC и микроконтроллеры | [Целевые платформы](target/README.md) |
 | Проверить исходные документы | [Оригиналы и происхождение](docs/vendor/README.md) |
 

@@ -2,8 +2,7 @@
 
 [Arducam](https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/16MP-IMX519/)
 описывает программные маршруты Raspberry Pi и Jetson. Рабочая связка
-с имеющимся модулем не зафиксирована. Закреплённого комплекта ОС,
-драйвера, libcamera и tuning пока нет.
+с имеющимся модулем не зафиксирована. Для Q6A закреплены исходники сенсора и привода. Рабочий комплект libcamera и tuning для автофокуса пока не определён.
 
 ## Raspberry Pi
 
@@ -32,8 +31,7 @@ Carrier, разъём, BSP и release определяют путь устано
 ## Другие SBC
 
 Pi overlay и NVIDIA integration не задают путь Qualcomm CAMSS.
-Для [Q6A](../../target/sbc/radxa_dragon_q6a/README.md) нужны проверенные DT endpoints,
-питание/такты, сенсорный драйвер, привод фокуса и userspace.
+Для Q6A подготовлены модули IMX519 и AK7375, оверлеи CAMSS и пробный захват V4L2. Питание, тактирование, захват и фокус требуют проверки на модуле. [Комплект Q6A](../../target/sbc/radxa_dragon_q6a/README.md).
 Работа на ESP32-P4 также не подтверждена; наличие CSI у хоста не определяет
 поддержку IMX519 или автофокуса.
 
