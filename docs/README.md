@@ -11,7 +11,7 @@
 | SBC | Материал | Статус |
 | --- | --- | --- |
 | Raspberry Pi | [Стек Arducam и автофокус](../target/sbc/raspberry_pi/README.md) | Есть инструкция производителя; экземпляр не проверен |
-| Radxa Dragon Q6A | [Установка по SSH и захват RAW10](../target/sbc/radxa_dragon_q6a/README.md) | Модули собраны для 7.0.11-7-qcom, оверлеи проверены на DTB. Захват и фокус ожидают проверки на плате |
+| Radxa Dragon Q6A | [Установка по SSH и захват RAW10](../target/sbc/radxa_dragon_q6a/README.md) | Модули собраны для 7.0.11-7-qcom, оверлеи проверены на DTB. [Захват на CAM3](guides/sbc/radxa_dragon_q6a.md) проверен с экспериментальной ревизией. Текущий установщик требует отдельного прогона |
 | NVIDIA Jetson | [Стек Arducam](../target/sbc/nvidia_jetson/README.md) | Есть инструкция производителя; экземпляр не проверен |
 
 ## Микроконтроллеры
@@ -19,7 +19,6 @@
 [Waveshare ESP32-P4](../target/mcu/waveshare_esp32_p4_wifi6_dev_kit/README.md):
 драйвер, сборка и физический захват не проверены.
 
-Подтверждённых аппаратных инструкций в `docs/guides` пока нет.
 [Правила оформления результата](development/README.md) отделяют разбор
 источников, сборку и физическую проверку.
 

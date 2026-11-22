@@ -1,0 +1,191 @@
+{
+  "verified_on": "2026-10-11",
+  "status": "CAM3 physical capture and GPU demo passed; IMX519 CAM1/CAM2 disabled; autofocus not tested",
+  "board": "Radxa Dragon Q6A",
+  "os": "Ubuntu 24.04.5 LTS",
+  "kernel": "7.0.11-7-qcom",
+  "physical_module": {
+    "sensor": "IMX519, strict I2C ID 0x0519",
+    "connector": "J7 / CAM3",
+    "lens": "80 degrees, autofocus according to owner/source",
+    "pcb_revision": null,
+    "cable_pinout": null
+  },
+  "userspace": {
+    "libcamera_pkg_config": "0.7.1",
+    "libcamera_runtime": "v0.0.0+1-de1e9bc0-dirty (2026-09-02T10:59:06UTC)",
+    "sdl2": "2.30.0",
+    "gles": "3.2",
+    "mesa": "25.2.8-0ubuntu0.24.04.4"
+  },
+  "camera_id": "/base/soc@0/cci@ac4b000/i2c-bus@1/imx519@1a",
+  "routing": {
+    "cci": "CCI1 / I2C1",
+    "bus_number": 20,
+    "sensor_address": "0x1a",
+    "lens_address": "0x0c",
+    "csiphy": 3,
+    "enable_gpio": 78,
+    "data_lanes": 2,
+    "i2c_hz": 400000,
+    "module_startup_delay_us": 100000,
+    "declared_external_clock_hz": 24000000,
+    "measured_external_clock_hz": null
+  },
+  "fixes": {
+    "metadata_pad": "MEDIA_BUS_FMT_METADATA_FIXED",
+    "runtime_pm": "Only disable enabled PM in probe unwind; do not perform control I2C writes when get_if_in_use returns a negative value",
+    "observed_initial_issue": "At 1 MHz the first ID read returned 0x0bff; later repeated reads returned 0x0519. After successful probe, mode register 0x0100 writes timed out at 1 MHz.",
+    "observed_resolution": "Boot probe and capture passed with a 100 ms module startup delay, corrected PM unwind, and 400 kHz camera I2C.",
+    "sensor_mode_registers_changed": false,
+    "chip_id_validation_relaxed": false
+  },
+  "boot": {
+    "boot_id": "4ac04503-04b4-4599-8d70-fa42d77eef28",
+    "automatic_sensor_registration": true,
+    "enabled_overlays": [
+      "ar0234-cam2.dtbo",
+      "imx519-cam3.dtbo"
+    ],
+    "disabled_imx519_overlays": [
+      "imx519-cam1.dtbo.disabled",
+      "imx519-cam2.dtbo.disabled"
+    ],
+    "ar0234_cam2_i2c_hz": 1000000,
+    "module_autoload": [
+      "i2c_qcom_cci",
+      "qcom_camss",
+      "ak7375",
+      "imx519"
+    ],
+    "recovery_entry": "/boot/efi/loader/entries/Q6A-before-imx519-cam3.conf",
+    "restore_script": "/home/radxa/camera-imx519-20261011/restore-imx519-cam3.py"
+  },
+  "build": {
+    "passed": true,
+    "warnings_as_errors": true,
+    "ordered_overlay_combinations_passed": 15,
+    "compiler_version_warning": true,
+    "cam1_single_port_dtc_warning": true
+  },
+  "stream": {
+    "command": "./build/imx519-demo --frames=600 --compare --snapshot=runs/cam3-600-comparison.ppm",
+    "sensor_format": "2328x1748 RGGB RAW10 CSI2P",
+    "sensor_stride": 2912,
+    "sensor_crop_reported": "(8,48)/4656x3496",
+    "output_format": "1920x1080 XBGR8888/sRGB",
+    "output_stride": 7680,
+    "metrics": {
+      "frames": 600,
+      "output_fps": 29.9002,
+      "seconds": 20.3709,
+      "dropped": 0,
+      "errors": 0
+    },
+    "new_camera_kernel_errors": ""
+  },
+  "snapshot": {
+    "path": "/home/radxa/camera-imx519-20261011/target/runs/cam3-600-comparison.ppm",
+    "bytes": 12441617,
+    "sha256": "3a318899a18f9549da095343d8992504e1282a9e2df1ad85297e9ba855e80f43",
+    "dimensions": [
+      3840,
+      1080
+    ],
+    "layout": "left original, right denoised",
+    "visual_inspection": "Scene visible; image dark and optically unfocused",
+    "committed_to_git": false
+  },
+  "lens": {
+    "driver_bound": "ak7375",
+    "control": "focus_absolute",
+    "minimum": 0,
+    "maximum": 4095,
+    "initial_position": 0,
+    "actuator_movement_tested": false,
+    "autofocus_tested": false
+  },
+  "preview": {
+    "service": "imx519-preview.service",
+    "active": true,
+    "start_on_boot": false,
+    "metrics": {
+      "fps": 30.1361,
+      "frames": 6696,
+      "dropped": 100,
+      "errors": 0
+    },
+    "dropped_meaning": "Older completed frames discarded by demo while renderer is behind; distinct from capture errors",
+    "final_perf_log": [
+      "Oct 11 23:20:34 radxa-dragon-q6a sh[2861]: PERF fps=28.5744 frames=4994 dropped=78 errors=0",
+      "Oct 11 23:20:37 radxa-dragon-q6a sh[2861]: PERF fps=28.7046 frames=5081 dropped=82 errors=0",
+      "Oct 11 23:20:40 radxa-dragon-q6a sh[2861]: PERF fps=29.2665 frames=5169 dropped=84 errors=0",
+      "Oct 11 23:20:43 radxa-dragon-q6a sh[2861]: PERF fps=29.0922 frames=5257 dropped=87 errors=0",
+      "Oct 11 23:20:46 radxa-dragon-q6a sh[2861]: PERF fps=29.037 frames=5345 dropped=90 errors=0",
+      "Oct 11 23:20:49 radxa-dragon-q6a sh[2861]: PERF fps=28.8948 frames=5432 dropped=93 errors=0",
+      "Oct 11 23:20:52 radxa-dragon-q6a sh[2861]: PERF fps=28.8413 frames=5520 dropped=95 errors=0",
+      "Oct 11 23:20:55 radxa-dragon-q6a sh[2861]: PERF fps=29.0329 frames=5609 dropped=96 errors=0",
+      "Oct 11 23:20:58 radxa-dragon-q6a sh[2861]: PERF fps=30.2759 frames=5700 dropped=99 errors=0",
+      "Oct 11 23:21:01 radxa-dragon-q6a sh[2861]: PERF fps=29.6067 frames=5789 dropped=100 errors=0",
+      "Oct 11 23:21:04 radxa-dragon-q6a sh[2861]: PERF fps=30.0857 frames=5880 dropped=100 errors=0",
+      "Oct 11 23:21:07 radxa-dragon-q6a sh[2861]: PERF fps=30.0039 frames=5971 dropped=100 errors=0",
+      "Oct 11 23:21:10 radxa-dragon-q6a sh[2861]: PERF fps=29.9395 frames=6061 dropped=100 errors=0",
+      "Oct 11 23:21:13 radxa-dragon-q6a sh[2861]: PERF fps=30.0847 frames=6152 dropped=100 errors=0",
+      "Oct 11 23:21:16 radxa-dragon-q6a sh[2861]: PERF fps=30.007 frames=6243 dropped=100 errors=0",
+      "Oct 11 23:21:19 radxa-dragon-q6a sh[2861]: PERF fps=29.8782 frames=6333 dropped=100 errors=0",
+      "Oct 11 23:21:22 radxa-dragon-q6a sh[2861]: PERF fps=30.1367 frames=6424 dropped=100 errors=0",
+      "Oct 11 23:21:25 radxa-dragon-q6a sh[2861]: PERF fps=29.9597 frames=6515 dropped=100 errors=0",
+      "Oct 11 23:21:28 radxa-dragon-q6a sh[2861]: PERF fps=29.9332 frames=6605 dropped=100 errors=0",
+      "Oct 11 23:21:31 radxa-dragon-q6a sh[2861]: PERF fps=30.1361 frames=6696 dropped=100 errors=0"
+    ]
+  },
+  "installed_artifact_sha256": {
+    "imx519-demo": "50b4b7226d0a8990fbcafb071ee11ff636bbd84f785b14b20133ef2447bee543",
+    "imx519.ko": "2a81594b00b957310a7a9d5c787df32ad13c00c4777db3e3e2bb1da285c5d017",
+    "ak7375.ko": "de1db89d4521a472f0b14e65ccc98ab8f60653fb8b6509cdc672e2ce70c54fe6",
+    "imx519-cam1.dtbo.disabled": "d10f9937de5de604789ee2f2a5f330784cc7dad79c0e4d898c1ad8e7e15dd12c",
+    "imx519-cam2.dtbo.disabled": "0d070ce8def5151ea3f4d1c99dff497f712f12e5136e8244a282f77fd89811a7",
+    "imx519-cam3.dtbo": "c0adbc4139df9478fb664faec23055a1347593e95a8fd754c6992d8dd1791035"
+  },
+  "source_sha256": [
+    {
+      "path": "demo/imx519-demo.cpp",
+      "sha256": "30cac9fa7c4861c49d2ea54fdd1ba02e708d5995ad956e17a82bf959a3ced965"
+    },
+    {
+      "path": "overlay/imx519-cam1.dts",
+      "sha256": "f9256fbd868d4a07179faa8b2eb9341b5af6a660c856c3665b8a9eae652ded07"
+    },
+    {
+      "path": "overlay/imx519-cam2.dts",
+      "sha256": "9f040aba7f05b23112be41d360af23c93d7e8582899b3df5a03f8cdcb8b77a91"
+    },
+    {
+      "path": "overlay/imx519-cam3.dts",
+      "sha256": "5c53ffd634d9170bd8ae1cba24e72007d426089d0e3aebca74e093fa4a9ccd87"
+    },
+    {
+      "path": "patches/imx519-linux-7.patch",
+      "sha256": "ed6da20d584fd70256315c0ecebd0c21a7e57f551028d72f57c1370d74d3acc8"
+    },
+    {
+      "path": "tools/check-overlays.py",
+      "sha256": "b42bf1940542303a32de78a828533a2294c55b42c2700de1df17c488a52228e4"
+    }
+  ],
+  "evidence_sha256": {
+    "final-board-2.json": "e63189626e021f80de34bc718e42e9ea1fa23c656d7ea97a00386742915e6388",
+    "camera-demo-2.json": "9a15be73b3b71af377075764d25b48a5bada13a621a5821b3619d330a4ce8fe5",
+    "post-boot-i2c-fix-1.json": "a5da9548dc6f1b902af3e0064e3a6ca2b1a0ec813d81f74488799cf73bfd1d8f",
+    "install-i2c-fix-1.json": "0d9f71b539a8632f5436c58b42d7dfbcb91cc18120fc9092edbd266f309b545f",
+    "cam3-600-result.json": "bdda1162ad1cc022925213a4b9e078a30dddce6d6856c0715bb1dff4e7df5db3",
+    "cam3-stream-media.txt": "73f92488b9a415752fa2ba3b9cdea6a30f02794caa00240fdae2b4520f0ce717"
+  },
+  "limitations": [
+    "Uncalibrated simple/software ISP; no IMX519 sensor helper or camera-specific tuning",
+    "AF and manual actuator movement untested",
+    "Module oscillator/rails not electrically measured",
+    "CAM1/CAM2 physical capture and simultaneous multi-camera capture untested",
+    "Full 4656x3496 mode and cold boot untested"
+  ]
+}
