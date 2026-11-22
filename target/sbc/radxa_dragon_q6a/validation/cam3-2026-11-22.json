@@ -1,0 +1,48 @@
+{
+  "board_log_date": "2026-11-22",
+  "board": "Radxa Dragon Q6A",
+  "os": "Ubuntu 24.04.5 LTS",
+  "kernel": "7.0.11-7-qcom",
+  "kit_commit": "2ba2f2d8e1d61e43e511bd3b3a2c29388789248f",
+  "loaded_imx519_version": "q6a-cam3.1",
+  "connector": "CAM3/J7",
+  "module_pcb_revision": null,
+  "cable_part_number": null,
+  "media_route": ["imx519 20-001a", "msm_csiphy3", "msm_csid0", "msm_vfe0_rdi0"],
+  "baseline_overlays": [
+    "ar0234-cam2.dtbo", "q6a-btt-tft50-display.dtbo", "q6a-btt-tft50-power.dtbo",
+    "q6a-cam1-innomaker-imx296.dtbo", "imx519-cam3.dtbo"
+  ],
+  "experiment": {
+    "method": "Separate EFI trial entry, changing only CAM3 clock-frequency in the merged device tree. Frequency checked from the live DT. Each attempt opened a new single-frame RAW10 stream.",
+    "module_startup_delay_us": 100000,
+    "frame": {"width": 4656, "height": 3496, "fourcc": "pRAA", "stride_bytes": 5824, "size_bytes": 20360704},
+    "controls": {"exposure_lines": 1000, "analogue_gain": 768, "digital_gain": 256},
+    "series": [
+      {"run": "imx519-white.jvSpul", "i2c_hz": 400000, "ok": [false, false, false], "failed_registers": ["0x3c7f", "0x5f88", "0x5c2b"]},
+      {"run": "imx519-100000-s5y0vz2p", "i2c_hz": 100000, "ok": [true, true, true]},
+      {"run": "imx519-400000-8kzf5kew", "i2c_hz": 400000, "ok": [true, true, false], "failed_registers": ["0x6336"]},
+      {"run": "imx519-100000-fla1iz35", "i2c_hz": 100000, "ok": [true, true, true]},
+      {"run": "imx519-100000-fc3t2nei", "i2c_hz": 100000, "ok": [true, true, true]}
+    ],
+    "failure": "STREAMON: EIO, zero bytes; IMX519 common register table write returned -5",
+    "continuous_stream_at_100khz": "not tested",
+    "concurrent_cameras": "not tested"
+  },
+  "indoor_static_example": {
+    "assumed_black_level_raw10": 64,
+    "measurement": "Center 20% of width and height. Exposure comparison uses the median of the mean of the two green sites per Bayer cell, less the assumed black level. Saturation counts individual RAW10 samples at 1023 across the frame.",
+    "exposure_pair": [
+      {"exposure_lines": 1000, "analogue_gain": 768, "digital_gain": 256, "median_green_above_black": 25, "saturated_percent": 0.424, "raw_sha256": "fd17a31d290dc27cb7cef865d624b009c13108c234bfe815f61d29ebc2e2b6bb"},
+      {"exposure_lines": 3000, "analogue_gain": 768, "digital_gain": 256, "median_green_above_black": 76, "saturated_percent": 0.472, "raw_sha256": "b88377fea502341f71c7e4d3c8a7bc9a3d5b53f71dc305abcbd0182bc2de2c33"}
+    ],
+    "white_reference": {
+      "exposure_lines": 1000, "analogue_gain": 768, "digital_gain": 256,
+      "median_r_gr_gb_b_raw10": [110, 128, 128, 93],
+      "linear_rgb_gains_relative_to_green": [1.39, 1.0, 2.21],
+      "raw_sha256": "a34a85a5ee5c66e6c5e9adc29c786ab2bfbc3f606f6485770e9a4a208fcc84ea"
+    },
+    "rendering": "For this illumination: subtract black, apply the measured channel gains, then +2 EV for the final static preview and sRGB encoding. These are offline display settings.",
+    "motion_blur": "not tested"
+  }
+}

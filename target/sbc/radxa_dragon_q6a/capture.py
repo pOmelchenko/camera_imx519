@@ -138,6 +138,18 @@ def capture(port, mode=MODES[0], focus=None):
                     print(f"Не удалось освободить связь {link.source} → {link.sink}.", file=sys.stderr)
 
 
+def read_sensor_controls(ctl, sensor):
+    """Snapshot the selected sensor after format setup, immediately before STREAMON."""
+    try:
+        subdev = subprocess.check_output([*ctl, "-e", sensor], text=True).strip()
+        names = ("exposure", "analogue_gain", "digital_gain")
+        readback = subprocess.check_output(["v4l2-ctl", "-d", subdev, "--get-ctrl=" + ",".join(names)], text=True)
+        return {name: int(format_value(readback, name, r"\d+")) for name in names}
+    except (OSError, subprocess.CalledProcessError, ValueError) as error:
+        print(f"Не удалось прочитать V4L2 controls для {sensor}: {error}", file=sys.stderr)
+        return None
+
+
 def capture_frame(ctl, sensor, phy, csid, rdi, video_entity, mode, focus):
     width, height = map(int, mode.split("x"))
     source = f'"{sensor}":0'
@@ -166,6 +178,7 @@ def capture_frame(ctl, sensor, phy, csid, rdi, video_entity, mode, focus):
     if stride < row_bytes or size < stride * height:
         raise ValueError(f"Некорректные параметры буфера: stride={stride}, sizeimage={size}.")
 
+    controls = read_sensor_controls(ctl, sensor)
     output = Path(mkdtemp(prefix="imx519-", dir="."))
     raw = output / "frame.raw"
     print(f"Захват в {output.resolve()}", flush=True)
@@ -177,7 +190,8 @@ def capture_frame(ctl, sensor, phy, csid, rdi, video_entity, mode, focus):
     with (output / "preview.ppm").open("wb") as preview:
         write_preview(preview, frame, width, height, stride, order)
     metadata = {"sensor": sensor, "csiphy": phy, "width": width, "height": height,
-                "fourcc": fourcc, "stride": stride, "sizeimage": size, "requested_focus": focus}
+                "fourcc": fourcc, "stride": stride, "sizeimage": size, "requested_focus": focus,
+                "v4l2_controls": controls}
     (output / "frame.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(f"RAW10 и 8-битное превью сохранены в {output.resolve()}")
 
