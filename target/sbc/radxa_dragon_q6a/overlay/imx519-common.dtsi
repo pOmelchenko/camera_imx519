@@ -1,0 +1,110 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// Q6A routing based on Radxa overlays, Copyright (c) 2025 Radxa Computer (Shenzhen) Co., Ltd.
+// Sensor and VCM bus configuration follows raspberrypi/linux imx519.dtsi.
+#define CAT_(a,b) a ## b
+#define CAT(a,b) CAT_(a,b)
+#define LABEL(name) CAT(CAT(PORT,_imx519_),name)
+#define STR_(x) #x
+#define STR(x) STR_(x)
+
+/ {
+	metadata {
+		title = PORT_TITLE;
+		compatible = "radxa,dragon-q6a";
+		category = "camera";
+		exclusive = STR(CCI_BUS);
+		description = "Two-lane IMX519 RAW10 with AK7375 lens.";
+	};
+};
+
+&{/} {
+	/* Module oscillator. This profile does not generate XCLK on the connector. */
+	LABEL(clk): imx519-PORT-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+
+	/* Common enable for the camera module's on-board supplies. */
+	LABEL(power): imx519-PORT-enable {
+		compatible = "regulator-fixed";
+		regulator-name = STR(imx519-PORT-enable);
+		enable-active-high;
+		gpios = <&tlmm ENABLE_GPIO 0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&LABEL(enable_pins)>;
+		startup-delay-us = <500000>;
+	};
+};
+
+&tlmm {
+	LABEL(enable_pins): imx519-PORT-enable-state {
+		pins = STR(CAT(gpio,ENABLE_GPIO));
+		function = "gpio";
+		drive-strength = <2>;
+		bias-pull-up;
+	};
+};
+
+&{/reserved-memory} {
+	linux,cma {
+		compatible = "shared-dma-pool";
+		size = <0 0x08000000>;
+		reusable;
+		linux,cma-default;
+	};
+};
+
+&CCI_CONTROLLER { status = "okay"; };
+
+&CCI_BUS {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	imx519@1a {
+		compatible = "sony,imx519";
+		reg = <0x1a>;
+		clocks = <&LABEL(clk)>;
+		clock-names = "xclk";
+		VANA-supply = <&LABEL(power)>;
+		VDIG-supply = <&LABEL(power)>;
+		VDDL-supply = <&LABEL(power)>;
+		lens-focus = <&LABEL(lens)>;
+		port {
+			LABEL(tx): endpoint {
+				data-lanes = <1 2>;
+				clock-lanes = <0>;
+				clock-noncontinuous;
+				link-frequencies = /bits/ 64 <408000000>;
+				remote-endpoint = <&LABEL(rx)>;
+			};
+		};
+	};
+
+	LABEL(lens): ak7375@c {
+		compatible = "asahi-kasei,ak7375";
+		reg = <0x0c>;
+		vdd-supply = <&LABEL(power)>;
+		vio-supply = <&LABEL(power)>;
+	};
+};
+
+&camss {
+	vdda-phy-supply = <&vreg_l10c_0p88>;
+	vdda-pll-supply = <&vreg_l6b_1p2>;
+	status = "okay";
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@PHY {
+			reg = <PHY>;
+			LABEL(rx): endpoint {
+				clock-lanes = <7>;
+				data-lanes = <0 1>;
+				clock-noncontinuous;
+				remote-endpoint = <&LABEL(tx)>;
+			};
+		};
+	};
+};

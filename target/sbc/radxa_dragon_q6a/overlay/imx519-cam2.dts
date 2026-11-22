@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// J16 pin 11: CAM2_RESET_3V3 drives camera CAM_IO0.
+/dts-v1/;
+/plugin/;
+
+#define PORT cam2
+#define PORT_TITLE "Enable Arducam IMX519 + AK7375 on CAM2"
+#define CCI_CONTROLLER cci1
+#define CCI_BUS cci1_i2c0
+#define PHY 2
+#define ENABLE_GPIO 77
+#include "imx519-common.dtsi"

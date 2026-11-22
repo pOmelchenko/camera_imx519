@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// J14 pin 23 CAM0_POWER_EN drives camera pin 11 via U90110 on the Radxa AC008 V1.1.
+/dts-v1/;
+/plugin/;
+
+#define PORT cam1
+#define PORT_TITLE "Enable Arducam IMX519 + AK7375 on CAM1"
+#define CCI_CONTROLLER cci0
+#define CCI_BUS cci0_i2c0
+#define PHY 0
+#define ENABLE_GPIO 36
+#include "imx519-common.dtsi"
