@@ -1,0 +1,67 @@
+--- a/imx519.c
++++ b/imx519.c
+@@ -1173,7 +1173,7 @@
+ 	/* Initialize try_fmt for the embedded metadata pad */
+ 	try_fmt_meta->width = IMX519_EMBEDDED_LINE_WIDTH;
+ 	try_fmt_meta->height = IMX519_NUM_EMBEDDED_LINES;
+-	try_fmt_meta->code = MEDIA_BUS_FMT_SENSOR_DATA;
++	try_fmt_meta->code = MEDIA_BUS_FMT_METADATA_FIXED;
+ 	try_fmt_meta->field = V4L2_FIELD_NONE;
+ 
+ 	/* Initialize try_crop */
+@@ -1239,7 +1239,7 @@
+ 	 * Applying V4L2 control value only happens
+ 	 * when power is up for streaming
+ 	 */
+-	if (pm_runtime_get_if_in_use(&client->dev) == 0)
++	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
+ 		return 0;
+ 
+ 	switch (ctrl->id) {
+@@ -1322,7 +1322,7 @@
+ 		if (code->index > 0)
+ 			return -EINVAL;
+ 
+-		code->code = MEDIA_BUS_FMT_SENSOR_DATA;
++		code->code = MEDIA_BUS_FMT_METADATA_FIXED;
+ 	}
+ 
+ 	return 0;
+@@ -1349,7 +1349,7 @@
+ 		fse->min_height = supported_modes_10bit[fse->index].height;
+ 		fse->max_height = fse->min_height;
+ 	} else {
+-		if (fse->code != MEDIA_BUS_FMT_SENSOR_DATA || fse->index > 0)
++		if (fse->code != MEDIA_BUS_FMT_METADATA_FIXED || fse->index > 0)
+ 			return -EINVAL;
+ 
+ 		fse->min_width = IMX519_EMBEDDED_LINE_WIDTH;
+@@ -1385,7 +1385,7 @@
+ {
+ 	fmt->format.width = IMX519_EMBEDDED_LINE_WIDTH;
+ 	fmt->format.height = IMX519_NUM_EMBEDDED_LINES;
+-	fmt->format.code = MEDIA_BUS_FMT_SENSOR_DATA;
++	fmt->format.code = MEDIA_BUS_FMT_METADATA_FIXED;
+ 	fmt->format.field = V4L2_FIELD_NONE;
+ }
+ 
+@@ -1407,7 +1407,7 @@
+ 		/* update the code which could change due to vflip or hflip: */
+ 		try_fmt->code = fmt->pad == IMAGE_PAD ?
+ 				imx519_get_format_code(imx519) :
+-				MEDIA_BUS_FMT_SENSOR_DATA;
++				MEDIA_BUS_FMT_METADATA_FIXED;
+ 		fmt->format = *try_fmt;
+ 	} else {
+ 		if (fmt->pad == IMAGE_PAD) {
+@@ -2100,7 +2100,9 @@
+ 	imx519_free_controls(imx519);
+ 
+ error_power_off:
+-	pm_runtime_disable(&client->dev);
++	/* A failed chip-ID check precedes pm_runtime_enable(). */
++	if (pm_runtime_enabled(&client->dev))
++		pm_runtime_disable(&client->dev);
+ 	pm_runtime_set_suspended(&client->dev);
+ 	imx519_power_off(&client->dev);
+ 

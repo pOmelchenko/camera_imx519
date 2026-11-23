@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Q6A routing based on Radxa overlays, Copyright (c) 2025 Radxa Computer (Shenzhen) Co., Ltd.
 // Sensor and VCM bus configuration follows raspberrypi/linux imx519.dtsi.
+#ifndef IMX519_STARTUP_DELAY_US
+#define IMX519_STARTUP_DELAY_US 500000
+#endif
 #define CAT_(a,b) a ## b
 #define CAT(a,b) CAT_(a,b)
 #define LABEL(name) CAT(CAT(PORT,_imx519_),name)
@@ -33,7 +36,7 @@
 		gpios = <&tlmm ENABLE_GPIO 0>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&LABEL(enable_pins)>;
-		startup-delay-us = <500000>;
+		startup-delay-us = <IMX519_STARTUP_DELAY_US>;
 	};
 };
 

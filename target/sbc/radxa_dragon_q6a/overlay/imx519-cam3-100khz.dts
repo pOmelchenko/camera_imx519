@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// CAM3/J7 timing from the 2026-11-22 repeated RAW10 starts.
+#define IMX519_STARTUP_DELAY_US 100000
+#include "imx519-cam3.dts"
+
+&cci1_i2c1 {
+	clock-frequency = <100000>;
+};

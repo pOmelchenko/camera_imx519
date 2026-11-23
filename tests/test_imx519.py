@@ -42,6 +42,10 @@ class CameraPortsTest(unittest.TestCase):
             def output(cmd, **kwargs):
                 if "--get-v4l2" in cmd:
                     return "[stream:0 fmt:SGBRG10_1X10/4x2 field:none]"
+                if cmd == [*ctl, "-e", "imx519 22-001a"]:
+                    return "/dev/v4l-subdev28"
+                if cmd == ["v4l2-ctl", "-d", "/dev/v4l-subdev28", "--get-ctrl=exposure,analogue_gain,digital_gain"]:
+                    return "exposure: 3000\nanalogue_gain: 768\ndigital_gain: 256"
                 if "-e" in cmd:
                     return "/dev/video42"
                 return "Pixel Format : 'pGAA'\nWidth/Height : 4/2\nBytes per Line : 6\nSize Image : 12"
@@ -55,7 +59,13 @@ class CameraPortsTest(unittest.TestCase):
             calls.assert_any_call("v4l2-ctl", "-d", "/dev/video42", "--set-fmt-video=width=4,height=2,pixelformat=pGAA")
             meta = json.loads((Path(tmp) / "frame.json").read_text())
             self.assertEqual((meta["fourcc"], meta["stride"], meta["sizeimage"]), ("pGAA", 6, 12))
+            self.assertEqual(meta["v4l2_controls"], {"exposure": 3000, "analogue_gain": 768, "digital_gain": 256})
             self.assertTrue((Path(tmp) / "preview.ppm").read_bytes().startswith(b"P6\n2 1\n255\n"))
+
+    def test_unavailable_controls_are_explicitly_unknown(self):
+        capture = load_script("capture")
+        with patch.object(subprocess, "check_output", side_effect=subprocess.CalledProcessError(1, "v4l2-ctl")):
+            self.assertIsNone(capture.read_sensor_controls(["media-ctl", "-d", "/dev/media0"], "imx519 20-001a"))
 
     def test_manual_focus_keeps_selected_lens_open_during_capture(self):
         from unittest.mock import mock_open
@@ -287,6 +297,103 @@ class InstallerTest(unittest.TestCase):
             self.assertEqual((modules / kernel / "updates/ak7375.ko").read_bytes(), b"test module")
             self.assertEqual(sum(c[0] == "make" for c in commands), 1)
             self.assertEqual(sum(c[0] == "depmod" for c in commands), 2)
+
+    def test_cam3_migrates_only_selected_entry_and_preserves_cam2_clock(self):
+        self.check_cam3_migration("cam3")
+
+    def test_cam3_migrates_previous_400khz_package(self):
+        self.check_cam3_migration("cam3-400khz")
+
+    def check_cam3_migration(self, source):
+        old = self.installer.build_overlay(self.root, source)
+        shutil.copyfile(old, self.catalog / old.name)
+        clock = self.overlay("cam2-clock", '&cci1_i2c0 { clock-frequency = <1000000>; };')
+        self.stock.write_text(self.original + f"devicetree-overlay {clock} /RadxaOS/test-kernel/dtbo/{old.name}\n")
+        saved = self.stock.with_name("rollback.conf")
+        saved.write_bytes(self.stock.read_bytes())
+        self.assertTrue(self.install("cam3")[1])
+        profile = "/RadxaOS/test-kernel/dtbo/imx519-cam3-100khz.dtbo"
+        self.assertIn(profile, self.stock.read_text())
+        self.assertNotIn(profile, saved.read_text())
+        self.assertEqual(old.read_bytes(), (self.catalog / old.name).read_bytes())
+        get = self.installer.get
+        self.assertEqual(get(self.root / "camera.dtb", "/cci1/bus1", "clock-frequency", "u"), "100000")
+        self.assertEqual(get(self.root / "camera.dtb", "/cci1/bus0", "clock-frequency", "u"), "1000000")
+        self.assertEqual(get(self.root / "camera.dtb", "/imx519-cam3-enable", "startup-delay-us", "u"), "100000")
+        self.assertFalse(self.install("cam3")[1])
+
+    def test_cam3_changes_only_bus_clock_in_a_custom_camera_profile(self):
+        stock = self.installer.build_overlay(self.root, "cam3-400khz")
+        legacy = self.catalog / "imx519-cam3.dtbo"
+        shutil.copyfile(stock, legacy)
+        paths = self.installer.overlay_paths(legacy, self.images / "board.dtb")
+        regulator = paths["/imx519-cam3-enable"][0]
+        subprocess.run(["fdtput", legacy, regulator, "regulator-always-on"], check=True)
+        backup = legacy.read_bytes()
+        self.stock.write_text(self.original + f"devicetree-overlay /RadxaOS/test-kernel/dtbo/{legacy.name}\n")
+        rollback = self.stock.with_name("cam3-original.conf")
+        rollback.write_bytes(self.stock.read_bytes())
+        self.assertTrue(self.install("cam3")[1])
+        self.assertEqual(legacy.read_bytes(), backup)
+        self.assertIn(legacy.name, rollback.read_text())
+        self.assertNotIn(legacy.name, self.stock.read_text())
+        self.assertEqual(self.installer.get(self.root / "camera.dtb", "/imx519-cam3-enable", "regulator-always-on", "bx"), "")
+        self.assertEqual(self.installer.get(self.root / "camera.dtb", "/cci1/bus1", "clock-frequency", "u"), "100000")
+        self.assertFalse(self.install("cam3")[1])
+
+    def test_cam3_refuses_to_retime_unrelated_i2c_device(self):
+        eeprom = self.overlay("cam3-eeprom", '&cci1_i2c1 { eeprom@50 { reg = <0x50>; }; };')
+        self.stock.write_text(self.original + f"devicetree-overlay {eeprom}\n")
+        before = self.snapshot()
+        with self.assertRaisesRegex(ValueError, "устройств"):
+            self.install("cam3")
+        self.assertEqual(self.snapshot(), before)
+
+    def test_cam3_driver_upgrade_backup_and_retry(self):
+        drivers = load_script("drivers")
+        modules = self.root / "modules"
+        updates = modules / "test-kernel/updates"
+        headers = updates.parent / "build"
+        headers.mkdir(parents=True)
+        (headers / "Makefile").touch()
+        updates.mkdir()
+        old = updates / "imx519.ko"
+        old.write_bytes(b"old driver")
+        loaded = self.root / "loaded"
+        loaded.mkdir()
+        index = {"version": ""}
+        calls = []
+        def field(kernel, key, name):
+            if key == "filename":
+                return str(old)
+            if isinstance(name, Path):
+                return drivers.CAM3_VERSION if name.read_bytes() == b"fixed driver" else ""
+            return index["version"]
+        def run(cmd, **options):
+            calls.append(cmd[0])
+            if cmd[0] == "patch":
+                self.assertTrue(Path(cmd[-1]).is_file())
+            if cmd[0] == "make":
+                self.assertIn(drivers.CAM3_VERSION, (self.root / "driver/imx519.c").read_text())
+                (self.root / "driver/imx519.ko").write_bytes(b"fixed driver")
+            if cmd[0] == "depmod":
+                index["version"] = drivers.CAM3_VERSION
+            return subprocess.CompletedProcess(cmd, 0)
+        with patch.object(drivers, "module_field", side_effect=field), patch.object(subprocess, "run", side_effect=run), \
+                patch.object(drivers, "read_source", return_value=b""):
+            def install():
+                return drivers.prepare_modules("test-kernel", self.root, self.installer.atomic_write,
+                                               modules, cam3=True, loaded=loaded)
+            self.assertTrue(install())
+            self.assertEqual(old.with_suffix(".ko.before-q6a-cam3").read_bytes(), b"old driver")
+            # A lost depmod index is repaired without recompiling or replacing the backup.
+            index["version"] = ""
+            (loaded / "version").write_text(drivers.CAM3_VERSION)
+            self.assertFalse(install())
+            self.assertEqual(calls.count("make"), 1)
+            self.assertEqual(calls.count("depmod"), 2)
+            self.assertFalse(install())
+            self.assertEqual(calls.count("depmod"), 2)
 
     def test_existing_drivers_need_no_build_or_source_download(self):
         drivers = load_script("drivers")

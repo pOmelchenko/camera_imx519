@@ -15,7 +15,7 @@ case "$stage" in *[!a-zA-Z0-9.]*) exit 1;; esac
 trap 'ssh -- "$host" "rm -rf -- ~/q6a-imx519/$stage" </dev/null || :' EXIT
 # Include only the runtime files and optional pinned driver sources.
 cd "$dir"
-set -- install.py replacement.py ports.py capture.py drivers.py overlay
+set -- install.py replacement.py ports.py capture.py drivers.py overlay patches
 for src in vendor/imx519.c vendor/ak7375.c; do
     if [ -f "$src" ]; then
         ssh -- "$host" "mkdir -p ~/q6a-imx519/$stage/vendor"
