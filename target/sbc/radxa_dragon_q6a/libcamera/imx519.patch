@@ -1,0 +1,101 @@
+--- a/src/ipa/libipa/camera_sensor_helper.cpp
++++ b/src/ipa/libipa/camera_sensor_helper.cpp
+@@ -642,6 +642,19 @@
+ };
+ REGISTER_CAMERA_SENSOR_HELPER("imx477", CameraSensorHelperImx477)
+ 
++class CameraSensorHelperImx519 : public CameraSensorHelper
++{
++public:
++	CameraSensorHelperImx519()
++	{
++		/* Raspberry Pi IMX519 tuning: 4096 in the 16-bit domain. */
++		blackLevel_ = 4096;
++		/* IMX519: physical gain = 1024 / (1024 - register code). */
++		gain_ = AnalogueGainLinear{ 0, 1024, -1, 1024 };
++	}
++};
++REGISTER_CAMERA_SENSOR_HELPER("imx519", CameraSensorHelperImx519)
++
+ class CameraSensorHelperImx577 : public CameraSensorHelper
+ {
+ public:
+--- a/src/ipa/simple/data/meson.build
++++ b/src/ipa/simple/data/meson.build
+@@ -6,2 +6,3 @@
+     'imx415.yaml',
++    'imx519.yaml',
+     'imx577.yaml',
+--- /dev/null
++++ b/src/ipa/simple/data/imx519.yaml
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: CC0-1.0
++# IMX519 baseline for the Radxa simple software ISP; not a colour calibration.
++# Gain law and black level are provided by CameraSensorHelperImx519.
++version: 1
++algorithms:
++  - BlackLevel:
++  - Awb:
++      speed: 0.2
++  - Adjust:
++      gamma: 2.2
++      contrast: 1.0
++  - Agc:
++      targetMsv: 2.5
++      tolerance: 0.2
+--- a/test/ipa/libipa/meson.build
++++ b/test/ipa/libipa/meson.build
+@@ -3,2 +3,3 @@
+ libipa_test = [
++    {'name': 'imx519-helper', 'sources': ['imx519_helper.cpp']},
+     {'name': 'fixedpoint', 'sources': ['fixedpoint.cpp']},
+--- /dev/null
++++ b/test/ipa/libipa/imx519_helper.cpp
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#include <array>
++#include <cmath>
++#include <iostream>
++#include <utility>
++
++#include "camera_sensor_helper.h"
++#include "test.h"
++
++using namespace libcamera;
++using namespace libcamera::ipa;
++
++class Imx519HelperTest : public Test
++{
++protected:
++	int run() override
++	{
++		auto helper = CameraSensorHelperFactoryBase::create("imx519");
++		if (!helper || helper->blackLevel() != 4096) {
++			std::cerr << "IMX519 factory or black level is missing" << std::endl;
++			return TestFail;
++		}
++
++		/* Reference points from the Raspberry Pi IMX519 helper. */
++		const std::array<std::pair<uint32_t, double>, 4> references = {{
++			{ 0, 1.0 }, { 512, 2.0 }, { 768, 4.0 }, { 960, 16.0 }
++		}};
++		for (const auto &[code, gain] : references) {
++			if (std::abs(helper->gain(code) - gain) > 1e-9 ||
++			    helper->gainCode(gain) != code) {
++				std::cerr << "Incorrect IMX519 gain at code " << code << std::endl;
++				return TestFail;
++			}
++		}
++
++		/* All codes exposed by our kernel driver must be valid and increasing. */
++		double previous = 0;
++		for (uint32_t code = 0; code <= 960; ++code) {
++			double gain = helper->gain(code);
++			if (!std::isfinite(gain) || gain < 1 || gain > 16 || gain <= previous)
++				return TestFail;
++			previous = gain;
++		}
++		return TestPass;
++	}
++};
++TEST_REGISTER(Imx519HelperTest)

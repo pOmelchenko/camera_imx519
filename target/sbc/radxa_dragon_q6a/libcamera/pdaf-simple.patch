@@ -1,0 +1,583 @@
+--- a/include/libcamera/internal/software_isp/software_isp.h
++++ b/include/libcamera/internal/software_isp/software_isp.h
+@@ -72,6 +72,7 @@
+ 
+ 	void processStats(const uint32_t frame, const uint32_t bufferId,
+ 			  const ControlList &sensorControls);
++	void setPhaseSample(uint32_t frame, int32_t phase, uint32_t regions);
+ 
+ 	int start();
+ 	void stop();
+--- a/include/libcamera/ipa/soft.mojom
++++ b/include/libcamera/ipa/soft.mojom
+@@ -11,6 +11,7 @@
+ struct IPAConfigInfo {
+ 	libcamera.ControlInfoMap sensorControls;
+ 	libcamera.ControlInfoMap lensControls;
++	bool pdafAvailable;
+ };
+ 
+ interface IPASoftInterface {
+@@ -26,6 +27,7 @@
+ 		=> (int32 ret);
+ 
+ 	[async] queueRequest(uint32 frame, libcamera.ControlList sensorControls);
++	[async] setPhaseSample(uint32 frame, int32 phase, uint32 regions);
+ 	[async] computeParams(uint32 frame);
+ 	[async] processStats(uint32 frame,
+ 			     uint32 bufferId,
+--- a/src/ipa/simple/algorithms/af.cpp
++++ b/src/ipa/simple/algorithms/af.cpp
+@@ -15,6 +15,7 @@
+ 
+ namespace {
+ constexpr uint32_t kSettleFrames = 12;
++constexpr unsigned int kPhaseWindow = 8;
+ /* Provisional Arducam Pi mapping, pending 80-degree lens calibration. */
+ constexpr float kMaximumDiopters = 15.0f;
+ }
+@@ -28,11 +29,12 @@
+ 	return 0;
+ }
+ 
+-int Af::configure(IPAContext &context, const IPAConfigInfo &)
++int Af::configure(IPAContext &context, const IPAConfigInfo &configInfo)
+ {
+ 	min_ = context.configuration.focus.focus_min;
+ 	max_ = context.configuration.focus.focus_max;
+ 	enabled_ = max_ > min_;
++	phaseEnabled_ = enabled_ && configInfo.pdafAvailable;
+ 	manualPositionSet_ = false;
+ 	mode_ = controls::AfModeManual;
+ 	state_ = controls::AfStateIdle;
+@@ -58,12 +60,28 @@
+ {
+ 	position_ = std::clamp(position, min_, max_);
+ 	nextSampleFrame_ = frame + kSettleFrames;
++	phaseWindow_.clear();
+ }
+ 
+ void Af::startScan(uint32_t frame)
+ {
+ 	if (!enabled_)
+ 		return;
++	if (phaseEnabled_) {
++		stage_ = Stage::Phase;
++		state_ = controls::AfStateScanning;
++		phaseAttempts_ = 0;
++		missingPhase_ = 0;
++		phaseWindow_.clear();
++		lowScoreCount_ = 0;
++		nextSampleFrame_ = frame + kSettleFrames;
++		return;
++	}
++	startContrastScan(frame);
++}
++
++void Af::startContrastScan(uint32_t frame)
++{
+ 	positions_.clear();
+ 	constexpr unsigned int kCoarseSteps = 8;
+ 	for (unsigned int i = 0; i <= kCoarseSteps; ++i)
+@@ -171,18 +189,75 @@
+ {
+ 	if (!enabled_)
+ 		return;
++	bool phaseHandled = false;
++	if (!paused_ && stage_ == Stage::Phase && frame >= nextSampleFrame_) {
++		if (frameContext.phase.regions >= 8) {
++			missingPhase_ = 0;
++			phaseWindow_.push_back(frameContext.phase.value);
++			if (phaseWindow_.size() >= kPhaseWindow) {
++				std::sort(phaseWindow_.begin(), phaseWindow_.end());
++				int spread = phaseWindow_[kPhaseWindow - 2] - phaseWindow_[1];
++				int phase = (phaseWindow_[kPhaseWindow / 2 - 1] +
++					     phaseWindow_[kPhaseWindow / 2]) / 2;
++				if (spread > 25) {
++					LOG(IPASoftAutoFocus, Warning)
++						<< "Unstable phase spread " << spread << "; using CDAF";
++					startContrastScan(frame);
++				} else if (std::abs(phase) <= 5) {
++					state_ = controls::AfStateFocused;
++					stage_ = Stage::Monitor;
++					lowScoreCount_ = 0;
++					if (stats && stats->valid && stats->focusSamples >= 64) {
++						double samples = stats->focusSamples;
++						double green = stats->sum_.g() / samples;
++						bestScore_ = (stats->focusSum / samples) /
++							     (green * green + 16.0);
++					}
++					LOG(IPASoftAutoFocus, Info)
++						<< "Phase AF focused at raw " << position_
++						<< " phase " << phase;
++				} else if (++phaseAttempts_ <= 4) {
++					int correction = std::clamp(std::lround(-phase / 0.14),
++								     -600L, 600L);
++					int candidate = std::clamp(position_ + correction, min_, max_);
++					if (candidate != position_) {
++						LOG(IPASoftAutoFocus, Info)
++							<< "Phase AF raw " << position_ << " phase "
++							<< phase << " -> " << candidate;
++						setPosition(candidate, frame);
++					} else {
++						startContrastScan(frame);
++					}
++				} else {
++					startContrastScan(frame);
++				}
++			}
++			phaseHandled = true;
++		} else if (++missingPhase_ >= 8) {
++			LOG(IPASoftAutoFocus, Warning) << "Phase samples missing; using CDAF";
++			startContrastScan(frame);
++			phaseHandled = true;
++		}
++	}
+ 	if (!paused_ && stats && stats->valid && stats->focusSamples >= 64 &&
+-	    frame >= nextSampleFrame_) {
++	    frame >= nextSampleFrame_ && !phaseHandled) {
+ 		double samples = stats->focusSamples;
+ 		double green = stats->sum_.g() / samples;
+ 		double score = (stats->focusSum / samples) / (green * green + 16.0);
+ 		if (stage_ == Stage::Coarse || stage_ == Stage::Fine)
+ 			finishStep(frame, score);
+ 		else if (stage_ == Stage::Monitor && mode_ == controls::AfModeContinuous) {
+-			if (score < bestScore_ * 0.55)
+-				++lowScoreCount_;
+-			else
+-				lowScoreCount_ = 0;
++			if (phaseEnabled_ && frameContext.phase.regions >= 8) {
++				if (std::abs(frameContext.phase.value) > 20)
++					++lowScoreCount_;
++				else
++					lowScoreCount_ = 0;
++			} else {
++				if (score < bestScore_ * 0.55)
++					++lowScoreCount_;
++				else
++					lowScoreCount_ = 0;
++			}
+ 			if (lowScoreCount_ >= 3)
+ 				startScan(frame);
+ 		}
+--- a/src/ipa/simple/algorithms/af.h
++++ b/src/ipa/simple/algorithms/af.h
+@@ -23,14 +23,16 @@
+ 		     ControlList &metadata) override;
+ 
+ private:
+-	enum class Stage { Idle, Coarse, Fine, Monitor };
++	enum class Stage { Idle, Phase, Coarse, Fine, Monitor };
+ 	void startScan(uint32_t frame);
++	void startContrastScan(uint32_t frame);
+ 	void finishStep(uint32_t frame, double score);
+ 	void setPosition(int position, uint32_t frame);
+ 	int toRaw(float diopters) const;
+ 	float toDiopters(int raw) const;
+ 
+ 	bool enabled_ = false;
++	bool phaseEnabled_ = false;
+ 	bool manualPositionSet_ = false;
+ 	bool paused_ = false;
+ 	bool pauseDeferred_ = false;
+@@ -43,6 +45,9 @@
+ 	uint32_t nextSampleFrame_ = 0;
+ 	unsigned int index_ = 0;
+ 	unsigned int lowScoreCount_ = 0;
++	unsigned int phaseAttempts_ = 0;
++	unsigned int missingPhase_ = 0;
++	std::vector<int32_t> phaseWindow_;
+ 	double bestScore_ = 0;
+ 	Stage stage_ = Stage::Idle;
+ 	std::vector<int> positions_;
+--- a/src/ipa/simple/ipa_context.h
++++ b/src/ipa/simple/ipa_context.h
+@@ -79,6 +79,10 @@
+ 	struct {
+ 		int32_t focus_pos;
+ 	} lens;
++	struct {
++		int32_t value = 0;
++		uint32_t regions = 0;
++	} phase;
+ 
+ 	struct {
+ 		double red;
+--- a/src/ipa/simple/soft_simple.cpp
++++ b/src/ipa/simple/soft_simple.cpp
+@@ -64,6 +64,7 @@
+ 	void stop() override;
+ 
+ 	void queueRequest(const uint32_t frame, const ControlList &controls) override;
++	void setPhaseSample(const uint32_t frame, int32_t phase, uint32_t regions) override;
+ 	void computeParams(const uint32_t frame) override;
+ 	void processStats(const uint32_t frame, const uint32_t bufferId,
+ 			  const ControlList &sensorControls) override;
+@@ -291,9 +292,17 @@
+ void IPASoftSimple::queueRequest(const uint32_t frame, const ControlList &controls)
+ {
+ 	IPAFrameContext &frameContext = context_.frameContexts.alloc(frame);
++	frameContext.phase = {};
+ 
+ 	for (const auto &algo : algorithms())
+ 		algo->queueRequest(context_, frame, frameContext, controls);
++}
++
++void IPASoftSimple::setPhaseSample(const uint32_t frame, int32_t phase, uint32_t regions)
++{
++	IPAFrameContext &frameContext = context_.frameContexts.get(frame);
++	frameContext.phase.value = phase;
++	frameContext.phase.regions = regions;
+ }
+ 
+ void IPASoftSimple::computeParams(const uint32_t frame)
+--- a/src/libcamera/pipeline/simple/simple.cpp
++++ b/src/libcamera/pipeline/simple/simple.cpp
+@@ -7,6 +7,9 @@
+  */
+ 
+ #include <algorithm>
++#include <cstdlib>
++#include <deque>
++#include <fcntl.h>
+ #include <iterator>
+ #include <list>
+ #include <map>
+@@ -24,6 +27,7 @@
+ #include <linux/media-bus-format.h>
+ 
+ #include <libcamera/base/log.h>
++#include <libcamera/base/shared_fd.h>
+ 
+ #include <libcamera/camera.h>
+ #include <libcamera/color_space.h>
+@@ -43,6 +47,7 @@
+ #include "libcamera/internal/formats.h"
+ #include "libcamera/internal/global_configuration.h"
+ #include "libcamera/internal/media_device.h"
++#include "libcamera/internal/mapped_framebuffer.h"
+ #include "libcamera/internal/pipeline_handler.h"
+ #include "libcamera/internal/request.h"
+ #include "libcamera/internal/software_isp/software_isp.h"
+@@ -54,6 +59,10 @@
+ namespace libcamera {
+ 
+ LOG_DEFINE_CATEGORY(SimplePipeline)
++
++/* Q6A kernel 7.0 names this code MEDIA_BUS_FMT_SENSOR_DATA; Ubuntu 24.04's
++ * bundled userspace header predates it. Keep the targeted numeric UAPI value. */
++constexpr uint32_t kQ6aSensorDataCode = 0x7002;
+ 
+ /* -----------------------------------------------------------------------------
+  *
+@@ -290,10 +299,12 @@
+ 
+ 	int init();
+ 	int setupLinks();
++	bool setupPhase(const Size &sensorSize);
+ 	int setupFormats(V4L2SubdeviceFormat *format,
+ 			 V4L2Subdevice::Whence whence,
+ 			 Transform transform = Transform::Identity);
+ 	void imageBufferReady(FrameBuffer *buffer);
++	void phaseBufferReady(FrameBuffer *buffer);
+ 	void clearIncompleteRequests();
+ 
+ 	unsigned int streamIndex(const Stream *stream) const
+@@ -345,6 +356,16 @@
+ 	std::list<Entity> entities_;
+ 	std::unique_ptr<CameraSensor> sensor_;
+ 	V4L2VideoDevice *video_;
++	std::unique_ptr<V4L2VideoDevice> phaseVideo_;
++	std::vector<std::unique_ptr<FrameBuffer>> phaseBuffers_;
++	bool phaseStreaming_ = false;
++	struct PhaseSample {
++		uint64_t timestamp;
++		int32_t phase;
++		uint32_t regions;
++	};
++	std::deque<PhaseSample> phaseSamples_;
++	std::map<uint32_t, uint64_t> rawTimestamps_;
+ 	V4L2Subdevice *frameStartEmitter_;
+ 
+ 	std::vector<Configuration> configs_;
+@@ -430,6 +451,7 @@
+ 	V4L2Subdevice *subdev(const MediaEntity *entity);
+ 	std::shared_ptr<MediaDevice> converter() { return converter_; }
+ 	bool swIspEnabled() const { return swIspEnabled_; }
++	MediaDevice *captureMedia() const { return captureMedia_.get(); }
+ 
+ protected:
+ 	int queueRequestDevice(Camera *camera, Request *request) override;
+@@ -462,6 +484,7 @@
+ 	std::map<const MediaEntity *, EntityData> entities_;
+ 
+ 	std::shared_ptr<MediaDevice> converter_;
++	std::shared_ptr<MediaDevice> captureMedia_;
+ 	bool swIspEnabled_;
+ };
+ 
+@@ -819,6 +842,61 @@
+ 	return 0;
+ }
+ 
++bool SimpleCameraData::setupPhase(const Size &sensorSize)
++{
++	phaseVideo_.reset();
++	if (sensor_->model() != "imx519" || sensorSize.width % 4)
++		return false;
++
++	MediaDevice *media = pipe()->captureMedia();
++	MediaEntity *csid = media->getEntityByName("msm_csid0");
++	MediaEntity *rdi = media->getEntityByName("msm_vfe0_rdi2");
++	MediaEntity *video = media->getEntityByName("msm_vfe0_video2");
++	MediaLink *link = media->link("msm_csid0", 3, "msm_vfe0_rdi2", 0);
++	if (!csid || !rdi || !video || !link)
++		return false;
++
++	V4L2Subdevice csidDevice(csid);
++	V4L2Subdevice rdiDevice(rdi);
++	if (csidDevice.open() || rdiDevice.open())
++		return false;
++
++	V4L2SubdeviceFormat format{};
++	format.code = kQ6aSensorDataCode;
++	format.size = { sensorSize.width * 5 / 4, 1 };
++	if (link->setEnabled(true) ||
++	    csidDevice.setFormat(3, &format, V4L2Subdevice::ActiveFormat) ||
++	    format.code != kQ6aSensorDataCode ||
++	    format.size != Size(sensorSize.width * 5 / 4, 1) ||
++	    rdiDevice.setFormat(0, &format, V4L2Subdevice::ActiveFormat)) {
++		LOG(SimplePipeline, Warning) << "IMX519 phase route unavailable";
++		return false;
++	}
++
++	phaseVideo_ = std::make_unique<V4L2VideoDevice>(video);
++	SharedFD handle(::open(video->deviceNode().c_str(), O_RDWR | O_CLOEXEC));
++	if (!handle.isValid() ||
++	    phaseVideo_->open(handle, V4L2_BUF_TYPE_META_CAPTURE)) {
++		phaseVideo_.reset();
++		return false;
++	}
++	V4L2DeviceFormat capture{};
++	capture.fourcc = V4L2PixelFormat(V4L2_META_FMT_GENERIC_8);
++	capture.size = format.size;
++	capture.planes[0].size = format.size.width;
++	if (phaseVideo_->setFormat(&capture) ||
++	    capture.fourcc != V4L2PixelFormat(V4L2_META_FMT_GENERIC_8) ||
++	    capture.planes[0].size < 970) {
++		LOG(SimplePipeline, Warning) << "IMX519 phase MET8 format unavailable";
++		phaseVideo_.reset();
++		return false;
++	}
++
++	LOG(SimplePipeline, Info) << "IMX519 phase stream on " << phaseVideo_->deviceNode()
++				  << " (" << capture.planes[0].size << " bytes)";
++	return true;
++}
++
+ int SimpleCameraData::setupFormats(V4L2SubdeviceFormat *format,
+ 				   V4L2Subdevice::Whence whence,
+ 				   Transform transform)
+@@ -942,9 +1020,12 @@
+ 		}
+ 	}
+ 
+-	if (request)
++	if (request) {
+ 		request->_d()->metadata().set(controls::SensorTimestamp,
+ 					      buffer->metadata().timestamp);
++		if (phaseStreaming_)
++			rawTimestamps_[request->sequence()] = buffer->metadata().timestamp;
++	}
+ 
+ 	/*
+ 	 * Queue the captured and the request buffer to the converter or Software
+@@ -978,6 +1059,53 @@
+ 	tryCompleteRequest(request);
+ }
+ 
++void SimpleCameraData::phaseBufferReady(FrameBuffer *buffer)
++{
++	if (buffer->metadata().status == FrameMetadata::FrameSuccess) {
++		MappedFrameBuffer mapped(buffer, MappedFrameBuffer::MapFlag::Read);
++		if (mapped.isValid() && !mapped.planes().empty()) {
++			Span<uint8_t> payload = mapped.planes()[0];
++			size_t length = std::min(payload.size(), static_cast<size_t>(
++						buffer->metadata().planes()[0].bytesused));
++			LOG(SimplePipeline, Debug) << "Phase buffer " << length
++						   << " bytes, plane " << payload.size();
++			if (length >= 970 && payload[0] == 0 && payload[1] < 0x40) {
++				std::vector<int32_t> phases;
++				for (unsigned int row = 3; row < 9; ++row) {
++					for (unsigned int column = 4; column < 12; ++column) {
++						size_t offset = 10 + (row * 16 + column) * 5;
++						int confidence = (payload[offset] << 3) |
++								 (payload[offset + 1] >> 5);
++						if (confidence < 16)
++							continue;
++						int phase = ((payload[offset + 1] & 0x0f) -
++							     (payload[offset + 1] & 0x10)) * 64 +
++							    (payload[offset + 2] >> 2);
++						phases.push_back(phase);
++					}
++				}
++				if (phases.size() >= 8) {
++					std::sort(phases.begin(), phases.end());
++					int32_t phase = (phases[(phases.size() - 1) / 2] +
++							 phases[phases.size() / 2]) / 2;
++					phaseSamples_.push_back({ buffer->metadata().timestamp,
++								  phase, static_cast<uint32_t>(phases.size()) });
++					if (phaseSamples_.size() > 32)
++						phaseSamples_.pop_front();
++					LOG(SimplePipeline, Debug) << "Phase sample " << phase
++							   << " regions " << phases.size();
++				}
++			}
++		} else {
++			LOG(SimplePipeline, Debug) << "Phase buffer mapping failed: "
++						   << mapped.error();
++		}
++	}
++
++	if (phaseStreaming_ && buffer->metadata().status != FrameMetadata::FrameCancelled)
++		phaseVideo_->queueBuffer(buffer);
++}
++
+ void SimpleCameraData::clearIncompleteRequests()
+ {
+ 	while (!conversionQueue_.empty()) {
+@@ -1029,6 +1157,28 @@
+ 
+ void SimpleCameraData::ispStatsReady(uint32_t frame, uint32_t bufferId)
+ {
++	int32_t phase = 0;
++	uint32_t regions = 0;
++	auto raw = rawTimestamps_.find(frame);
++	bool hadTimestamp = raw != rawTimestamps_.end();
++	if (hadTimestamp) {
++		uint64_t bestDelta = 5000001;
++		for (const PhaseSample &sample : phaseSamples_) {
++			uint64_t delta = raw->second > sample.timestamp
++					 ? raw->second - sample.timestamp
++					 : sample.timestamp - raw->second;
++			if (delta < bestDelta) {
++				bestDelta = delta;
++				phase = sample.phase;
++				regions = sample.regions;
++			}
++		}
++		rawTimestamps_.erase(raw);
++	}
++	swIsp_->setPhaseSample(frame, phase, regions);
++	LOG(SimplePipeline, Debug) << "IPA frame " << frame << " phase "
++				   << phase << " regions " << regions
++				   << " raw timestamp found " << hadTimestamp;
+ 	swIsp_->processStats(frame, bufferId,
+ 			     delayedCtrls_->get(frame));
+ }
+@@ -1592,8 +1742,10 @@
+ 			data->rawStream_ = &data->streams_[i];
+ 	}
+ 
+-	if (outputCfgs.empty())
++	if (outputCfgs.empty()) {
++		data->phaseVideo_.reset();
+ 		return 0;
++	}
+ 
+ 	StreamConfiguration inputCfg;
+ 	inputCfg.pixelFormat = videoFormat.toPixelFormat();
+@@ -1605,6 +1757,7 @@
+ 		return data->converter_->configure(inputCfg, outputCfgs);
+ 	} else {
+ 		ipa::soft::IPAConfigInfo configInfo;
++		configInfo.pdafAvailable = data->setupPhase(pipeConfig->sensorSize);
+ 		configInfo.sensorControls = data->sensor_->controls();
+ 		if (data->sensor_->focusLens() != nullptr)
+ 			configInfo.lensControls = data->sensor_->focusLens()->controls();
+@@ -1685,6 +1838,28 @@
+ 		stop(camera);
+ 		return ret;
+ 	}
++	if (data->phaseVideo_) {
++		ret = data->phaseVideo_->allocateBuffers(4, &data->phaseBuffers_);
++		if (ret > 0) {
++			data->phaseVideo_->bufferReady.connect(data, &SimpleCameraData::phaseBufferReady);
++			for (auto &buffer : data->phaseBuffers_) {
++				ret = data->phaseVideo_->queueBuffer(buffer.get());
++				if (ret < 0)
++					break;
++			}
++			if (ret >= 0)
++				ret = data->phaseVideo_->streamOn();
++			if (ret >= 0)
++				data->phaseStreaming_ = true;
++		}
++		if (!data->phaseStreaming_) {
++			LOG(SimplePipeline, Warning) << "IMX519 phase stream failed; using CDAF";
++			data->phaseVideo_->bufferReady.disconnect(data,
++							 &SimpleCameraData::phaseBufferReady);
++			data->phaseVideo_->releaseBuffers();
++			data->phaseBuffers_.clear();
++		}
++	}
+ 
+ 	if (data->useConversion_) {
+ 		if (data->converter_)
+@@ -1713,6 +1888,16 @@
+ 	SimpleCameraData *data = cameraData(camera);
+ 	V4L2VideoDevice *video = data->video_;
+ 	V4L2Subdevice *frameStartEmitter = data->frameStartEmitter_;
++	if (data->phaseVideo_) {
++		data->phaseStreaming_ = false;
++		data->phaseVideo_->streamOff();
++		data->phaseVideo_->bufferReady.disconnect(data,
++							 &SimpleCameraData::phaseBufferReady);
++		data->phaseVideo_->releaseBuffers();
++		data->phaseBuffers_.clear();
++		data->phaseSamples_.clear();
++		data->rawTimestamps_.clear();
++	}
+ 
+ 	if (frameStartEmitter) {
+ 		frameStartEmitter->setFrameStartEnabled(false);
+@@ -1874,6 +2059,7 @@
+ 					const SimplePipelineInfo &info,
+ 					DeviceEnumerator *enumerator)
+ {
++	captureMedia_ = media;
+ 	unsigned int numStreams = 1;
+ 
+ 	for (const auto &[name, streams] : info.converters) {
+--- a/src/libcamera/software_isp/software_isp.cpp
++++ b/src/libcamera/software_isp/software_isp.cpp
+@@ -204,6 +204,12 @@
+ 	ipa_->processStats(frame, bufferId, sensorControls);
+ }
+ 
++void SoftwareIsp::setPhaseSample(uint32_t frame, int32_t phase, uint32_t regions)
++{
++	ASSERT(ipa_);
++	ipa_->setPhaseSample(frame, phase, regions);
++}
++
+ /**
+  * \brief Check the validity of Software Isp object
+  * \return True if Software Isp is valid, false otherwise
+--- a/src/libcamera/v4l2_videodevice.cpp
++++ b/src/libcamera/v4l2_videodevice.cpp
+@@ -697,6 +697,14 @@
+ 	EventNotifier::Type notifierType;
+ 
+ 	switch (type) {
++	case V4L2_BUF_TYPE_META_CAPTURE:
++		notifierType = EventNotifier::Read;
++		bufferType_ = V4L2_BUF_TYPE_META_CAPTURE;
++		break;
++	case V4L2_BUF_TYPE_META_OUTPUT:
++		notifierType = EventNotifier::Write;
++		bufferType_ = V4L2_BUF_TYPE_META_OUTPUT;
++		break;
+ 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
+ 		notifierType = EventNotifier::Write;
+ 		bufferType_ = caps_.isMultiplanar()

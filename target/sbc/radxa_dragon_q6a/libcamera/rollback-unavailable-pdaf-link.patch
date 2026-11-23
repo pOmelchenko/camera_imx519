@@ -1,0 +1,36 @@
+--- a/src/libcamera/pipeline/simple/simple.cpp
++++ b/src/libcamera/pipeline/simple/simple.cpp
+@@ -28,6 +28,7 @@
+ 
+ #include <libcamera/base/log.h>
+ #include <libcamera/base/shared_fd.h>
++#include <libcamera/base/utils.h>
+ 
+ #include <libcamera/camera.h>
+ #include <libcamera/color_space.h>
+@@ -864,8 +865,15 @@
+ 	V4L2SubdeviceFormat format{};
+ 	format.code = kQ6aSensorDataCode;
+ 	format.size = { sensorSize.width * 5 / 4, 1 };
+-	if (link->setEnabled(true) ||
+-	    csidDevice.setFormat(3, &format, V4L2Subdevice::ActiveFormat) ||
++	const bool linkWasEnabled = link->flags() & MEDIA_LNK_FL_ENABLED;
++	if (!linkWasEnabled && link->setEnabled(true))
++		return false;
++
++	utils::ScopeExitActions phaseLinkRollback;
++	if (!linkWasEnabled)
++		phaseLinkRollback += [link]() { link->setEnabled(false); };
++
++	if (csidDevice.setFormat(3, &format, V4L2Subdevice::ActiveFormat) ||
+ 	    format.code != kQ6aSensorDataCode ||
+ 	    format.size != Size(sensorSize.width * 5 / 4, 1) ||
+ 	    rdiDevice.setFormat(0, &format, V4L2Subdevice::ActiveFormat)) {
+@@ -892,6 +900,7 @@
+ 		return false;
+ 	}
+ 
++	phaseLinkRollback.release();
+ 	LOG(SimplePipeline, Info) << "IMX519 phase stream on " << phaseVideo_->deviceNode()
+ 				  << " (" << capture.planes[0].size << " bytes)";
+ 	return true;
