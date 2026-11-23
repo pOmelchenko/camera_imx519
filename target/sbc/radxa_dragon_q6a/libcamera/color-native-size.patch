@@ -1,0 +1,31 @@
+diff --git a/src/libcamera/shaders/bayer_1x_packed.frag b/src/libcamera/shaders/bayer_1x_packed.frag
+index 23747f7..a49d0c2 100644
+--- a/src/libcamera/shaders/bayer_1x_packed.frag
++++ b/src/libcamera/shaders/bayer_1x_packed.frag
+@@ -143,6 +143,13 @@ void main(void)
+ 	 */
+ 	xcoords[1] += (fract_x > THRESHOLD_H) ? tex_step.x : 0.0;
+ 
++	/* Replicate edge pixels instead of sampling stride padding. This permits
++	 * debayering an output frame as wide as the sensor input. */
++	xcoords[0] = center_pixel.x > 0.0 ? xcoords[0] : center_bytes.x;
++	xcoords[1] = center_pixel.x < tex_size.x - 1.0 ? xcoords[1] : center_bytes.x;
++	ycoords[0] = center_pixel.y > 0.0 ? ycoords[0] : center_bytes.y;
++	ycoords[1] = center_pixel.y < tex_size.y - 1.0 ? ycoords[1] : center_bytes.y;
++
+ 	vec2 alternate = mod(center_pixel.xy + tex_bayer_first_red, 2.0);
+ 	bool even_col = alternate.x < 1.0;
+ 	bool even_row = alternate.y < 1.0;
+diff --git a/src/libcamera/software_isp/debayer_egl.cpp b/src/libcamera/software_isp/debayer_egl.cpp
+index 8f0c229..bd33f65 100644
+--- a/src/libcamera/software_isp/debayer_egl.cpp
++++ b/src/libcamera/software_isp/debayer_egl.cpp
+@@ -622,7 +622,7 @@ SizeRange DebayerEGL::sizes(PixelFormat inputFormat, const Size &inputSize)
+ 	}
+ 
+ 	return SizeRange(Size(patternSize.width, patternSize.height),
+-			 Size((inputSize.width - 2 * patternSize.width) & ~(patternSize.width - 1),
++			 Size(inputSize.width & ~(patternSize.width - 1),
+ 			      (inputSize.height - 2 * borderHeight) & ~(patternSize.height - 1)),
+ 			 patternSize.width, patternSize.height);
+ }

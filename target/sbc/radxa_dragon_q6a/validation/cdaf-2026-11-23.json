@@ -1,0 +1,163 @@
+{
+  "date": "2026-11-23",
+  "board": "Radxa Dragon Q6A",
+  "os": "Ubuntu 24.04.5 LTS",
+  "kernel": "7.0.11-7-qcom",
+  "camss": "stock packaged module",
+  "camera": "Arducam IMX519 80-degree and AK7375, CAM3/J7, two CSI lanes",
+  "camera_pcb_revision_and_cable_part": "unconfirmed",
+  "driver_version": "q6a-cam3.1",
+  "tested_camera_kit_commit": "f621d23aa460c6cc35faa56ed9e4c6cc9dc29787",
+  "cam3_i2c_hz": 100000,
+  "libcamera": {
+    "base_commit": "de1e9bc095e23085e77533357d2582176de0a582",
+    "source": "https://github.com/radxa-pkg/libcamera",
+    "recipe_source_commit": "d8e0258fc0d557f7da85dc606529c9321a048ec5",
+    "test_runtime_version": "0.7.1+radxa.de1e9bc0.imx519.pdaf5 plus phase-link rollback",
+    "phase_link_rollback_sha256": "930e7d592a94ec421b20f67a1b5f4bca7de75d167180513df28d3d4c9de9924d",
+    "ipa_tests_passed": 8
+  },
+  "auto": {
+    "algorithm": "CDAF",
+    "format": "1920x1080 XRGB8888",
+    "trigger_request": 0
+  },
+  "raw_reference": {
+    "format": "4656x3496 RAW10 pRAA",
+    "controls": {
+      "exposure": 3000,
+      "analogue_gain": 0,
+      "digital_gain": 256
+    },
+    "method": "three samples per code, normalized green-channel gradient energy in the target region"
+  },
+  "static_scenes": [
+    {
+      "target": "one duck figurine, face and beak",
+      "distance_mm_approx": 100,
+      "manual_best_sampled_ak7375": 3328,
+      "auto_ak7375": 3325,
+      "auto_state": "Focused",
+      "auto_rgb_frames": 330,
+      "roi_normalized_xywh": [
+        0.4,
+        0.37,
+        0.1,
+        0.17
+      ],
+      "raw_comparison": [
+        {
+          "code": 3325,
+          "median": 0.004230625388764229,
+          "min": 0.004204624783461569,
+          "max": 0.004239090250816857,
+          "samples": 3
+        },
+        {
+          "code": 3328,
+          "median": 0.0042092797168908486,
+          "min": 0.004207548634496525,
+          "max": 0.004224404400199999,
+          "samples": 3
+        }
+      ],
+      "sample_ranges_overlap": true
+    },
+    {
+      "target": "one duck figurine, eyes and beak",
+      "distance_mm_approx": 200,
+      "manual_best_sampled_ak7375": 2496,
+      "auto_ak7375": 2432,
+      "auto_state": "Focused",
+      "auto_rgb_frames": 330,
+      "roi_normalized_xywh": [
+        0.42,
+        0.405,
+        0.06,
+        0.09
+      ],
+      "raw_comparison": [
+        {
+          "code": 2368,
+          "median": 0.004679979275292723,
+          "min": 0.004614346741801387,
+          "max": 0.004867188330758919,
+          "samples": 3
+        },
+        {
+          "code": 2432,
+          "median": 0.006060916845437754,
+          "min": 0.0039209380295951906,
+          "max": 0.006170018495111088,
+          "samples": 3
+        },
+        {
+          "code": 2496,
+          "median": 0.006164868131929999,
+          "min": 0.004465824371611207,
+          "max": 0.006251099131884149,
+          "samples": 3
+        }
+      ],
+      "sample_ranges_overlap": true
+    },
+    {
+      "target": "crown print",
+      "distance_mm_approx": 300,
+      "manual_best_sampled_ak7375": 2208,
+      "auto_ak7375": 2174,
+      "auto_state": "Focused",
+      "auto_rgb_frames": 330,
+      "raw_comparison_frames_per_position": 3,
+      "raw_comparison": [
+        {
+          "code": 2174,
+          "median_normalized_energy": 0.047978643396466354,
+          "min": 0.04662336550604923,
+          "max": 0.048415270414839395
+        },
+        {
+          "code": 2208,
+          "median_normalized_energy": 0.046898955860271305,
+          "min": 0.0459501484710146,
+          "max": 0.04829556849004616
+        }
+      ],
+      "sample_ranges_overlap": true
+    }
+  ],
+  "three_targets_in_frame": {
+    "auto_code": 2174,
+    "auto_selected_target": "crown print",
+    "AfMetering": "rejected as unsupported",
+    "AfWindows": "not advertised by this runtime",
+    "best_sampled_code_by_target_region": {
+      "left duck": 3325,
+      "right duck": 2432,
+      "crown print": 2174
+    }
+  },
+  "scope": "Single-shot contrast AF under studio lighting on stationary targets; dynamic and phase focus are separate experiments.",
+  "media_links_and_raw_exposure_restored": true,
+  "rebuilt_runtime": {
+    "version": "0.7.1+radxa.de1e9bc0.imx519.cdaf1",
+    "build": "Clean ARM64 native build on the Q6A using build-inside.sh and the pinned Radxa source archive",
+    "runtime_archive_sha256": "d7d9d222be9ab35581ea0b7a417e54c3bb70601effe7aea54f3abada1cab5a79",
+    "ipa_tests_passed": 8,
+    "unpacked_wrapper_listed_imx519": true,
+    "auto_metadata_only": {
+      "frames": 330,
+      "missing_sequence_numbers": 0,
+      "state": "Focused",
+      "ak7375_code": 2174,
+      "log_sha256": "762d919bb74c4d37e07c3b706b719ded359d50dc5754993645f70c367430b4c7"
+    },
+    "auto_with_ppm_write": {
+      "frames": 330,
+      "missing_sequence_numbers": 63,
+      "state": "Focused",
+      "ak7375_code": 2174,
+      "log_sha256": "9fca2eebe2ee5be2cd58e0c61312e529622c65e29756824f5e04d06732681e4c"
+    }
+  }
+}
